@@ -1,0 +1,25 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1584635304318.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "9A8173C9",
+    "lastKnownWriteTime" : 1584635607,
+    "last_content_update" : 1584635607209,
+    "path" : "~/Dropbox/Hollister Projects/R Journal/R_Package/FDRestimation/FDRestimation/man/p.fdr.Rd",
+    "project_path" : "man/p.fdr.Rd",
+    "properties" : {
+        "cursorPosition" : "63,0",
+        "scrollLine" : "60"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 4,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_doc"
+}
