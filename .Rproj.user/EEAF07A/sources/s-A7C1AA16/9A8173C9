@@ -5,20 +5,20 @@
     "dirty" : false,
     "encoding" : "UTF-8",
     "folds" : "",
-    "hash" : "0",
+    "hash" : "3665058887",
     "id" : "9A8173C9",
-    "lastKnownWriteTime" : 1584635607,
-    "last_content_update" : 1584635607209,
-    "path" : "~/Dropbox/Hollister Projects/R Journal/R_Package/FDRestimation/FDRestimation/man/p.fdr.Rd",
+    "lastKnownWriteTime" : 1584642343,
+    "last_content_update" : 1584642343325,
+    "path" : "~/Dropbox/Hollister Projects/R Journal/R_Package/FDRestimation/man/p.fdr.Rd",
     "project_path" : "man/p.fdr.Rd",
     "properties" : {
-        "cursorPosition" : "63,0",
-        "scrollLine" : "60"
+        "cursorPosition" : "75,17",
+        "scrollLine" : "59"
     },
     "read_only" : false,
     "read_only_alternatives" : [
     ],
-    "relative_order" : 4,
+    "relative_order" : 2,
     "source_on_save" : false,
     "source_window" : "",
     "type" : "r_doc"

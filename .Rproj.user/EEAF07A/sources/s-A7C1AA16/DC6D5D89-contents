@@ -4,7 +4,7 @@
 ##	Function:	p.fdr
 ##	Version:	1.0
 ##
-##	Author:		Megan H. Murray and Valerie F. Welty
+##	Author:		Megan H. Murray and Jeffrey D. Blume
 ##	Date:		  March 11, 2020
 ################################################################
 #
@@ -47,7 +47,6 @@
 #' @references
 #'
 #'
-
 
 p.fdr = function(pvalues,
                  zvalues = NA,
