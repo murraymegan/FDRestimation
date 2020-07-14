@@ -1,18 +1,18 @@
-MethodAdjustments
+FDRestimatio
 ========
 
-The `MethodAdjustments` package contains functions to calculate method adjusted FDRs and p-values. 
+The `FDRestimation` package contains functions to calculate method adjusted FDRs and p-values. 
 
 News
 ----
-Version ?
+Version 1.0.0
 
 Installation
 ------------
 
 ``` r
 # install.packages("devtools")
-devtools::install_github("murraymegan/MethodAdjustments")
+devtools::install_github("murraymegan/FDRestimation")
 ```
 
 Example
@@ -21,7 +21,7 @@ Example
 The `p.fdr()` function calculates ?
 
 ``` r
-library(MethodAdjustments)
+library(FDRestimation)
 
 pi0 <- 0.8
 pi1 <- 1-pi0
