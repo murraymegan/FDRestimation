@@ -1,0 +1,469 @@
+---
+title: "p.fdr pi0 Estimation Simulations"
+author: "Megan Hollister"
+date: "11/18/2019"
+output:
+  html_document:
+    code_folding: hide
+    theme: cosmo
+    toc: yes
+    toc_depth: 5
+    toc_float: yes
+  pdf_document:
+    toc: yes
+    toc_depth: '5'
+---
+
+```{r message=FALSE, warning=FALSE}
+library(kableExtra)
+library(RColorBrewer)
+library(FDRestimation)
+knitr::opts_chunk$set(message=FALSE, warning=FALSE,  out.width = '100%')
+```
+
+# Simulated Comparisons
+
+```{r cache=TRUE}
+pi0 = seq(0,1, by=0.1) 
+n <- 1000
+return.mat4 = matrix(NA, ncol=12, nrow=length(pi0))
+smooth.hist = NA
+last.hist = NA
+lindseys = NA 
+Meinshausen = NA
+Storey = NA
+Jiang = NA
+Nettleton = NA
+Pounds = NA
+
+pb <- txtProgressBar(min = 0, max = length(pi0), style = 3)
+
+for(i in 1:length(pi0)){
+  pi1 <- 1-pi0[i]
+  n.0 <- ceiling(n*pi0[i]) 
+  n.1 <- n-n.0 
+   
+  for(j in 1:10){
+    sim.data <- c(rnorm(n.1,2,10),rnorm(n.0,0,1))
+    sim.data.p <- 2*pnorm(-abs(sim.data))
+    
+    smooth.hist[j] <- p.fdr(pvalues=sim.data.p, pi0.estimate = "smooth.hist")$pi0
+    last.hist[j] <- p.fdr(pvalues=sim.data.p, pi0.estimate = "last.hist")$pi0
+    lindseys[j] <- p.fdr(pvalues=sim.data.p, zvalues=sim.data, pi0.estimate = "lindseys")$pi0
+    
+    #Meinshausen[j] = p.fdr(pvalues=sim.data.p, pi0.estimate = "Meinshausen")$pi0
+    Storey[j] = ifelse(!is.numeric(try(p.fdr(pvalues=sim.data.p, pi0.estimate = "Storey")$pi0, silent=TRUE)), NA,p.fdr(pvalues=sim.data.p, pi0.estimate = "Storey")$pi0)
+    Jiang[j] = p.fdr(pvalues=sim.data.p, pi0.estimate = "Jiang")$pi0
+    Nettleton[j] = p.fdr(pvalues=sim.data.p, pi0.estimate = "Nettleton")$pi0
+    Pounds[j] = p.fdr(pvalues=sim.data.p, pi0.estimate = "Pounds")$pi0
+  }
+  
+  return.mat4[i,1] <- mean(smooth.hist, na.rm = TRUE)
+  return.mat4[i,2] <- mean(last.hist, na.rm = TRUE)
+  return.mat4[i,3] <- mean(lindseys, na.rm = TRUE)
+  return.mat4[i,4] <- 1-mean(Meinshausen, na.rm = TRUE)
+  return.mat4[i,5] <- mean(Storey, na.rm = TRUE)
+  return.mat4[i,7] <- mean(Jiang, na.rm = TRUE)
+  return.mat4[i,8] <- mean(Nettleton, na.rm = TRUE)
+  return.mat4[i,10] <- mean(Pounds, na.rm = TRUE)
+  
+  Sys.sleep(0.1)
+  setTxtProgressBar(pb, i)
+} 
+
+close(pb)
+```
+
+```{r cache=TRUE}
+return.mat2 = matrix(NA, ncol=12, nrow=length(pi0))
+smooth.hist = NA
+last.hist = NA
+lindseys = NA 
+Meinshausen = NA
+Storey = NA
+Jiang = NA
+Nettleton = NA
+Pounds = NA
+
+for(i in 1:length(pi0)){
+  pi1 <- 1-pi0[i]
+  n.0 <- ceiling(n*pi0[i]) 
+  n.1 <- n-n.0 
+   
+  for(j in 1:10){
+    sim.data <- c(rnorm(n.1,2,1),rnorm(n.0,0,1))
+    sim.data.p <- 2*pnorm(-abs(sim.data))
+    
+    smooth.hist[j] <- p.fdr(pvalues=sim.data.p, pi0.estimate = "smooth.hist")$pi0
+    last.hist[j] <- p.fdr(pvalues=sim.data.p, pi0.estimate = "last.hist")$pi0
+    lindseys[j] <- p.fdr(pvalues=sim.data.p, zvalues=sim.data, pi0.estimate = "lindseys")$pi0
+    #Meinshausen[j] = p.fdr(pvalues=sim.data.p, pi0.estimate = "Meinshausen")$pi0
+    Storey[j] = ifelse(!is.numeric(try(p.fdr(pvalues=sim.data.p, pi0.estimate = "Storey")$pi0, silent=TRUE)), NA,p.fdr(pvalues=sim.data.p, pi0.estimate = "Storey")$pi0)
+    Jiang[j] = p.fdr(pvalues=sim.data.p, pi0.estimate = "Jiang")$pi0
+    Nettleton[j] = p.fdr(pvalues=sim.data.p, pi0.estimate = "Nettleton")$pi0
+    Pounds[j] = p.fdr(pvalues=sim.data.p, pi0.estimate = "Pounds")$pi0
+  }
+  
+  return.mat2[i,1] <- mean(smooth.hist, na.rm = TRUE)
+  return.mat2[i,2] <- mean(last.hist, na.rm = TRUE)
+  return.mat2[i,3] <- mean(lindseys, na.rm = TRUE)
+  return.mat2[i,4] <- 1-mean(Meinshausen, na.rm = TRUE)
+  return.mat2[i,5] <- mean(Storey, na.rm = TRUE)
+  return.mat2[i,7] <- mean(Jiang, na.rm = TRUE)
+  return.mat2[i,8] <- mean(Nettleton, na.rm = TRUE)
+  return.mat2[i,10] <- mean(Pounds, na.rm = TRUE)
+} 
+```
+
+
+```{r cache=TRUE}
+return.mat1 = matrix(NA, ncol=12, nrow=length(pi0))
+smooth.hist = NA
+last.hist = NA
+lindseys = NA 
+Meinshausen = NA
+Storey = NA
+Jiang = NA
+Nettleton = NA
+Pounds = NA
+
+for(i in 1:length(pi0)){
+  pi1 <- 1-pi0[i]
+  n.0 <- ceiling(n*pi0[i]) 
+  n.1 <- n-n.0 
+   
+  for(j in 1:10){
+    sim.data <- c(rnorm(n.1,1,1),rnorm(n.0,0,1))
+    sim.data.p <- 2*pnorm(-abs(sim.data))
+    
+    smooth.hist[j] <- p.fdr(pvalues=sim.data.p, pi0.estimate = "smooth.hist")$pi0
+    last.hist[j] <- p.fdr(pvalues=sim.data.p, pi0.estimate = "last.hist")$pi0
+    lindseys[j] <- p.fdr(pvalues=sim.data.p, zvalues=sim.data, pi0.estimate = "lindseys")$pi0
+    
+    #Meinshausen[j] = p.fdr(pvalues=sim.data.p, pi0.estimate = "Meinshausen")$pi0
+    Storey[j] = ifelse(!is.numeric(try(p.fdr(pvalues=sim.data.p, pi0.estimate = "Storey")$pi0, silent=TRUE)), NA,p.fdr(pvalues=sim.data.p, pi0.estimate = "Storey")$pi0)
+    Jiang[j] = p.fdr(pvalues=sim.data.p, pi0.estimate = "Jiang")$pi0
+    Nettleton[j] = p.fdr(pvalues=sim.data.p, pi0.estimate = "Nettleton")$pi0
+    Pounds[j] = p.fdr(pvalues=sim.data.p, pi0.estimate = "Pounds")$pi0
+  }
+  
+  return.mat1[i,1] <- mean(smooth.hist, na.rm = TRUE)
+  return.mat1[i,2] <- mean(last.hist, na.rm = TRUE)
+  return.mat1[i,3] <- mean(lindseys, na.rm = TRUE)
+  return.mat1[i,4] <- 1-mean(Meinshausen, na.rm = TRUE)
+  return.mat1[i,5] <- mean(Storey, na.rm = TRUE)
+  return.mat1[i,7] <- mean(Jiang, na.rm = TRUE)
+  return.mat1[i,8] <- mean(Nettleton, na.rm = TRUE)
+  return.mat1[i,10] <- mean(Pounds, na.rm = TRUE)
+} 
+```
+
+```{r cache=TRUE}
+return.mat0.1 = matrix(NA, ncol=12, nrow=length(pi0))
+smooth.hist = NA
+last.hist = NA
+lindseys = NA 
+Meinshausen = NA
+Storey = NA
+Jiang = NA
+Nettleton = NA
+Pounds = NA
+
+for(i in 1:length(pi0)){
+  pi1 <- 1-pi0[i]
+  n.0 <- ceiling(n*pi0[i]) 
+  n.1 <- n-n.0 
+   
+  for(j in 1:10){
+    sim.data <- c(rnorm(n.1,1,0.1),rnorm(n.0,0,1))
+    sim.data.p <- 2*pnorm(-abs(sim.data))
+    
+    smooth.hist[j] <- p.fdr(pvalues=sim.data.p, pi0.estimate = "smooth.hist")$pi0
+    last.hist[j] <- p.fdr(pvalues=sim.data.p, pi0.estimate = "last.hist")$pi0
+    lindseys[j] <- p.fdr(pvalues=sim.data.p, zvalues=sim.data, pi0.estimate = "lindseys")$pi0
+    
+   #Meinshausen[j] = p.fdr(pvalues=sim.data.p, pi0.estimate = "Meinshausen")$pi0
+    Storey[j] = ifelse(!is.numeric(try(p.fdr(pvalues=sim.data.p, pi0.estimate = "Storey")$pi0, silent=TRUE)), NA,p.fdr(pvalues=sim.data.p, pi0.estimate = "Storey")$pi0)
+    Jiang[j] = p.fdr(pvalues=sim.data.p, pi0.estimate = "Jiang")$pi0
+    Nettleton[j] = p.fdr(pvalues=sim.data.p, pi0.estimate = "Nettleton")$pi0
+    Pounds[j] = p.fdr(pvalues=sim.data.p, pi0.estimate = "Pounds")$pi0
+  }
+  
+  return.mat0.1[i,1] <- mean(smooth.hist, na.rm = TRUE)
+  return.mat0.1[i,2] <- mean(last.hist, na.rm = TRUE)
+  return.mat0.1[i,3] <- mean(lindseys, na.rm = TRUE)
+  return.mat0.1[i,4] <- 1-mean(Meinshausen, na.rm = TRUE)
+  return.mat0.1[i,5] <- mean(Storey, na.rm = TRUE)
+  return.mat0.1[i,7] <- mean(Jiang, na.rm = TRUE)
+  return.mat0.1[i,8] <- mean(Nettleton, na.rm = TRUE)
+  return.mat0.1[i,10] <- mean(Pounds, na.rm = TRUE)
+} 
+```
+
+```{r cache=TRUE}
+return.mat0.2 = matrix(NA, ncol=12, nrow=length(pi0))
+smooth.hist = NA
+last.hist = NA
+lindseys = NA 
+Meinshausen = NA
+Storey = NA
+Jiang = NA
+Nettleton = NA
+Pounds = NA
+
+for(i in 1:length(pi0)){
+  pi1 <- 1-pi0[i]
+  n.0 <- ceiling(n*pi0[i]) 
+  n.1 <- n-n.0 
+   
+  for(j in 1:10){
+    sim.data <- c(rnorm(n.1,2,0.2),rnorm(n.0,0,1))
+    sim.data.p <- 2*pnorm(-abs(sim.data))
+    
+    smooth.hist[j] <- p.fdr(pvalues=sim.data.p, pi0.estimate = "smooth.hist")$pi0
+    last.hist[j] <- p.fdr(pvalues=sim.data.p, pi0.estimate = "last.hist")$pi0
+    lindseys[j] <- p.fdr(pvalues=sim.data.p, zvalues=sim.data, pi0.estimate = "lindseys")$pi0
+    
+    ##Meinshausen[j] = p.fdr(pvalues=sim.data.p, pi0.estimate = "Meinshausen")$pi0
+    Storey[j] = ifelse(!is.numeric(try(p.fdr(pvalues=sim.data.p, pi0.estimate = "Storey")$pi0, silent=TRUE)), NA,p.fdr(pvalues=sim.data.p, pi0.estimate = "Storey")$pi0)
+    Jiang[j] = p.fdr(pvalues=sim.data.p, pi0.estimate = "Jiang")$pi0
+    Nettleton[j] = p.fdr(pvalues=sim.data.p, pi0.estimate = "Nettleton")$pi0
+    Pounds[j] = p.fdr(pvalues=sim.data.p, pi0.estimate = "Pounds")$pi0
+  }
+  
+  return.mat0.2[i,1] <- mean(smooth.hist, na.rm = TRUE)
+  return.mat0.2[i,2] <- mean(last.hist, na.rm = TRUE)
+  return.mat0.2[i,3] <- mean(lindseys, na.rm = TRUE)
+  return.mat0.2[i,4] <- 1-mean(Meinshausen, na.rm = TRUE)
+  return.mat0.2[i,5] <- mean(Storey, na.rm = TRUE)
+  return.mat0.2[i,7] <- mean(Jiang, na.rm = TRUE)
+  return.mat0.2[i,8] <- mean(Nettleton, na.rm = TRUE)
+  return.mat0.2[i,10] <- mean(Pounds, na.rm = TRUE)
+} 
+```
+
+## Plots
+
+```{r}
+par(pty = "s")
+mypalette<-rainbow(12)
+
+plot(pi0, pi0, type="l",main="Alternative N(1,1)", ylab="Estimated pi0", xlab="True pi0", lwd=2)
+lines(pi0, return.mat1[,1], col=mypalette[1], lwd=2)
+lines(pi0, return.mat1[,2], col=mypalette[2], lwd=2)
+lines(pi0, return.mat1[,3], col=mypalette[3], lwd=2)
+lines(pi0, return.mat1[,4], col=mypalette[4], lwd=2)
+lines(pi0, return.mat1[,5], col=mypalette[5], lwd=2)
+# lines(pi0, return.mat1[,6], col=mypalette[6], lwd=2)
+lines(pi0, return.mat1[,7], col=mypalette[7], lwd=2)
+lines(pi0, return.mat1[,8], col=mypalette[8], lwd=2)
+lines(pi0, return.mat1[,9], col=mypalette[9], lwd=2)
+lines(pi0, return.mat1[,10], col=mypalette[10],lwd=2)
+# lines(pi0, return.mat1[,11], col=mypalette[11], lwd=2)
+# lines(pi0, return.mat1[,12], col=mypalette[12], lwd=2)
+# legend("bottomright",
+#            legend=c("True Value", "Smooth Hist", "Last Hist", "Lindsey's", "Meinshausen", "Storey","Jiang","Nettleton" ,"Langaas" ,"Pounds"),
+#            lty=1,
+#            lwd=2,
+#            col=c("black",mypalette[c(1:5,7:10)]),
+#            bty = "n") 
+
+plot(pi0, (pi0-pi0)^2, type="n", ylim=c(0, 0.2), main="MSE", ylab="MSE", xlab="True pi0")
+lines(pi0, (return.mat1[,1]-pi0)^2, col=mypalette[1], lwd=2)
+lines(pi0, (return.mat1[,2]-pi0)^2, col=mypalette[2], lwd=2)
+lines(pi0, (return.mat1[,3]-pi0)^2, col=mypalette[3], lwd=2)
+lines(pi0, (return.mat1[,4]-pi0)^2, col=mypalette[4], lwd=2)
+lines(pi0, (return.mat1[,5]-pi0)^2, col=mypalette[5], lwd=2)
+# lines(pi0, (return.mat1[,6]-pi0)^2, col=mypalette[6], lwd=2)
+lines(pi0, (return.mat1[,7]-pi0)^2, col=mypalette[7], lwd=2)
+lines(pi0, (return.mat1[,8]-pi0)^2, col=mypalette[8], lwd=2)
+lines(pi0, (return.mat1[,9]-pi0)^2, col=mypalette[9], lwd=2)
+lines(pi0, (return.mat1[,10]-pi0)^2, col=mypalette[10], lwd=2)
+# lines(pi0, (return.mat1[,11]-pi0)^2, col=mypalette[11], lwd=2)
+# lines(pi0, (return.mat1[,12]-pi0)^2, col=mypalette[12], lwd=2)
+# legend("topright",
+#            legend=c( "Smooth Hist", "Last Hist", "Lindsey's","Meinshausen", "Storey","Jiang","Nettleton" ,"Langaas" ,"Pounds"),
+#            lty=1,
+#            lwd=2,
+#            col=mypalette[c(1:5,7:10)],
+#            bty = "n") 
+```
+
+```{r}
+par(pty = "s")
+plot(pi0, pi0, type="l",main="Alternative N(2,1)", ylab="Estimated pi0", xlab="True pi0", lwd=2)
+lines(pi0, return.mat2[,1], col=mypalette[1], lty=1,lwd=2)
+lines(pi0, return.mat2[,2], col=mypalette[2],lty=1, lwd=2)
+lines(pi0, return.mat2[,3], col=mypalette[3],lty=1, lwd=2)
+lines(pi0, return.mat2[,4], col=mypalette[4],lty=1, lwd=2)
+lines(pi0, return.mat2[,5], col=mypalette[5],lty=1, lwd=2)
+# lines(pi0, return.mat2[,6], col=mypalette[6],lty=1, lwd=2)
+lines(pi0, return.mat2[,7], col=mypalette[7],lty=1, lwd=2)
+lines(pi0, return.mat2[,8], col=mypalette[8],lty=1, lwd=2)
+lines(pi0, return.mat2[,9], col=mypalette[9],lty=1, lwd=2)
+lines(pi0, return.mat2[,10], col=mypalette[10],lty=1, lwd=2)
+# lines(pi0, return.mat2[,11], col=mypalette[11],lty=1, lwd=2)
+# lines(pi0, return.mat2[,12], col=mypalette[12],lty=1, lwd=2)
+# legend("bottomright",
+#            legend=c("True Value", "Smooth Hist", "Last Hist", "Lindsey's", "Meinshausen", "Storey","Jiang","Nettleton" ,"Langaas" ,"Pounds"),
+#            lty=c(1,2,2,2,2,2,2,2,2,2,2),
+#            lwd=2,
+#            col=c("black",mypalette[c(1:5,7:10)]),
+#            bty = "n") 
+
+plot(pi0, (pi0-pi0)^2, type="n", ylim=c(0, 0.2), main="MSE", ylab="MSE", xlab="True pi0")
+lines(pi0, (return.mat2[,1]-pi0)^2, col=mypalette[1],lty=1, lwd=2)
+lines(pi0, (return.mat2[,2]-pi0)^2, col=mypalette[2],lty=1, lwd=2)
+lines(pi0, (return.mat2[,3]-pi0)^2, col=mypalette[3],lty=1, lwd=2)
+lines(pi0, (return.mat2[,4]-pi0)^2, col=mypalette[4],lty=1, lwd=2)
+lines(pi0, (return.mat2[,5]-pi0)^2, col=mypalette[5],lty=1, lwd=2)
+# lines(pi0, (return.mat2[,6]-pi0)^2, col=mypalette[6],lty=1, lwd=2)
+lines(pi0, (return.mat2[,7]-pi0)^2, col=mypalette[7],lty=1, lwd=2)
+lines(pi0, (return.mat2[,8]-pi0)^2, col=mypalette[8],lty=1, lwd=2)
+lines(pi0, (return.mat2[,9]-pi0)^2, col=mypalette[9],lty=1, lwd=2)
+lines(pi0, (return.mat2[,10]-pi0)^2, col=mypalette[10],lty=1, lwd=2)
+# lines(pi0, (return.mat2[,11]-pi0)^2, col=mypalette[11],lty=1, lwd=2)
+# lines(pi0, (return.mat2[,12]-pi0)^2, col=mypalette[12],lty=1, lwd=2)
+# legend("topright",
+#            legend=c( "Smooth Hist", "Last Hist", "Lindsey's","Meinshausen", "Storey","Jiang","Nettleton" ,"Langaas" ,"Pounds"),
+#            lty=1,
+#            lwd=2,
+#            col=mypalette[c(1:5,7:10)],
+#            bty = "n") 
+```
+
+```{r}
+par(pty = "s")
+plot(pi0, pi0, type="l",main="Alternative N(4,1)", ylab="Estimated pi0", xlab="True pi0", lwd=2)
+lines(pi0, return.mat4[,1], col=mypalette[1], lty=1,lwd=2)
+lines(pi0, return.mat4[,2], col=mypalette[2],lty=1, lwd=2)
+lines(pi0, return.mat4[,3], col=mypalette[3],lty=1, lwd=2)
+lines(pi0, return.mat4[,4], col=mypalette[4],lty=1, lwd=2)
+lines(pi0, return.mat4[,5], col=mypalette[5],lty=1, lwd=2)
+# lines(pi0, return.mat4[,6], col=mypalette[6],lty=1, lwd=2)
+lines(pi0, return.mat4[,7], col=mypalette[7],lty=1, lwd=2)
+lines(pi0, return.mat4[,8], col=mypalette[8],lty=1, lwd=2)
+lines(pi0, return.mat4[,9], col=mypalette[9],lty=1, lwd=2)
+lines(pi0, return.mat4[,10], col=mypalette[10],lty=1, lwd=2)
+# lines(pi0, return.mat4[,11], col=mypalette[11],lty=1, lwd=2)
+# lines(pi0, return.mat4[,12], col=mypalette[12],lty=1, lwd=2)
+# legend("bottomright",
+#            legend=c("True Value", "Smooth Hist", "Last Hist", "Lindsey's", "Meinshausen", "Storey","Jiang","Nettleton" ,"Langaas" ,"Pounds"),
+#            lty=c(1,4,4,4,4,4,4,4,4,4,4),
+#            lwd=2,
+#            col=c("black",mypalette[c(1:5,7:10)]),
+#            bty = "n") 
+
+plot(pi0, (pi0-pi0)^2, type="n", ylim=c(0, 0.2), main="MSE", ylab="MSE", xlab="True pi0")
+lines(pi0, (return.mat4[,1]-pi0)^2, col=mypalette[1],lty=1, lwd=2)
+lines(pi0, (return.mat4[,2]-pi0)^2, col=mypalette[2],lty=1, lwd=2)
+lines(pi0, (return.mat4[,3]-pi0)^2, col=mypalette[3],lty=1, lwd=2)
+lines(pi0, (return.mat4[,4]-pi0)^2, col=mypalette[4],lty=1, lwd=2)
+lines(pi0, (return.mat4[,5]-pi0)^2, col=mypalette[5],lty=1, lwd=2)
+# lines(pi0, (return.mat4[,6]-pi0)^2, col=mypalette[6],lty=1, lwd=2)
+lines(pi0, (return.mat4[,7]-pi0)^2, col=mypalette[7],lty=1, lwd=2)
+lines(pi0, (return.mat4[,8]-pi0)^2, col=mypalette[8],lty=1, lwd=2)
+lines(pi0, (return.mat4[,9]-pi0)^2, col=mypalette[9],lty=1, lwd=2)
+lines(pi0, (return.mat4[,10]-pi0)^2, col=mypalette[10],lty=1, lwd=2)
+# lines(pi0, (return.mat4[,11]-pi0)^2, col=mypalette[11],lty=1, lwd=2)
+# lines(pi0, (return.mat4[,12]-pi0)^2, col=mypalette[12],lty=1, lwd=2)
+# legend("topright",
+#            legend=c( "Smooth Hist", "Last Hist", "Lindsey's","Meinshausen", "Storey","Jiang","Nettleton" ,"Langaas" ,"Pounds"),
+#            lty=1,
+#            lwd=2,
+#            col=mypalette[c(1:5,7:10)],
+#            bty = "n") 
+```
+
+```{r}
+plot(pi0, pi0, type="l",main="Alternative N(1,0.1)", ylab="Estimated pi0", xlab="True pi0", lwd=2)
+lines(pi0, return.mat0.1[,1], col=mypalette[1], lty=1,lwd=2)
+lines(pi0, return.mat0.1[,2], col=mypalette[2],lty=1, lwd=2)
+lines(pi0, return.mat0.1[,3], col=mypalette[3],lty=1, lwd=2)
+lines(pi0, return.mat0.1[,4], col=mypalette[4],lty=1, lwd=2)
+lines(pi0, return.mat0.1[,5], col=mypalette[5],lty=1, lwd=2)
+# lines(pi0, return.mat0.1[,6], col=mypalette[6],lty=1, lwd=2)
+lines(pi0, return.mat0.1[,7], col=mypalette[7],lty=1, lwd=2)
+lines(pi0, return.mat0.1[,8], col=mypalette[8],lty=1, lwd=2)
+lines(pi0, return.mat0.1[,9], col=mypalette[9],lty=1, lwd=2)
+lines(pi0, return.mat0.1[,10], col=mypalette[10],lty=1, lwd=2)
+# lines(pi0, return.mat0.1[,11], col=mypalette[11],lty=1, lwd=2)
+# lines(pi0, return.mat0.1[,12], col=mypalette[12],lty=1, lwd=2)
+# legend("bottomright",
+#            legend=c("True Value", "Smooth Hist", "Last Hist", "Lindsey's", "Meinshausen", "Storey","Jiang","Nettleton" ,"Langaas" ,"Pounds"),
+#            lty=c(1,4,4,4,4,4,4,4,4,4,4),
+#            lwd=2,
+#            col=c("black",mypalette[c(1:5,7:10)]),
+#            bty = "n") 
+
+plot(pi0, (pi0-pi0)^2, type="n", ylim=c(0, 0.2), main=" ", ylab="MSE", xlab="True pi0")
+lines(pi0, (return.mat0.1[,1]-pi0)^2, col=mypalette[1],lty=1, lwd=2)
+lines(pi0, (return.mat0.1[,2]-pi0)^2, col=mypalette[2],lty=1, lwd=2)
+lines(pi0, (return.mat0.1[,3]-pi0)^2, col=mypalette[3],lty=1, lwd=2)
+lines(pi0, (return.mat0.1[,4]-pi0)^2, col=mypalette[4],lty=1, lwd=2)
+lines(pi0, (return.mat0.1[,5]-pi0)^2, col=mypalette[5],lty=1, lwd=2)
+# lines(pi0, (return.mat0.1[,6]-pi0)^2, col=mypalette[6],lty=1, lwd=2)
+lines(pi0, (return.mat0.1[,7]-pi0)^2, col=mypalette[7],lty=1, lwd=2)
+lines(pi0, (return.mat0.1[,8]-pi0)^2, col=mypalette[8],lty=1, lwd=2)
+lines(pi0, (return.mat0.1[,9]-pi0)^2, col=mypalette[9],lty=1, lwd=2)
+lines(pi0, (return.mat0.1[,10]-pi0)^2, col=mypalette[10],lty=1, lwd=2)
+# lines(pi0, (return.mat0.1[,11]-pi0)^2, col=mypalette[11],lty=1, lwd=2)
+# lines(pi0, (return.mat0.1[,12]-pi0)^2, col=mypalette[12],lty=1, lwd=2)
+# legend("topright",
+#            legend=c( "Smooth Hist", "Last Hist", "Lindsey's","Meinshausen", "Storey","Jiang","Nettleton" ,"Langaas" ,"Pounds"),
+#            lty=1,
+#            lwd=2,
+#            col=mypalette[c(1:5,7:10)],
+#            bty = "n") 
+```
+
+```{r}
+plot(pi0, pi0, type="l",main="Alternative N(2,0.2)", ylab="Estimated pi0", xlab="True pi0", lwd=2)
+lines(pi0, return.mat0.2[,1], col=mypalette[1], lty=1,lwd=2)
+lines(pi0, return.mat0.2[,2], col=mypalette[2],lty=1, lwd=2)
+lines(pi0, return.mat0.2[,3], col=mypalette[3],lty=1, lwd=2)
+lines(pi0, return.mat0.2[,4], col=mypalette[4],lty=1, lwd=2)
+lines(pi0, return.mat0.2[,5], col=mypalette[5],lty=1, lwd=2)
+# lines(pi0, return.mat0.2[,6], col=mypalette[6],lty=1, lwd=2)
+lines(pi0, return.mat0.2[,7], col=mypalette[7],lty=1, lwd=2)
+lines(pi0, return.mat0.2[,8], col=mypalette[8],lty=1, lwd=2)
+lines(pi0, return.mat0.2[,9], col=mypalette[9],lty=1, lwd=2)
+lines(pi0, return.mat0.2[,10], col=mypalette[10],lty=1, lwd=2)
+# lines(pi0, return.mat0.2[,11], col=mypalette[11],lty=1, lwd=2)
+# lines(pi0, return.mat0.2[,12], col=mypalette[12],lty=1, lwd=2)
+# legend("bottomright",
+#            legend=c("True Value", "Smooth Hist", "Last Hist", "Lindsey's", "Meinshausen", "Storey","Jiang","Nettleton" ,"Langaas" ,"Pounds"),
+#            lty=c(1,4,4,4,4,4,4,4,4,4,4),
+#            lwd=2,
+#            col=c("black",mypalette[c(1:5,7:10)]),
+#            bty = "n") 
+
+plot(pi0, (pi0-pi0)^2, type="n", ylim=c(0, 0.2), main=" ", ylab="MSE", xlab="True pi0")
+lines(pi0, (return.mat0.2[,1]-pi0)^2, col=mypalette[1],lty=1, lwd=2)
+lines(pi0, (return.mat0.2[,2]-pi0)^2, col=mypalette[2],lty=1, lwd=2)
+lines(pi0, (return.mat0.2[,3]-pi0)^2, col=mypalette[3],lty=1, lwd=2)
+lines(pi0, (return.mat0.2[,4]-pi0)^2, col=mypalette[4],lty=1, lwd=2)
+lines(pi0, (return.mat0.2[,5]-pi0)^2, col=mypalette[5],lty=1, lwd=2)
+# lines(pi0, (return.mat0.2[,6]-pi0)^2, col=mypalette[6],lty=1, lwd=2)
+lines(pi0, (return.mat0.2[,7]-pi0)^2, col=mypalette[7],lty=1, lwd=2)
+lines(pi0, (return.mat0.2[,8]-pi0)^2, col=mypalette[8],lty=1, lwd=2)
+lines(pi0, (return.mat0.2[,9]-pi0)^2, col=mypalette[9],lty=1, lwd=2)
+lines(pi0, (return.mat0.2[,10]-pi0)^2, col=mypalette[10],lty=1, lwd=2)
+# lines(pi0, (return.mat0.2[,11]-pi0)^2, col=mypalette[11],lty=1, lwd=2)
+# lines(pi0, (return.mat0.2[,12]-pi0)^2, col=mypalette[12],lty=1, lwd=2)
+# legend("topright",
+#            legend=c( "Smooth Hist", "Last Hist", "Lindsey's","Meinshausen", "Storey","Jiang","Nettleton" ,"Langaas" ,"Pounds"),
+#            lty=1,
+#            lwd=2,
+#            col=mypalette[c(1:5,7:10)],
+#            bty = "n") 
+```
+
+```{r}
+plot(pi0, pi0, type="n",main=" ", ylab=" ", xlab=" ", lwd=2)
+legend("topright",
+           legend=c("True Value", "Smooth Hist", "Last Hist", "Lindsey's","Meinshausen", "Storey","Jiang","Nettleton" ,"Langaas" ,"Pounds"),
+           lwd=2,
+           col=c("black",mypalette[c(1:5,7:10)]),
+           bty = "n")
+```

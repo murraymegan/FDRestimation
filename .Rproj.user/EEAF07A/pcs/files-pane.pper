@@ -1,9 +1,9 @@
 {
-    "path" : "~/Dropbox/Hollister Projects/R Journal/R_Package/FDRestimation/FDRestimation",
-    "sortOrder" : [
+    "path": "~/Dropbox/Hollister Projects/R Journal/R_Package/FDRestimation",
+    "sortOrder": [
         {
-            "ascending" : true,
-            "columnIndex" : 2
+            "ascending": true,
+            "columnIndex": 2
         }
     ]
 }

@@ -1,157 +1,223 @@
 ################################################################
-##	Purpose: 	Compute FDRs and Adjusted P-Values
+##	Purpose: 	Compute FDRs and Adjusted p-values
 ##
 ##	Function:	p.fdr
 ##	Version:	1.0
 ##
 ##	Author:		Megan H. Murray and Jeffrey D. Blume
-##	Date:		  March 11, 2020
+##	Date:		  June 29, 2020
 ################################################################
 #
 #' FDR Computation
 #'
-#' @description This function computes FDRs and Method Adjusted P-Values.
+#' @description This function computes FDRs and Method Adjusted p-values.
 #'
-#' @param
+#' @param pvalues A numeric vector of raw p-values.
+#' @param zvalues A numeric vector of z-values to be used in pi0 estimation or a string with options "two.sided", "greater" or "less". Defaults to "two.sided".
+#' @param threshold A numeric value in the interval \code{[0,1]} used in a multiple comparison hypothesis tests to determine significance from the null. Defaults to 0.05.
+#' @param adjust.method A string used to identify the p-value and false discovery rate adjustment method. Defaults to \code{BH}. Options are \code{BH}, \code{BY}, code{Bon},\code{Holm}, \code{Hoch}, and \code{Hommel}.
+#' @param BY.corr A string of either "positive" or "negative" to determine which correlation is used in the BY method. Defaults to \code{positive}.
+#' @param just.fdr A Boolean TRUE or FALSE value which output only the FDR vector instead of the list output. Defaults to FALSE.
+#' @param default.odds A numeric value determining the ratio of pi1/pi0 used in the computation of one FDR. Defaults to 1.
+#' @param estim.method A string used to determine which method is used to estimate the null proportion or pi0 value. Defaults to \code{set.pi0}.
+#' @param set.pi0 A numeric value to specify a known or assumed pi0 value in the interval \code{[0,1]}. Defaults to 1. Which means the assumption is that all inputted raw p-values come from the null distribution.
+#' @param hist.breaks A numeric or string variable representing how many breaks are used in the pi0 estimation histogram methods. Defaults to "scott".
+#' @param sort.results A Boolean TRUE or FALSE value which sorts the output in either increasing or non-increasing order dependent on the FDR vector. Defaults to FALSE.
+#' @param na.rm A Boolean TRUE or FALSE value indicating whether NA's should be removed from the inputted raw p-value vector before further computation. Defaults to TRUE.
 #'
-#' @details
+#' @details We run into errors or warnings when
 #'
 #' @return A list containing the following components:
-#' \describe{
-#' \item{\code{fdr}}{Vector of method adjusted fdrs.}
+#' @return \item{fdrs}{A numeric vector of method adjusted FDRs.}
+#' @return \item{Results Matrix}{A numeric matrix of method adjusted FDRs, method adjusted p-values, and raw p-values.}
+#' @return \item{Reject Vector}{A vector containing Reject.H0 and/or FTR.H0 based off of the threshold value and hypothesis test on the adjusted p-values.}
+#' @return \item{pi0}{A numeric value for the pi0 value used in the computations. }
+#' @return \item{threshold}{A numeric value for the threshold value used in the hypothesis tests.}
+#' @return \item{Adjustment Method}{The string with the method name used in computation(needed for the plot.fdr function).}
 #'
-#' }
-#' @seealso \code{\link{plotfdr}}
-#' @keywords szjbfajbfja
+#' @seealso \code{\link{plot.p.fdr}, \link{summary.p.fdr}, \link{get.pi0}}
+#' @keywords
 #' @export
 #' @examples
 #'
-#' ## Example
-#' pi0 <- 0.8
-#' pi1 <- 1-pi0
-#' n <- 10000
-#' n.0 <- ceiling(n*pi0)
-#' n.1 <- n-n.0
+#' # Example 1
+#' pi0 = 0.8
+#' pi1 = 1-pi0
+#' n = 10
+#' n.0 = ceiling(n*pi0)
+#' n.1 = n-n.0
 #'
-#' data <- c(rnorm(n.1,5,1),rnorm(n.0,0,1))
-#' sim.data.p <- 2*pnorm(-abs(sim.data))
+#' sim.data = c(rnorm(n.1,5,1),rnorm(n.0,0,1))
+#' sim.data.p = 2*pnorm(-abs(sim.data))
 #'
 #' fdr.output = p.fdr(pvalues=sim.data.p, adjust.method="BH")
 #'
-#' fdr.output$fdr
-#' [1] ?
-#' sgpv$pi0
-#' [1]    ?
+#' fdr.output$fdrs
+#' fdr.output$pi0
+#'
+#' # Example 2
+#'
+#' sim.data.p = output = c(runif(80),runif(20, min=0, max=0.01))
+#' fdr.output = p.fdr(pvalues=sim.data.p, adjust.method="Holm" , sort.results = TRUE)
+#'
+#' fdr.output$`Results Matrix`
 #'
 #'
 #' @references
-#'
+#' R Journal 2020?
 #'
 
 p.fdr = function(pvalues,
-                 zvalues = NA,
+                 zvalues = "two.sided",
                  threshold=0.05,
-                 adjust.method=NA,
+                 adjust.method="BH",
+                 BY.corr="positive",
                  just.fdr=FALSE,
-                 pi0.estim = "one",
-                 set.pi0 = NA,
+                 default.odds=1,
+                 estim.method = "set.pi0",
+                 set.pi0 = 1,
+                 hist.breaks="scott",
+                 sort.results=FALSE,
                  na.rm=TRUE){
 
-  library(splines)
+  cl <- match.call()
   n=length(pvalues)
 
+  #Remove NA inputted pvalues
   if(na.rm){
     pvalues = pvalues[!is.na(pvalues)]
     n = length(pvalues)
   }
 
-  #Null Proportion Estimation
-  if(pi0.estim=="one"){
-    pi0=1
-  }
-  else if(pi0.estim=="last.hist"){
-    try.hist <- hist(pvalues, breaks=min(n/10,100), plot=FALSE)
-    try.mids <- try.hist$mids
-    try.count <- try.hist$counts
-    pi0 = tail(try.count,1)*length(try.mids)/sum(try.count)
-  }
-  else if(pi0.estim=="loess"){
-    try.hist <- hist(pvalues, breaks=n/10, plot=FALSE)
-    try.mids <- try.hist$mids
-    try.count <- try.hist$counts
-    loe <- loess(try.count~try.mids)
-    k <- 0.3
-    x.loe <- try.mids[try.mids>=k]
-    y.loe <- loe$fitted[try.mids>=k]
-    avg.loe <- mean(y.loe)
-    y.est <- c(rep(avg.loe,(length(try.mids)-length(y.loe))),y.loe)
-
-    pi0 = sum(y.est)/sum(try.count)
-  }
-  else if(pi0.estim=="lindseys"){
-    if(sum(is.na(zvalues))==1){
-      stop("No argument for `zvalues` provided")
+  #Zvalues method
+  if(is.character(zvalues)){
+    if(zvalues=="greater"){
+      zvalues = qnorm(pvalues, lower.tail = FALSE)
+    }else if(zvalues=="two.sided"){
+      zvalues = qnorm(pvalues/2, lower.tail = FALSE)
+    }else if(zvalues=="less"){
+      zvalues = qnorm(pvalues, lower.tail = TRUE)
     }
-    sim.hist <-hist(zvalues, plot=FALSE, breaks=min(n/10,100))
-    bin <- length(sim.hist$mids)  # number of bins
-    df <- 7 # J= degrees of freedom
-    breaks <- sim.hist$breaks
-    y <- sim.hist$counts
-    x <- sim.hist$mids
-    K <- length(y)
-    k <- seq(K)
-    yhat <- glm(y ~ ns(x,df=df), poisson)$fit
-    bw <- x[2]-x[1]
-    fhat <- yhat/(n*bw)
-    #Lindseys
-    fdra <- dnorm(x,0,1)/fhat
-
-    plot(x, pmin(fdra,1), type="l", col="blue",
-         main="Lindsey's adjust.method FDR vs. z-values")
-    abline(h=0.05, col="red", lty=2)
-
-    pi0 = min(quantile(fhat/dnorm(x,0,1),0.05),1)
   }
 
-  #Always calc the individual FDRs
-  fdr.bh = pmin(1,pi0*pvalues*n/rank(pvalues))
 
-  if(is.na(adjust.method)| adjust.method == "BH"){
-    adj.pvalues = cummin(pmin(1,pvalues*n/rank(pvalues)))
-
-    adj.fdrs = pmin(1,pi0*pvalues*n/rank(pvalues))
+  if(estim.method == "set.pi0"){
+    pi0 = set.pi0
+  }else{
+    pi0 = get.pi0(pvalues=pvalues,
+                    estim.method=estim.method,
+                    zvalues=zvalues ,
+                    threshold=threshold,
+                    default.odds=default.odds,
+                    hist.breaks=hist.breaks)
   }
-  else if(adjust.method == "BY"){
+
+  #Always calc the individual BH FDRs
+  fdr.bh = pmin(1,pi0*pvalues*n/rank(pvalues,ties.method = "first"))
+
+  #Different Adjustment Methods
+  if(adjust.method == "BH"){
+    o = order(pvalues, decreasing = TRUE)
+    ro = order(o)
+    adj.pvalues = cummin(pmin(1,pvalues*n/rank(pvalues,ties.method = "first"))[o])[ro]
+
+    adj.fdrs = pmin(1,pi0*pvalues*n/rank(pvalues,ties.method = "first"))
+  }else if(adjust.method == "BY"&BY.corr=="positive"){
     dep = cumsum(1/(1:n))
+    o = order(pvalues, decreasing = TRUE)
+    ro = order(o)
+    adj.pvalues = cummin(pmin(1,dep*pvalues*n/rank(pvalues,ties.method = "first"))[o])[ro]
 
-    adj.pvalues = cummin(pmin(1,dep*pvalues*n/rank(pvalues)))
+    adj.fdrs = pmin(1,pi0*dep*pvalues*n/rank(pvalues,ties.method = "first"))
+  }else if(adjust.method == "BY"&BY.corr=="negative"){
+    gamma= -1*log(n)+sum(1/(1:n))
+    dep = log(1:n)+gamma+1/(2*(1:n))
+    o = order(pvalues, decreasing = TRUE)
+    ro = order(o)
+    adj.pvalues = cummin(pmin(1,dep*pvalues*n/rank(pvalues,ties.method = "first"))[o])[ro]
 
-    adj.fdrs = pmin(1,pi0*dep*pvalues*n/rank(pvalues))
-  }
-  else if(adjust.method == "Bon"){
+    adj.fdrs = pmin(1,pi0*dep*pvalues*n/rank(pvalues,ties.method = "first"))
+  }else if(adjust.method == "Bon"){
     adj.pvalues = pmin(1, n*pvalues)
 
     adj.fdrs = pmin(1, pi0*n*pvalues)
+  }else if(adjust.method == "Holm"){
+    o = order(pvalues, decreasing = TRUE)
+    ro = order(o)
+    adj.pvalues = cummax(pmin(1,(n + 1 - rank(pvalues,ties.method = "first"))*pvalues)[o])[ro]
+
+    adj.fdrs = pmin(1, (n + 1 - rank(pvalues,ties.method = "first")*pvalues))
+  }else if(adjust.method == "Hoch"){
+    o = order(pvalues, decreasing = TRUE)
+    ro = order(o)
+    adj.pvalues = cummin(pmin(1,(n - rank(pvalues,ties.method = "first") + 1)*pvalues)[o])[ro]
+
+    adj.fdrs = pmin(1, (n - rank(pvalues,ties.method = "first") + 1)*pvalues)
+  }else if(adjust.method == "Hommel"){
+    o = order(pvalues, decreasing = TRUE)
+    ro = order(o)
+    p = pvalues[o]
+    q = pa = rep.int(min(n * p/(1:n)), n)
+
+    for (j in (n - 1):2) {
+      ij = seq_len(n - j + 1)
+      i2 = (n - j + 2):n
+      q1 = min(j * p[i2]/(2:j))
+      q[ij] = pmin(j * p[ij], q1)
+      q[i2] = q[n - j + 1]
+      pa = pmax(pa, q)
+    }
+    adj.pvalues = pmax(pa, p)[ro]
+
+    adj.fdrs = pmax(pa, p)[ro]
   }
-  else if(adjust.method == "Holm"){
-    adj.pvalues = cummax(pmin(1,(n - rank(pvalues) + 1)*pvalues))
 
-    adj.fdrs = pmin(1, (n - rank(pvalues) + 1)*pvalues)
+  #Sort results matrix in decreasing order by adj.fdrs
+  if(sort.results){
+    new.order = order(adj.fdrs, decreasing = FALSE)
+  }else{
+    new.order = c(1:n)
   }
 
-  out <- as.data.frame(cbind("Method Adjusted FDRs" = adj.fdrs,
-                             "Method Adjusted P-Values" = adj.pvalues,
-                             "Unadjusted P-Values" = pvalues,
-                             "Individual BH FDRs" = fdr.bh))
+  if(length(pvalues)==1){
+    one.fdr=(1+exp(zvalues^2/2)*default.odds)^-1
 
-  return(list("fdrs"=adj.fdrs,
-              "Results Matrix"=out,
-              "Reject Vector"=ifelse(adj.pvalues<=threshold,
-                                     "Reject.H0", "FTR.H0"),
-              "pi0"=pi0,
-              "threshold"=threshold))
+    class(one.fdr) = "one.fdr"
+    return(one.fdr)
+
+  }else if(just.fdr){
+    output.fdrs = adj.fdrs[new.order]
+
+    class(output.fdrs) = "fdrs"
+    return(output.fdrs)
+
+  }else{
+    #Only report 4th column if different from first column
+    if(adjust.method == "BH"){
+      out.mat = as.data.frame(cbind("BH FDRs" = adj.fdrs[new.order],
+                                 "Adjusted p-values" = adj.pvalues[new.order],
+                                 "Raw p-values" = pvalues[new.order]))
+    }else{
+      out.mat = as.data.frame(cbind("Adjusted FDRs" = adj.fdrs[new.order],
+                                 "Adjusted p-values" = adj.pvalues[new.order],
+                                 "Raw p-values" = pvalues[new.order],
+                                 "BH FDRs" = fdr.bh[new.order]))
+    }
+
+    #Return a list of fdrs, results matrix, pi0, threshold, adjustment method
+    output = list("fdrs"=adj.fdrs[new.order],
+         "Results Matrix"=out.mat,
+         "Reject Vector"=ifelse(adj.pvalues[new.order]<=threshold,
+                                "Reject.H0", "FTR.H0"),
+         "pi0"=pi0,
+         "threshold"=threshold,
+         "Adjustment Method"= adjust.method,
+         "Call" = cl)
+
+    class(output) = "p.fdr"
+    return(output)
+  }
 }
-
 
 ###
 ##

@@ -1,0 +1,2069 @@
+---
+title: "p.fdr pi0 Estimation Simulations"
+author: "Megan Hollister"
+date: "6/1/2020"
+output:
+  html_document:
+    code_folding: hide
+    theme: cosmo
+    toc: yes
+    toc_depth: 5
+    toc_float: yes
+  pdf_document:
+    toc: yes
+    toc_depth: '5'
+---
+
+```{r message=FALSE, warning=FALSE}
+library(kableExtra)
+library(RColorBrewer)
+library(FDRestimation)
+knitr::opts_chunk$set(message=FALSE, warning=FALSE,  out.width = '120%')
+```
+
+# Simulated Comparisons
+
+## n=30
+
+```{r "small sample 41", cache=TRUE}
+pi0 = seq(0,1, by=0.025)  
+n <- 30 
+return.mat4 = matrix(NA, ncol=10, nrow=length(pi0))
+last.hist = NA
+Meinshausen = NA 
+Storey = NA
+Jiang = NA 
+Nettleton = NA
+Pounds = NA 
+
+for(i in 1:length(pi0)){
+  pi1 <- 1-pi0[i]
+  n.0 <- ceiling(n*pi0[i]) 
+  n.1 <- n-n.0 
+   
+  for(j in 1:200){
+    sim.data <- c(rnorm(n.1,4,1),rnorm(n.0,0,1))
+    sim.data.p <- 2*pnorm(-abs(sim.data))
+
+    last.hist[j] <- p.fdr(pvalues=sim.data.p, estim.method = "last.hist")$pi0
+    Meinshausen[j] = p.fdr(pvalues=sim.data.p, estim.method = "Meinshausen")$pi0
+    Jiang[j] = p.fdr(pvalues=sim.data.p, estim.method = "Jiang")$pi0
+    Nettleton[j] = p.fdr(pvalues=sim.data.p, estim.method = "Nettleton")$pi0
+    Pounds[j] = p.fdr(pvalues=sim.data.p, estim.method = "Pounds")$pi0
+    Storey[j] = p.fdr(pvalues=sim.data.p, estim.method = "Storey")$pi0
+    
+  }
+  
+  return.mat4[i,1] <- mean(last.hist, na.rm = TRUE)
+  return.mat4[i,2] <- 1-mean(Meinshausen, na.rm = TRUE)
+  return.mat4[i,3] <- mean(Storey, na.rm = TRUE)
+  return.mat4[i,4] <- mean(Jiang, na.rm = TRUE)
+  return.mat4[i,5] <- mean(Nettleton, na.rm = TRUE)
+  return.mat4[i,6] <- mean(Pounds, na.rm = TRUE)
+
+} 
+```
+
+```{r "small sample 21", cache=TRUE}
+pi0 = seq(0,1, by=0.025)  
+return.mat2 = matrix(NA, ncol=10, nrow=length(pi0))
+last.hist = NA 
+Meinshausen = NA
+Storey = NA
+Jiang = NA
+Nettleton = NA 
+Pounds = NA 
+
+for(i in 1:length(pi0)){
+  pi1 <- 1-pi0[i]
+  n.0 <- ceiling(n*pi0[i]) 
+  n.1 <- n-n.0 
+   
+  for(j in 1:200){
+    sim.data <- c(rnorm(n.1,2,1),rnorm(n.0,0,1))
+    sim.data.p <- 2*pnorm(-abs(sim.data))
+    
+    last.hist[j] <- p.fdr(pvalues=sim.data.p, estim.method = "last.hist")$pi0
+    Meinshausen[j] = p.fdr(pvalues=sim.data.p, estim.method = "Meinshausen")$pi0
+    Jiang[j] = p.fdr(pvalues=sim.data.p, estim.method = "Jiang")$pi0
+    Nettleton[j] = p.fdr(pvalues=sim.data.p, estim.method = "Nettleton")$pi0
+    Pounds[j] = p.fdr(pvalues=sim.data.p, estim.method = "Pounds")$pi0
+    Storey[j] = p.fdr(pvalues=sim.data.p, estim.method = "Storey")$pi0
+    
+   }
+  
+  return.mat2[i,1] <- mean(last.hist, na.rm = TRUE)
+  return.mat2[i,2] <- 1-mean(Meinshausen, na.rm = TRUE)
+  return.mat2[i,3] <- mean(Storey, na.rm = TRUE)
+  return.mat2[i,4] <- mean(Jiang, na.rm = TRUE)
+  return.mat2[i,5] <- mean(Nettleton, na.rm = TRUE)
+  return.mat2[i,6] <- mean(Pounds, na.rm = TRUE)
+} 
+```
+
+```{r "small sample 11", cache=TRUE}
+pi0 = seq(0,1, by=0.025)  
+return.mat1 = matrix(NA, ncol=10, nrow=length(pi0))
+  
+last.hist = NA 
+Meinshausen = NA
+Storey = NA
+Jiang = NA
+Nettleton = NA
+Pounds = NA 
+ 
+for(i in 1:length(pi0)){
+  pi1 <- 1-pi0[i]
+  n.0 <- ceiling(n*pi0[i]) 
+  n.1 <- n-n.0 
+   
+  for(j in 1:200){
+    sim.data <- c(rnorm(n.1,1,1),rnorm(n.0,0,1))
+    sim.data.p <- 2*pnorm(-abs(sim.data))
+    
+    last.hist[j] <- p.fdr(pvalues=sim.data.p, estim.method = "last.hist")$pi0
+    Meinshausen[j] = p.fdr(pvalues=sim.data.p, estim.method = "Meinshausen")$pi0
+    Jiang[j] = p.fdr(pvalues=sim.data.p, estim.method = "Jiang")$pi0
+    Nettleton[j] = p.fdr(pvalues=sim.data.p, estim.method = "Nettleton")$pi0
+    Pounds[j] = p.fdr(pvalues=sim.data.p, estim.method = "Pounds")$pi0
+    Storey[j] = p.fdr(pvalues=sim.data.p, estim.method = "Storey")$pi0
+    
+   }
+  
+  return.mat1[i,1] <- mean(last.hist, na.rm = TRUE)
+  return.mat1[i,2] <- 1-mean(Meinshausen, na.rm = TRUE)
+  return.mat1[i,3] <- mean(Storey, na.rm = TRUE)
+  return.mat1[i,4] <- mean(Jiang, na.rm = TRUE)
+  return.mat1[i,5] <- mean(Nettleton, na.rm = TRUE)
+  return.mat1[i,6] <- mean(Pounds, na.rm = TRUE)
+} 
+```
+
+```{r "small sample 1.1", cache=TRUE}
+pi0 = seq(0,1, by=0.025)  
+return.mat0.1 = matrix(NA, ncol=10, nrow=length(pi0))
+last.hist = NA
+Meinshausen = NA 
+Storey = NA 
+Jiang = NA
+Nettleton = NA
+Pounds = NA 
+
+for(i in 1:length(pi0)){
+  pi1 <- 1-pi0[i]
+  n.0 <- ceiling(n*pi0[i]) 
+  n.1 <- n-n.0 
+   
+  for(j in 1:200){
+    sim.data <- c(rnorm(n.1,1,0.1),rnorm(n.0,0,1))
+    sim.data.p <- 2*pnorm(-abs(sim.data))
+    
+    last.hist[j] <- p.fdr(pvalues=sim.data.p, estim.method = "last.hist")$pi0
+    Meinshausen[j] = p.fdr(pvalues=sim.data.p, estim.method = "Meinshausen")$pi0
+    Jiang[j] = p.fdr(pvalues=sim.data.p, estim.method = "Jiang")$pi0
+    Nettleton[j] = p.fdr(pvalues=sim.data.p, estim.method = "Nettleton")$pi0
+    Pounds[j] = p.fdr(pvalues=sim.data.p, estim.method = "Pounds")$pi0
+    Storey[j] = p.fdr(pvalues=sim.data.p, estim.method = "Storey")$pi0
+    
+ }
+  
+  return.mat0.1[i,1] <- mean(last.hist, na.rm = TRUE)
+  return.mat0.1[i,2] <- 1-mean(Meinshausen, na.rm = TRUE)
+  return.mat0.1[i,3] <- mean(Storey, na.rm = TRUE)
+  return.mat0.1[i,4] <- mean(Jiang, na.rm = TRUE)
+  return.mat0.1[i,5] <- mean(Nettleton, na.rm = TRUE)
+  return.mat0.1[i,6] <- mean(Pounds, na.rm = TRUE)
+} 
+```
+
+```{r "small sample 2.1", cache=TRUE}
+pi0 = seq(0,1, by=0.025)  
+return.mat0.2 = matrix(NA, ncol=10, nrow=length(pi0))
+last.hist = NA 
+Meinshausen = NA 
+Storey = NA
+Jiang = NA
+Nettleton = NA 
+Pounds = NA 
+
+for(i in 1:length(pi0)){
+  pi1 <- 1-pi0[i]
+  n.0 <- ceiling(n*pi0[i]) 
+  n.1 <- n-n.0 
+   
+  for(j in 1:200){
+    sim.data <- c(rnorm(n.1,2,0.1),rnorm(n.0,0,1))
+    sim.data.p <- 2*pnorm(-abs(sim.data))
+
+    last.hist[j] <- p.fdr(pvalues=sim.data.p, estim.method = "last.hist")$pi0
+    Meinshausen[j] = p.fdr(pvalues=sim.data.p, estim.method = "Meinshausen")$pi0
+    Jiang[j] = p.fdr(pvalues=sim.data.p, estim.method = "Jiang")$pi0
+    Nettleton[j] = p.fdr(pvalues=sim.data.p, estim.method = "Nettleton")$pi0
+    Pounds[j] = p.fdr(pvalues=sim.data.p, estim.method = "Pounds")$pi0
+    Storey[j] = p.fdr(pvalues=sim.data.p, estim.method = "Storey")$pi0
+      
+  }
+  
+  return.mat0.2[i,1] <- mean(last.hist, na.rm = TRUE)
+  return.mat0.2[i,2] <- 1-mean(Meinshausen, na.rm = TRUE)
+  return.mat0.2[i,3] <- mean(Storey, na.rm = TRUE)
+  return.mat0.2[i,4] <- mean(Jiang, na.rm = TRUE)
+  return.mat0.2[i,5] <- mean(Nettleton, na.rm = TRUE)
+  return.mat0.2[i,6] <- mean(Pounds, na.rm = TRUE)
+} 
+```
+
+```{r "small sample 4.1",cache=TRUE}
+pi0 = seq(0,1, by=0.025)  
+return.mat0.4 = matrix(NA, ncol=10, nrow=length(pi0))
+last.hist = NA 
+Meinshausen = NA
+Storey = NA
+Jiang = NA
+Nettleton = NA 
+Pounds = NA  
+
+for(i in 1:length(pi0)){
+  pi1 <- 1-pi0[i]
+  n.0 <- ceiling(n*pi0[i]) 
+  n.1 <- n-n.0 
+   
+  for(j in 1:200){
+    sim.data <- c(rnorm(n.1,4,0.1),rnorm(n.0,0,1))
+    sim.data.p <- 2*pnorm(-abs(sim.data))
+
+    last.hist[j] <- p.fdr(pvalues=sim.data.p, estim.method = "last.hist")$pi0
+    Meinshausen[j] = p.fdr(pvalues=sim.data.p, estim.method = "Meinshausen")$pi0
+    Jiang[j] = p.fdr(pvalues=sim.data.p, estim.method = "Jiang")$pi0
+    Nettleton[j] = p.fdr(pvalues=sim.data.p, estim.method = "Nettleton")$pi0
+    Pounds[j] = p.fdr(pvalues=sim.data.p, estim.method = "Pounds")$pi0
+    Storey[j] = p.fdr(pvalues=sim.data.p, estim.method = "Storey")$pi0
+      
+  }
+  
+  return.mat0.4[i,1] <- mean(last.hist, na.rm = TRUE)
+  return.mat0.4[i,2] <- 1-mean(Meinshausen, na.rm = TRUE)
+  return.mat0.4[i,3] <- mean(Storey, na.rm = TRUE)
+  return.mat0.4[i,4] <- mean(Jiang, na.rm = TRUE)
+  return.mat0.4[i,5] <- mean(Nettleton, na.rm = TRUE)
+  return.mat0.4[i,6] <- mean(Pounds, na.rm = TRUE)
+} 
+```
+
+```{r "small sample 1.5",cache=TRUE}
+pi0 = seq(0,1, by=0.025)  
+return.mat1.5 = matrix(NA, ncol=10, nrow=length(pi0))
+last.hist = NA
+Meinshausen = NA
+Storey = NA
+Jiang = NA
+Nettleton = NA
+Pounds = NA 
+
+for(i in 1:length(pi0)){
+  pi1 <- 1-pi0[i]
+  n.0 <- ceiling(n*pi0[i]) 
+  n.1 <- n-n.0 
+   
+  for(j in 1:200){
+    sim.data <- c(rnorm(n.1,1,0.5),rnorm(n.0,0,1))
+    sim.data.p <- 2*pnorm(-abs(sim.data))
+
+    last.hist[j] <- p.fdr(pvalues=sim.data.p, estim.method = "last.hist")$pi0
+    Meinshausen[j] = p.fdr(pvalues=sim.data.p, estim.method = "Meinshausen")$pi0
+    Jiang[j] = p.fdr(pvalues=sim.data.p, estim.method = "Jiang")$pi0
+    Nettleton[j] = p.fdr(pvalues=sim.data.p, estim.method = "Nettleton")$pi0
+    Pounds[j] = p.fdr(pvalues=sim.data.p, estim.method = "Pounds")$pi0
+    Storey[j] = p.fdr(pvalues=sim.data.p, estim.method = "Storey")$pi0
+      
+  }
+
+  return.mat1.5[i,1] <- mean(last.hist, na.rm = TRUE)
+  return.mat1.5[i,2] <- 1-mean(Meinshausen, na.rm = TRUE)
+  return.mat1.5[i,3] <- mean(Storey, na.rm = TRUE)
+  return.mat1.5[i,4] <- mean(Jiang, na.rm = TRUE)
+  return.mat1.5[i,5] <- mean(Nettleton, na.rm = TRUE)
+  return.mat1.5[i,6] <- mean(Pounds, na.rm = TRUE)
+} 
+```
+
+
+```{r "small sample 2.5",cache=TRUE}
+pi0 = seq(0,1, by=0.025)  
+return.mat2.5 = matrix(NA, ncol=10, nrow=length(pi0))
+last.hist = NA
+Meinshausen = NA
+Storey = NA
+Jiang = NA
+Nettleton = NA
+Pounds = NA 
+
+for(i in 1:length(pi0)){
+  pi1 <- 1-pi0[i]
+  n.0 <- ceiling(n*pi0[i]) 
+  n.1 <- n-n.0 
+   
+  for(j in 1:200){
+    sim.data <- c(rnorm(n.1,2,0.5),rnorm(n.0,0,1))
+    sim.data.p <- 2*pnorm(-abs(sim.data))
+    
+    last.hist[j] <- p.fdr(pvalues=sim.data.p, estim.method = "last.hist")$pi0
+    Meinshausen[j] = p.fdr(pvalues=sim.data.p, estim.method = "Meinshausen")$pi0
+    Jiang[j] = p.fdr(pvalues=sim.data.p, estim.method = "Jiang")$pi0
+    Nettleton[j] = p.fdr(pvalues=sim.data.p, estim.method = "Nettleton")$pi0
+    Pounds[j] = p.fdr(pvalues=sim.data.p, estim.method = "Pounds")$pi0
+    Storey[j] = p.fdr(pvalues=sim.data.p, estim.method = "Storey")$pi0
+      
+  }
+  
+  return.mat2.5[i,1] <- mean(last.hist, na.rm = TRUE)
+  return.mat2.5[i,2] <- 1-mean(Meinshausen, na.rm = TRUE)
+  return.mat2.5[i,3] <- mean(Storey, na.rm = TRUE)
+  return.mat2.5[i,4] <- mean(Jiang, na.rm = TRUE)
+  return.mat2.5[i,5] <- mean(Nettleton, na.rm = TRUE)
+  return.mat2.5[i,6] <- mean(Pounds, na.rm = TRUE)
+} 
+```
+
+```{r "small sample 4.5",cache=TRUE}
+pi0 = seq(0,1, by=0.025)  
+return.mat4.5 = matrix(NA, ncol=10, nrow=length(pi0))
+last.hist = NA
+Meinshausen = NA
+Storey = NA
+Jiang = NA
+Nettleton = NA
+Pounds = NA 
+
+for(i in 1:length(pi0)){
+  pi1 <- 1-pi0[i]
+  n.0 <- ceiling(n*pi0[i]) 
+  n.1 <- n-n.0 
+   
+  for(j in 1:200){
+    sim.data <- c(rnorm(n.1,4,0.5),rnorm(n.0,0,1))
+    sim.data.p <- 2*pnorm(-abs(sim.data))
+    
+    last.hist[j] <- p.fdr(pvalues=sim.data.p, estim.method = "last.hist")$pi0
+    Meinshausen[j] = p.fdr(pvalues=sim.data.p, estim.method = "Meinshausen")$pi0
+    Jiang[j] = p.fdr(pvalues=sim.data.p, estim.method = "Jiang")$pi0
+    Nettleton[j] = p.fdr(pvalues=sim.data.p, estim.method = "Nettleton")$pi0
+    Pounds[j] = p.fdr(pvalues=sim.data.p, estim.method = "Pounds")$pi0
+    Storey[j] = p.fdr(pvalues=sim.data.p, estim.method = "Storey")$pi0
+      
+  }
+  
+  return.mat4.5[i,1] <- mean(last.hist, na.rm = TRUE)
+  return.mat4.5[i,2] <- 1-mean(Meinshausen, na.rm = TRUE)
+  return.mat4.5[i,3] <- mean(Storey, na.rm = TRUE)
+  return.mat4.5[i,4] <- mean(Jiang, na.rm = TRUE)
+  return.mat4.5[i,5] <- mean(Nettleton, na.rm = TRUE)
+  return.mat4.5[i,6] <- mean(Pounds, na.rm = TRUE)
+} 
+```
+
+```{r "small sample 13",cache=TRUE}
+pi0 = seq(0,1, by=0.025)  
+return.mat13 = matrix(NA, ncol=10, nrow=length(pi0))
+last.hist = NA 
+Meinshausen = NA
+Storey = NA
+Jiang = NA
+Nettleton = NA
+Pounds = NA 
+
+for(i in 1:length(pi0)){
+  pi1 <- 1-pi0[i]
+  n.0 <- ceiling(n*pi0[i]) 
+  n.1 <- n-n.0 
+   
+  for(j in 1:200){
+    sim.data <- c(rnorm(n.1,1,3),rnorm(n.0,0,1))
+    sim.data.p <- 2*pnorm(-abs(sim.data))
+    
+    last.hist[j] <- p.fdr(pvalues=sim.data.p, estim.method = "last.hist")$pi0
+     Meinshausen[j] = p.fdr(pvalues=sim.data.p, estim.method = "Meinshausen")$pi0
+    Jiang[j] = p.fdr(pvalues=sim.data.p, estim.method = "Jiang")$pi0
+    Nettleton[j] = p.fdr(pvalues=sim.data.p, estim.method = "Nettleton")$pi0
+    Pounds[j] = p.fdr(pvalues=sim.data.p, estim.method = "Pounds")$pi0
+    Storey[j] = p.fdr(pvalues=sim.data.p, estim.method = "Storey")$pi0
+      
+  }
+
+  return.mat13[i,1] <- mean(last.hist, na.rm = TRUE)
+  return.mat13[i,2] <- 1-mean(Meinshausen, na.rm = TRUE)
+  return.mat13[i,3] <- mean(Storey, na.rm = TRUE)
+  return.mat13[i,4] <- mean(Jiang, na.rm = TRUE)
+  return.mat13[i,5] <- mean(Nettleton, na.rm = TRUE)
+  return.mat13[i,6] <- mean(Pounds, na.rm = TRUE)
+} 
+```
+
+
+```{r "small sample 23",cache=TRUE}
+pi0 = seq(0,1, by=0.025)  
+return.mat23 = matrix(NA, ncol=10, nrow=length(pi0))
+last.hist = NA
+Meinshausen = NA
+Storey = NA
+Jiang = NA
+Nettleton = NA
+Pounds = NA 
+
+for(i in 1:length(pi0)){
+  pi1 <- 1-pi0[i]
+  n.0 <- ceiling(n*pi0[i]) 
+  n.1 <- n-n.0 
+   
+  for(j in 1:200){
+    sim.data <- c(rnorm(n.1,2,3),rnorm(n.0,0,1))
+    sim.data.p <- 2*pnorm(-abs(sim.data))
+    
+    last.hist[j] <- p.fdr(pvalues=sim.data.p, estim.method = "last.hist")$pi0
+    Meinshausen[j] = p.fdr(pvalues=sim.data.p, estim.method = "Meinshausen")$pi0
+    Jiang[j] = p.fdr(pvalues=sim.data.p, estim.method = "Jiang")$pi0
+    Nettleton[j] = p.fdr(pvalues=sim.data.p, estim.method = "Nettleton")$pi0
+    Pounds[j] = p.fdr(pvalues=sim.data.p, estim.method = "Pounds")$pi0
+    Storey[j] = p.fdr(pvalues=sim.data.p, estim.method = "Storey")$pi0
+      
+  }
+  
+  return.mat23[i,1] <- mean(last.hist, na.rm = TRUE)
+  return.mat23[i,2] <- 1-mean(Meinshausen, na.rm = TRUE)
+  return.mat23[i,3] <- mean(Storey, na.rm = TRUE)
+  return.mat23[i,4] <- mean(Jiang, na.rm = TRUE)
+  return.mat23[i,5] <- mean(Nettleton, na.rm = TRUE)
+  return.mat23[i,6] <- mean(Pounds, na.rm = TRUE)
+} 
+```
+
+```{r "small sample 43",cache=TRUE}
+pi0 = seq(0,1, by=0.025)  
+return.mat43 = matrix(NA, ncol=10, nrow=length(pi0))
+last.hist = NA 
+Meinshausen = NA
+Storey = NA
+Jiang = NA
+Nettleton = NA
+Pounds = NA 
+
+for(i in 1:length(pi0)){
+  pi1 <- 1-pi0[i]
+  n.0 <- ceiling(n*pi0[i]) 
+  n.1 <- n-n.0 
+   
+  for(j in 1:200){
+    sim.data <- c(rnorm(n.1,4,3),rnorm(n.0,0,1))
+    sim.data.p <- 2*pnorm(-abs(sim.data))
+    
+    last.hist[j] <- p.fdr(pvalues=sim.data.p, estim.method = "last.hist")$pi0
+    Meinshausen[j] = p.fdr(pvalues=sim.data.p, estim.method = "Meinshausen")$pi0
+    Jiang[j] = p.fdr(pvalues=sim.data.p, estim.method = "Jiang")$pi0
+    Nettleton[j] = p.fdr(pvalues=sim.data.p, estim.method = "Nettleton")$pi0
+    Pounds[j] = p.fdr(pvalues=sim.data.p, estim.method = "Pounds")$pi0
+    Storey[j] = p.fdr(pvalues=sim.data.p, estim.method = "Storey")$pi0
+      
+  }
+  
+  return.mat43[i,1] <- mean(last.hist, na.rm = TRUE)
+  return.mat43[i,2] <- 1-mean(Meinshausen, na.rm = TRUE)
+  return.mat43[i,3] <- mean(Storey, na.rm = TRUE)
+  return.mat43[i,4] <- mean(Jiang, na.rm = TRUE)
+  return.mat43[i,5] <- mean(Nettleton, na.rm = TRUE)
+  return.mat43[i,6] <- mean(Pounds, na.rm = TRUE)
+} 
+```
+
+### Plots
+
+```{r}
+par(pty="s",mar=c(2,2,2,2), mfrow=c(4,3), mai=c(.3,.3,.3,.3))
+mypalette<-rainbow(6)
+
+plot(pi0, pi0, type="l",main="Alt N(1,3)", ylab="", xlab="", lwd=2)
+lines(pi0, return.mat13[,1], col=mypalette[1], lwd=2)
+lines(pi0, return.mat13[,2], col=mypalette[2], lwd=2)
+lines(pi0, return.mat13[,3], col=mypalette[3], lwd=2)
+lines(pi0, return.mat13[,4], col=mypalette[4], lwd=2)
+lines(pi0, return.mat13[,5], col=mypalette[5], lwd=2)
+lines(pi0, return.mat13[,6], col=mypalette[6], lwd=2)
+lines(pi0, return.mat13[,1], col=mypalette[1], lwd=2)
+
+plot(pi0, pi0, type="l",main="Alt N(2,3)", ylab="", xlab="", lwd=2)
+lines(pi0, return.mat23[,1], col=mypalette[1], lty=1,lwd=2)
+lines(pi0, return.mat23[,2], col=mypalette[2],lty=1, lwd=2)
+lines(pi0, return.mat23[,3], col=mypalette[3],lty=1, lwd=2)
+lines(pi0, return.mat23[,4], col=mypalette[4],lty=1, lwd=2)
+lines(pi0, return.mat23[,5], col=mypalette[5],lty=1, lwd=2)
+lines(pi0, return.mat23[,6], col=mypalette[6],lty=1, lwd=2)
+lines(pi0, return.mat23[,1], col=mypalette[1], lty=1,lwd=2)
+
+plot(pi0, pi0, type="l",main="Alt N(4,3)", ylab="", xlab="", lwd=2)
+lines(pi0, return.mat43[,1], col=mypalette[1],lty=1,lwd=2)
+lines(pi0, return.mat43[,2], col=mypalette[2],lty=1, lwd=2)
+lines(pi0, return.mat43[,3], col=mypalette[3],lty=1, lwd=2)
+lines(pi0, return.mat43[,4], col=mypalette[4],lty=1, lwd=2)
+lines(pi0, return.mat43[,5], col=mypalette[5],lty=1, lwd=2)
+lines(pi0, return.mat43[,6], col=mypalette[6],lty=1, lwd=2)
+lines(pi0, return.mat43[,1], col=mypalette[1],lty=1,lwd=2)
+
+plot(pi0, pi0, type="l",main="Alt N(1,1)", ylab="", xlab="", lwd=2)
+lines(pi0, return.mat1[,1], col=mypalette[1], lwd=2)
+lines(pi0, return.mat1[,2], col=mypalette[2], lwd=2)
+lines(pi0, return.mat1[,3], col=mypalette[3], lwd=2)
+lines(pi0, return.mat1[,4], col=mypalette[4], lwd=2)
+lines(pi0, return.mat1[,5], col=mypalette[5], lwd=2)
+lines(pi0, return.mat1[,6], col=mypalette[6], lwd=2)
+lines(pi0, return.mat1[,1], col=mypalette[1], lwd=2)
+
+plot(pi0, pi0, type="l",main="Alt N(2,1)", ylab="", xlab="", lwd=2)
+lines(pi0, return.mat2[,1], col=mypalette[1], lty=1,lwd=2)
+lines(pi0, return.mat2[,2], col=mypalette[2],lty=1, lwd=2)
+lines(pi0, return.mat2[,3], col=mypalette[3],lty=1, lwd=2)
+lines(pi0, return.mat2[,4], col=mypalette[4],lty=1, lwd=2)
+lines(pi0, return.mat2[,5], col=mypalette[5],lty=1, lwd=2)
+lines(pi0, return.mat2[,6], col=mypalette[6],lty=1, lwd=2)
+lines(pi0, return.mat2[,1], col=mypalette[1], lty=1,lwd=2)
+
+plot(pi0, pi0, type="l",main="Alt N(4,1)", ylab="", xlab="", lwd=2)
+lines(pi0, return.mat4[,1], col=mypalette[1], lty=1,lwd=2)
+lines(pi0, return.mat4[,2], col=mypalette[2],lty=1, lwd=2)
+lines(pi0, return.mat4[,3], col=mypalette[3],lty=1, lwd=2)
+lines(pi0, return.mat4[,4], col=mypalette[4],lty=1, lwd=2)
+lines(pi0, return.mat4[,5], col=mypalette[5],lty=1, lwd=2)
+lines(pi0, return.mat4[,6], col=mypalette[6],lty=1, lwd=2)
+lines(pi0, return.mat4[,1], col=mypalette[1], lty=1,lwd=2)
+
+plot(pi0, pi0, type="l",main="Alt N(1,0.5)", ylab="", xlab="", lwd=2)
+lines(pi0, return.mat1.5[,1], col=mypalette[1], lwd=2)
+lines(pi0, return.mat1.5[,2], col=mypalette[2], lwd=2)
+lines(pi0, return.mat1.5[,3], col=mypalette[3], lwd=2)
+lines(pi0, return.mat1.5[,4], col=mypalette[4], lwd=2)
+lines(pi0, return.mat1.5[,5], col=mypalette[5], lwd=2)
+lines(pi0, return.mat1.5[,6], col=mypalette[6], lwd=2)
+lines(pi0, return.mat1.5[,1], col=mypalette[1], lwd=2)
+
+plot(pi0, pi0, type="l",main="Alt N(2,0.5)", ylab="", xlab="", lwd=2)
+lines(pi0, return.mat2.5[,1], col=mypalette[1], lty=1,lwd=2)
+lines(pi0, return.mat2.5[,2], col=mypalette[2],lty=1, lwd=2)
+lines(pi0, return.mat2.5[,3], col=mypalette[3],lty=1, lwd=2)
+lines(pi0, return.mat2.5[,4], col=mypalette[4],lty=1, lwd=2)
+lines(pi0, return.mat2.5[,5], col=mypalette[5],lty=1, lwd=2)
+lines(pi0, return.mat2.5[,6], col=mypalette[6],lty=1, lwd=2)
+lines(pi0, return.mat2.5[,1], col=mypalette[1], lty=1,lwd=2)
+
+plot(pi0, pi0, type="l",main="Alt N(4,0.5)", ylab="", xlab="", lwd=2)
+lines(pi0, return.mat4.5[,1], col=mypalette[1], lty=1,lwd=2)
+lines(pi0, return.mat4.5[,2], col=mypalette[2],lty=1, lwd=2)
+lines(pi0, return.mat4.5[,3], col=mypalette[3],lty=1, lwd=2)
+lines(pi0, return.mat4.5[,4], col=mypalette[4],lty=1, lwd=2)
+lines(pi0, return.mat4.5[,5], col=mypalette[5],lty=1, lwd=2)
+lines(pi0, return.mat4.5[,6], col=mypalette[6],lty=1, lwd=2)
+lines(pi0, return.mat4.5[,1], col=mypalette[1], lty=1,lwd=2)
+
+plot(pi0, pi0, type="l",main="Alt N(1,0.1)", ylab="", xlab="", lwd=2)
+lines(pi0, return.mat0.1[,1], col=mypalette[1], lty=1,lwd=2)
+lines(pi0, return.mat0.1[,2], col=mypalette[2],lty=1, lwd=2)
+lines(pi0, return.mat0.1[,3], col=mypalette[3],lty=1, lwd=2)
+lines(pi0, return.mat0.1[,4], col=mypalette[4],lty=1, lwd=2)
+lines(pi0, return.mat0.1[,5], col=mypalette[5],lty=1, lwd=2)
+lines(pi0, return.mat0.1[,6], col=mypalette[6],lty=1, lwd=2)
+lines(pi0, return.mat0.1[,1], col=mypalette[1], lty=1,lwd=2)
+
+plot(pi0, pi0, type="l",main="Alt N(2,0.1)", ylab="", xlab="", lwd=2)
+lines(pi0, return.mat0.2[,1], col=mypalette[1], lty=1,lwd=2)
+lines(pi0, return.mat0.2[,2], col=mypalette[2],lty=1, lwd=2)
+lines(pi0, return.mat0.2[,3], col=mypalette[3],lty=1, lwd=2)
+lines(pi0, return.mat0.2[,4], col=mypalette[4],lty=1, lwd=2)
+lines(pi0, return.mat0.2[,5], col=mypalette[5],lty=1, lwd=2)
+lines(pi0, return.mat0.2[,6], col=mypalette[6],lty=1, lwd=2)
+lines(pi0, return.mat0.2[,1], col=mypalette[1], lty=1,lwd=2)
+
+plot(pi0, pi0, type="l",main="Alt N(4,0.1)", ylab="", xlab="", lwd=2)
+lines(pi0, return.mat0.4[,1], col=mypalette[1], lty=1,lwd=2)
+lines(pi0, return.mat0.4[,2], col=mypalette[2],lty=1, lwd=2)
+lines(pi0, return.mat0.4[,3], col=mypalette[3],lty=1, lwd=2)
+lines(pi0, return.mat0.4[,4], col=mypalette[4],lty=1, lwd=2)
+lines(pi0, return.mat0.4[,5], col=mypalette[5],lty=1, lwd=2)
+lines(pi0, return.mat0.4[,6], col=mypalette[6],lty=1, lwd=2)
+lines(pi0, return.mat0.4[,1], col=mypalette[1], lty=1,lwd=2)
+```
+
+```{r}
+par(pty="s",mar=c(2,2,2,2), mfrow=c(4,3), mai=c(.3,.3,.3,.3))
+plot(pi0, (pi0-pi0)^2, type="n", ylim=c(0, 0.2), main="Alt N(1,3)", ylab="", xlab="")
+lines(pi0, (return.mat13[,1]-pi0)^2, col=mypalette[1], lwd=2)
+lines(pi0, (return.mat13[,2]-pi0)^2, col=mypalette[2], lwd=2)
+lines(pi0, (return.mat13[,3]-pi0)^2, col=mypalette[3], lwd=2)
+lines(pi0, (return.mat13[,4]-pi0)^2, col=mypalette[4], lwd=2)
+lines(pi0, (return.mat13[,5]-pi0)^2, col=mypalette[5], lwd=2)
+lines(pi0, (return.mat13[,6]-pi0)^2, col=mypalette[6], lwd=2)
+lines(pi0, (return.mat13[,1]-pi0)^2, col=mypalette[1], lwd=2)
+
+
+plot(pi0, (pi0-pi0)^2, type="n", ylim=c(0, 0.2), main="Alt N(2,3)", ylab="", xlab="")
+lines(pi0, (return.mat23[,1]-pi0)^2, col=mypalette[1],lty=1, lwd=2)
+lines(pi0, (return.mat23[,2]-pi0)^2, col=mypalette[2],lty=1, lwd=2)
+lines(pi0, (return.mat23[,3]-pi0)^2, col=mypalette[3],lty=1, lwd=2)
+lines(pi0, (return.mat23[,4]-pi0)^2, col=mypalette[4],lty=1, lwd=2)
+lines(pi0, (return.mat23[,5]-pi0)^2, col=mypalette[5],lty=1, lwd=2)
+lines(pi0, (return.mat23[,6]-pi0)^2, col=mypalette[6],lty=1, lwd=2)
+lines(pi0, (return.mat23[,1]-pi0)^2, col=mypalette[1],lty=1, lwd=2)
+
+plot(pi0, (pi0-pi0)^2, type="n", ylim=c(0, 0.2), main="Alt N(4,3)", ylab="", xlab="")
+lines(pi0, (return.mat43[,1]-pi0)^2, col=mypalette[1],lty=1, lwd=2)
+lines(pi0, (return.mat43[,2]-pi0)^2, col=mypalette[2],lty=1, lwd=2)
+lines(pi0, (return.mat43[,3]-pi0)^2, col=mypalette[3],lty=1, lwd=2)
+lines(pi0, (return.mat43[,4]-pi0)^2, col=mypalette[4],lty=1, lwd=2)
+lines(pi0, (return.mat43[,5]-pi0)^2, col=mypalette[5],lty=1, lwd=2)
+lines(pi0, (return.mat43[,6]-pi0)^2, col=mypalette[6],lty=1, lwd=2)
+lines(pi0, (return.mat43[,1]-pi0)^2, col=mypalette[1],lty=1, lwd=2)
+
+plot(pi0, (pi0-pi0)^2, type="n", ylim=c(0, 0.2), main="Alt N(1,1)", ylab="", xlab="")
+lines(pi0, (return.mat1[,1]-pi0)^2, col=mypalette[1], lwd=2)
+lines(pi0, (return.mat1[,2]-pi0)^2, col=mypalette[2], lwd=2)
+lines(pi0, (return.mat1[,3]-pi0)^2, col=mypalette[3], lwd=2)
+lines(pi0, (return.mat1[,4]-pi0)^2, col=mypalette[4], lwd=2)
+lines(pi0, (return.mat1[,5]-pi0)^2, col=mypalette[5], lwd=2)
+lines(pi0, (return.mat1[,6]-pi0)^2, col=mypalette[6], lwd=2)
+lines(pi0, (return.mat1[,1]-pi0)^2, col=mypalette[1], lwd=2)
+
+plot(pi0, (pi0-pi0)^2, type="n", ylim=c(0, 0.2), main="Alt N(2,1)", ylab="", xlab="")
+lines(pi0, (return.mat2[,1]-pi0)^2, col=mypalette[1],lty=1, lwd=2)
+lines(pi0, (return.mat2[,2]-pi0)^2, col=mypalette[2],lty=1, lwd=2)
+lines(pi0, (return.mat2[,3]-pi0)^2, col=mypalette[3],lty=1, lwd=2)
+lines(pi0, (return.mat2[,4]-pi0)^2, col=mypalette[4],lty=1, lwd=2)
+lines(pi0, (return.mat2[,5]-pi0)^2, col=mypalette[5],lty=1, lwd=2)
+lines(pi0, (return.mat2[,6]-pi0)^2, col=mypalette[6],lty=1, lwd=2)
+lines(pi0, (return.mat2[,1]-pi0)^2, col=mypalette[1],lty=1, lwd=2)
+
+plot(pi0, (pi0-pi0)^2, type="n", ylim=c(0, 0.2), main="Alt N(4,1)", ylab="", xlab="")
+lines(pi0, (return.mat4[,1]-pi0)^2, col=mypalette[1],lty=1, lwd=2)
+lines(pi0, (return.mat4[,2]-pi0)^2, col=mypalette[2],lty=1, lwd=2)
+lines(pi0, (return.mat4[,3]-pi0)^2, col=mypalette[3],lty=1, lwd=2)
+lines(pi0, (return.mat4[,4]-pi0)^2, col=mypalette[4],lty=1, lwd=2)
+lines(pi0, (return.mat4[,5]-pi0)^2, col=mypalette[5],lty=1, lwd=2)
+lines(pi0, (return.mat4[,6]-pi0)^2, col=mypalette[6],lty=1, lwd=2)
+lines(pi0, (return.mat4[,1]-pi0)^2, col=mypalette[1],lty=1, lwd=2)
+
+plot(pi0, (pi0-pi0)^2, type="n", ylim=c(0, 0.2), main="Alt N(1,0.5)", ylab="", xlab="")
+lines(pi0, (return.mat1.5[,1]-pi0)^2, col=mypalette[1], lwd=2)
+lines(pi0, (return.mat1.5[,2]-pi0)^2, col=mypalette[2], lwd=2)
+lines(pi0, (return.mat1.5[,3]-pi0)^2, col=mypalette[3], lwd=2)
+lines(pi0, (return.mat1.5[,4]-pi0)^2, col=mypalette[4], lwd=2)
+lines(pi0, (return.mat1.5[,5]-pi0)^2, col=mypalette[5], lwd=2)
+lines(pi0, (return.mat1.5[,6]-pi0)^2, col=mypalette[6], lwd=2)
+lines(pi0, (return.mat1.5[,1]-pi0)^2, col=mypalette[1], lwd=2)
+
+plot(pi0, (pi0-pi0)^2, type="n", ylim=c(0, 0.2), main="Alt N(2,0.5)", ylab="", xlab="")
+lines(pi0, (return.mat2.5[,1]-pi0)^2, col=mypalette[1],lty=1, lwd=2)
+lines(pi0, (return.mat2.5[,2]-pi0)^2, col=mypalette[2],lty=1, lwd=2)
+lines(pi0, (return.mat2.5[,3]-pi0)^2, col=mypalette[3],lty=1, lwd=2)
+lines(pi0, (return.mat2.5[,4]-pi0)^2, col=mypalette[4],lty=1, lwd=2)
+lines(pi0, (return.mat2.5[,5]-pi0)^2, col=mypalette[5],lty=1, lwd=2)
+lines(pi0, (return.mat2.5[,6]-pi0)^2, col=mypalette[6],lty=1, lwd=2)
+lines(pi0, (return.mat2.5[,1]-pi0)^2, col=mypalette[1],lty=1, lwd=2)
+
+plot(pi0, (pi0-pi0)^2, type="n", ylim=c(0, 0.2), main="Alt N(4,0.5)", ylab="", xlab="")
+lines(pi0, (return.mat4.5[,1]-pi0)^2, col=mypalette[1],lty=1, lwd=2)
+lines(pi0, (return.mat4.5[,2]-pi0)^2, col=mypalette[2],lty=1, lwd=2)
+lines(pi0, (return.mat4.5[,3]-pi0)^2, col=mypalette[3],lty=1, lwd=2)
+lines(pi0, (return.mat4.5[,4]-pi0)^2, col=mypalette[4],lty=1, lwd=2)
+lines(pi0, (return.mat4.5[,5]-pi0)^2, col=mypalette[5],lty=1, lwd=2)
+lines(pi0, (return.mat4.5[,6]-pi0)^2, col=mypalette[6],lty=1, lwd=2)
+lines(pi0, (return.mat4.5[,1]-pi0)^2, col=mypalette[1],lty=1, lwd=2)
+
+plot(pi0, (pi0-pi0)^2, type="n", ylim=c(0, 0.2), main="Alt N(1,0.1)", ylab="", xlab="")
+lines(pi0, (return.mat0.1[,1]-pi0)^2, col=mypalette[1],lty=1, lwd=2)
+lines(pi0, (return.mat0.1[,2]-pi0)^2, col=mypalette[2],lty=1, lwd=2)
+lines(pi0, (return.mat0.1[,3]-pi0)^2, col=mypalette[3],lty=1, lwd=2)
+lines(pi0, (return.mat0.1[,4]-pi0)^2, col=mypalette[4],lty=1, lwd=2)
+lines(pi0, (return.mat0.1[,5]-pi0)^2, col=mypalette[5],lty=1, lwd=2)
+lines(pi0, (return.mat0.1[,6]-pi0)^2, col=mypalette[6],lty=1, lwd=2)
+lines(pi0, (return.mat0.1[,1]-pi0)^2, col=mypalette[1],lty=1, lwd=2)
+
+plot(pi0, (pi0-pi0)^2, type="n", ylim=c(0, 0.2), main="Alt N(2,0.1)", ylab="", xlab="")
+lines(pi0, (return.mat0.2[,1]-pi0)^2, col=mypalette[1],lty=1, lwd=2)
+lines(pi0, (return.mat0.2[,2]-pi0)^2, col=mypalette[2],lty=1, lwd=2)
+lines(pi0, (return.mat0.2[,3]-pi0)^2, col=mypalette[3],lty=1, lwd=2)
+lines(pi0, (return.mat0.2[,4]-pi0)^2, col=mypalette[4],lty=1, lwd=2)
+lines(pi0, (return.mat0.2[,5]-pi0)^2, col=mypalette[5],lty=1, lwd=2)
+lines(pi0, (return.mat0.2[,6]-pi0)^2, col=mypalette[6],lty=1, lwd=2)
+lines(pi0, (return.mat0.2[,1]-pi0)^2, col=mypalette[1],lty=1, lwd=2)
+
+plot(pi0, (pi0-pi0)^2, type="n", ylim=c(0, 0.2), main="Alt N(4,0.1)", ylab="", xlab="")
+lines(pi0, (return.mat0.4[,1]-pi0)^2, col=mypalette[1],lty=1, lwd=2)
+lines(pi0, (return.mat0.4[,2]-pi0)^2, col=mypalette[2],lty=1, lwd=2)
+lines(pi0, (return.mat0.4[,3]-pi0)^2, col=mypalette[3],lty=1, lwd=2)
+lines(pi0, (return.mat0.4[,4]-pi0)^2, col=mypalette[4],lty=1, lwd=2)
+lines(pi0, (return.mat0.4[,5]-pi0)^2, col=mypalette[5],lty=1, lwd=2)
+lines(pi0, (return.mat0.4[,6]-pi0)^2, col=mypalette[6],lty=1, lwd=2)
+lines(pi0, (return.mat0.4[,1]-pi0)^2, col=mypalette[1],lty=1, lwd=2)
+```
+
+## n=100
+
+```{r " med sample 41",cache=TRUE}
+pi0 = seq(0,1, by=0.025)  
+n <- 100
+return.mat4 = matrix(NA, ncol=10, nrow=length(pi0))
+last.hist = NA
+Meinshausen = NA
+Storey = NA
+Jiang = NA
+Nettleton = NA
+Pounds = NA 
+
+for(i in 1:length(pi0)){
+  pi1 <- 1-pi0[i]
+  n.0 <- ceiling(n*pi0[i]) 
+  n.1 <- n-n.0 
+   
+  for(j in 1:200){
+    sim.data <- c(rnorm(n.1,4,1),rnorm(n.0,0,1))
+    sim.data.p <- 2*pnorm(-abs(sim.data))
+    
+    last.hist[j] <- p.fdr(pvalues=sim.data.p, estim.method = "last.hist")$pi0
+    Meinshausen[j] = p.fdr(pvalues=sim.data.p, estim.method = "Meinshausen")$pi0
+    Jiang[j] = p.fdr(pvalues=sim.data.p, estim.method = "Jiang")$pi0
+    Nettleton[j] = p.fdr(pvalues=sim.data.p, estim.method = "Nettleton")$pi0
+    Pounds[j] = p.fdr(pvalues=sim.data.p, estim.method = "Pounds")$pi0
+    Storey[j] = p.fdr(pvalues=sim.data.p, estim.method = "Storey")$pi0
+      
+  }
+  
+  return.mat4[i,1] <- mean(last.hist, na.rm = TRUE)
+  return.mat4[i,2] <- 1-mean(Meinshausen, na.rm = TRUE)
+  return.mat4[i,3] <- mean(Storey, na.rm = TRUE)
+  return.mat4[i,4] <- mean(Jiang, na.rm = TRUE)
+  return.mat4[i,5] <- mean(Nettleton, na.rm = TRUE)
+  return.mat4[i,6] <- mean(Pounds, na.rm = TRUE)
+
+} 
+```
+
+```{r " med sample 21",cache=TRUE}
+pi0 = seq(0,1, by=0.025)  
+return.mat2 = matrix(NA, ncol=10, nrow=length(pi0))
+last.hist = NA
+Meinshausen = NA 
+Storey = NA
+Jiang = NA
+Nettleton = NA
+Pounds = NA 
+
+for(i in 1:length(pi0)){
+  pi1 <- 1-pi0[i]
+  n.0 <- ceiling(n*pi0[i]) 
+  n.1 <- n-n.0 
+   
+  for(j in 1:200){
+    sim.data <- c(rnorm(n.1,2,1),rnorm(n.0,0,1))
+    sim.data.p <- 2*pnorm(-abs(sim.data))
+
+    last.hist[j] <- p.fdr(pvalues=sim.data.p, estim.method = "last.hist")$pi0
+    Meinshausen[j] = p.fdr(pvalues=sim.data.p, estim.method = "Meinshausen")$pi0
+    Jiang[j] = p.fdr(pvalues=sim.data.p, estim.method = "Jiang")$pi0
+    Nettleton[j] = p.fdr(pvalues=sim.data.p, estim.method = "Nettleton")$pi0
+    Pounds[j] = p.fdr(pvalues=sim.data.p, estim.method = "Pounds")$pi0
+    Storey[j] = p.fdr(pvalues=sim.data.p, estim.method = "Storey")$pi0
+      
+  }
+  
+  return.mat2[i,1] <- mean(last.hist, na.rm = TRUE)
+  return.mat2[i,2] <- 1-mean(Meinshausen, na.rm = TRUE)
+  return.mat2[i,3] <- mean(Storey, na.rm = TRUE)
+  return.mat2[i,4] <- mean(Jiang, na.rm = TRUE)
+  return.mat2[i,5] <- mean(Nettleton, na.rm = TRUE)
+  return.mat2[i,6] <- mean(Pounds, na.rm = TRUE)
+} 
+```
+
+
+```{r " med sample 11",cache=TRUE}
+pi0 = seq(0,1, by=0.025)  
+return.mat1 = matrix(NA, ncol=10, nrow=length(pi0))
+last.hist = NA
+Meinshausen = NA
+Storey = NA
+Jiang = NA
+Nettleton = NA
+Pounds = NA 
+
+for(i in 1:length(pi0)){
+  pi1 <- 1-pi0[i]
+  n.0 <- ceiling(n*pi0[i]) 
+  n.1 <- n-n.0 
+   
+  for(j in 1:200){
+    sim.data <- c(rnorm(n.1,1,1),rnorm(n.0,0,1))
+    sim.data.p <- 2*pnorm(-abs(sim.data))
+    
+    last.hist[j] <- p.fdr(pvalues=sim.data.p, estim.method = "last.hist")$pi0
+    Meinshausen[j] = p.fdr(pvalues=sim.data.p, estim.method = "Meinshausen")$pi0
+    Jiang[j] = p.fdr(pvalues=sim.data.p, estim.method = "Jiang")$pi0
+    Nettleton[j] = p.fdr(pvalues=sim.data.p, estim.method = "Nettleton")$pi0
+    Pounds[j] = p.fdr(pvalues=sim.data.p, estim.method = "Pounds")$pi0
+    Storey[j] = p.fdr(pvalues=sim.data.p, estim.method = "Storey")$pi0
+      
+  }
+  
+  return.mat1[i,1] <- mean(last.hist, na.rm = TRUE)
+  return.mat1[i,2] <- 1-mean(Meinshausen, na.rm = TRUE)
+  return.mat1[i,3] <- mean(Storey, na.rm = TRUE)
+  return.mat1[i,4] <- mean(Jiang, na.rm = TRUE)
+  return.mat1[i,5] <- mean(Nettleton, na.rm = TRUE)
+  return.mat1[i,6] <- mean(Pounds, na.rm = TRUE)
+} 
+```
+
+```{r " med sample 1.1",cache=TRUE}
+pi0 = seq(0,1, by=0.025)  
+return.mat0.1 = matrix(NA, ncol=10, nrow=length(pi0))
+last.hist = NA
+Meinshausen = NA
+Storey = NA
+Jiang = NA
+Nettleton = NA
+Pounds = NA 
+
+for(i in 1:length(pi0)){
+  pi1 <- 1-pi0[i]
+  n.0 <- ceiling(n*pi0[i]) 
+  n.1 <- n-n.0 
+   
+  for(j in 1:200){
+    sim.data <- c(rnorm(n.1,1,0.1),rnorm(n.0,0,1))
+    sim.data.p <- 2*pnorm(-abs(sim.data))
+    
+    last.hist[j] <- p.fdr(pvalues=sim.data.p, estim.method = "last.hist")$pi0
+    Meinshausen[j] = p.fdr(pvalues=sim.data.p, estim.method = "Meinshausen")$pi0
+    Jiang[j] = p.fdr(pvalues=sim.data.p, estim.method = "Jiang")$pi0
+    Nettleton[j] = p.fdr(pvalues=sim.data.p, estim.method = "Nettleton")$pi0
+    Pounds[j] = p.fdr(pvalues=sim.data.p, estim.method = "Pounds")$pi0
+    Storey[j] = p.fdr(pvalues=sim.data.p, estim.method = "Storey")$pi0
+      
+  }
+  
+  return.mat0.1[i,1] <- mean(last.hist, na.rm = TRUE)
+  return.mat0.1[i,2] <- 1-mean(Meinshausen, na.rm = TRUE)
+  return.mat0.1[i,3] <- mean(Storey, na.rm = TRUE)
+  return.mat0.1[i,4] <- mean(Jiang, na.rm = TRUE)
+  return.mat0.1[i,5] <- mean(Nettleton, na.rm = TRUE)
+  return.mat0.1[i,6] <- mean(Pounds, na.rm = TRUE)
+} 
+```
+
+```{r " med sample 2.1",cache=TRUE}
+pi0 = seq(0,1, by=0.025)  
+return.mat0.2 = matrix(NA, ncol=10, nrow=length(pi0))
+last.hist = NA
+Meinshausen = NA
+Storey = NA
+Jiang = NA
+Nettleton = NA
+Pounds = NA 
+
+for(i in 1:length(pi0)){
+  pi1 <- 1-pi0[i]
+  n.0 <- ceiling(n*pi0[i]) 
+  n.1 <- n-n.0 
+   
+  for(j in 1:200){
+    sim.data <- c(rnorm(n.1,2,0.1),rnorm(n.0,0,1))
+    sim.data.p <- 2*pnorm(-abs(sim.data))
+  
+    last.hist[j] <- p.fdr(pvalues=sim.data.p, estim.method = "last.hist")$pi0
+    Meinshausen[j] = p.fdr(pvalues=sim.data.p, estim.method = "Meinshausen")$pi0
+    Jiang[j] = p.fdr(pvalues=sim.data.p, estim.method = "Jiang")$pi0
+    Nettleton[j] = p.fdr(pvalues=sim.data.p, estim.method = "Nettleton")$pi0
+    Pounds[j] = p.fdr(pvalues=sim.data.p, estim.method = "Pounds")$pi0
+    Storey[j] = p.fdr(pvalues=sim.data.p, estim.method = "Storey")$pi0
+      
+  }
+   
+  return.mat0.2[i,1] <- mean(last.hist, na.rm = TRUE)
+  return.mat0.2[i,2] <- 1-mean(Meinshausen, na.rm = TRUE)
+  return.mat0.2[i,3] <- mean(Storey, na.rm = TRUE)
+  return.mat0.2[i,4] <- mean(Jiang, na.rm = TRUE)
+  return.mat0.2[i,5] <- mean(Nettleton, na.rm = TRUE)
+  return.mat0.2[i,6] <- mean(Pounds, na.rm = TRUE)
+} 
+```
+
+```{r " med sample 4.1",cache=TRUE}
+pi0 = seq(0,1, by=0.025)  
+return.mat0.4 = matrix(NA, ncol=10, nrow=length(pi0))
+last.hist = NA
+Meinshausen = NA
+Storey = NA
+Jiang = NA
+Nettleton = NA
+Pounds = NA 
+
+for(i in 1:length(pi0)){
+  pi1 <- 1-pi0[i]
+  n.0 <- ceiling(n*pi0[i]) 
+  n.1 <- n-n.0 
+   
+  for(j in 1:200){
+    sim.data <- c(rnorm(n.1,4,0.1),rnorm(n.0,0,1))
+    sim.data.p <- 2*pnorm(-abs(sim.data))
+    
+    last.hist[j] <- p.fdr(pvalues=sim.data.p, estim.method = "last.hist")$pi0
+    Meinshausen[j] = p.fdr(pvalues=sim.data.p, estim.method = "Meinshausen")$pi0
+    Jiang[j] = p.fdr(pvalues=sim.data.p, estim.method = "Jiang")$pi0
+    Nettleton[j] = p.fdr(pvalues=sim.data.p, estim.method = "Nettleton")$pi0
+    Pounds[j] = p.fdr(pvalues=sim.data.p, estim.method = "Pounds")$pi0
+    Storey[j] = p.fdr(pvalues=sim.data.p, estim.method = "Storey")$pi0
+      
+  }
+  
+  return.mat0.4[i,1] <- mean(last.hist, na.rm = TRUE)
+  return.mat0.4[i,2] <- 1-mean(Meinshausen, na.rm = TRUE)
+  return.mat0.4[i,3] <- mean(Storey, na.rm = TRUE)
+  return.mat0.4[i,4] <- mean(Jiang, na.rm = TRUE)
+  return.mat0.4[i,5] <- mean(Nettleton, na.rm = TRUE)
+  return.mat0.4[i,6] <- mean(Pounds, na.rm = TRUE)
+} 
+```
+
+```{r " med sample 1.5",cache=TRUE}
+pi0 = seq(0,1, by=0.025)  
+return.mat1.5 = matrix(NA, ncol=10, nrow=length(pi0))
+last.hist = NA
+Meinshausen = NA
+Storey = NA
+Jiang = NA
+Nettleton = NA
+Pounds = NA 
+
+for(i in 1:length(pi0)){
+  pi1 <- 1-pi0[i]
+  n.0 <- ceiling(n*pi0[i]) 
+  n.1 <- n-n.0 
+   
+  for(j in 1:200){
+    sim.data <- c(rnorm(n.1,1,0.5),rnorm(n.0,0,1))
+    sim.data.p <- 2*pnorm(-abs(sim.data))
+    
+    last.hist[j] <- p.fdr(pvalues=sim.data.p, estim.method = "last.hist")$pi0
+    Meinshausen[j] = p.fdr(pvalues=sim.data.p, estim.method = "Meinshausen")$pi0
+    Jiang[j] = p.fdr(pvalues=sim.data.p, estim.method = "Jiang")$pi0
+    Nettleton[j] = p.fdr(pvalues=sim.data.p, estim.method = "Nettleton")$pi0
+    Pounds[j] = p.fdr(pvalues=sim.data.p, estim.method = "Pounds")$pi0
+    Storey[j] = p.fdr(pvalues=sim.data.p, estim.method = "Storey")$pi0
+      
+  }
+  
+  return.mat1.5[i,1] <- mean(last.hist, na.rm = TRUE)
+  return.mat1.5[i,2] <- 1-mean(Meinshausen, na.rm = TRUE)
+  return.mat1.5[i,3] <- mean(Storey, na.rm = TRUE)
+  return.mat1.5[i,4] <- mean(Jiang, na.rm = TRUE)
+  return.mat1.5[i,5] <- mean(Nettleton, na.rm = TRUE)
+  return.mat1.5[i,6] <- mean(Pounds, na.rm = TRUE)
+} 
+```
+
+
+```{r " med sample 2.5",cache=TRUE}
+pi0 = seq(0,1, by=0.025)  
+return.mat2.5 = matrix(NA, ncol=10, nrow=length(pi0))
+last.hist = NA
+Meinshausen = NA
+Storey = NA
+Jiang = NA
+Nettleton = NA
+Pounds = NA 
+
+for(i in 1:length(pi0)){
+  pi1 <- 1-pi0[i]
+  n.0 <- ceiling(n*pi0[i]) 
+  n.1 <- n-n.0 
+   
+  for(j in 1:200){
+    sim.data <- c(rnorm(n.1,2,0.5),rnorm(n.0,0,1))
+    sim.data.p <- 2*pnorm(-abs(sim.data))
+    
+    last.hist[j] <- p.fdr(pvalues=sim.data.p, estim.method = "last.hist")$pi0
+    Meinshausen[j] = p.fdr(pvalues=sim.data.p, estim.method = "Meinshausen")$pi0
+    Jiang[j] = p.fdr(pvalues=sim.data.p, estim.method = "Jiang")$pi0
+    Nettleton[j] = p.fdr(pvalues=sim.data.p, estim.method = "Nettleton")$pi0
+    Pounds[j] = p.fdr(pvalues=sim.data.p, estim.method = "Pounds")$pi0
+    Storey[j] = p.fdr(pvalues=sim.data.p, estim.method = "Storey")$pi0
+      
+  }
+  
+  return.mat2.5[i,1] <- mean(last.hist, na.rm = TRUE)
+  return.mat2.5[i,2] <- 1-mean(Meinshausen, na.rm = TRUE)
+  return.mat2.5[i,3] <- mean(Storey, na.rm = TRUE)
+  return.mat2.5[i,4] <- mean(Jiang, na.rm = TRUE)
+  return.mat2.5[i,5] <- mean(Nettleton, na.rm = TRUE)
+  return.mat2.5[i,6] <- mean(Pounds, na.rm = TRUE)
+} 
+```
+
+```{r " med sample 4.5",cache=TRUE}
+pi0 = seq(0,1, by=0.025)  
+return.mat4.5 = matrix(NA, ncol=10, nrow=length(pi0))
+last.hist = NA
+Meinshausen = NA
+Storey = NA
+Jiang = NA
+Nettleton = NA
+Pounds = NA 
+
+for(i in 1:length(pi0)){
+  pi1 <- 1-pi0[i]
+  n.0 <- ceiling(n*pi0[i]) 
+  n.1 <- n-n.0 
+   
+  for(j in 1:200){
+    sim.data <- c(rnorm(n.1,4,0.5),rnorm(n.0,0,1))
+    sim.data.p <- 2*pnorm(-abs(sim.data))
+
+    last.hist[j] <- p.fdr(pvalues=sim.data.p, estim.method = "last.hist")$pi0
+    Meinshausen[j] = p.fdr(pvalues=sim.data.p, estim.method = "Meinshausen")$pi0
+    Jiang[j] = p.fdr(pvalues=sim.data.p, estim.method = "Jiang")$pi0
+    Nettleton[j] = p.fdr(pvalues=sim.data.p, estim.method = "Nettleton")$pi0
+    Pounds[j] = p.fdr(pvalues=sim.data.p, estim.method = "Pounds")$pi0
+    Storey[j] = p.fdr(pvalues=sim.data.p, estim.method = "Storey")$pi0
+      
+  }
+  
+  return.mat4.5[i,1] <- mean(last.hist, na.rm = TRUE)
+  return.mat4.5[i,2] <- 1-mean(Meinshausen, na.rm = TRUE)
+  return.mat4.5[i,3] <- mean(Storey, na.rm = TRUE)
+  return.mat4.5[i,4] <- mean(Jiang, na.rm = TRUE)
+  return.mat4.5[i,5] <- mean(Nettleton, na.rm = TRUE)
+  return.mat4.5[i,6] <- mean(Pounds, na.rm = TRUE)
+} 
+```
+
+```{r " med sample 13",cache=TRUE}
+pi0 = seq(0,1, by=0.025)  
+return.mat13 = matrix(NA, ncol=10, nrow=length(pi0))
+last.hist = NA
+Meinshausen = NA
+Storey = NA
+Jiang = NA
+Nettleton = NA
+Pounds = NA 
+
+for(i in 1:length(pi0)){
+  pi1 <- 1-pi0[i]
+  n.0 <- ceiling(n*pi0[i]) 
+  n.1 <- n-n.0 
+   
+  for(j in 1:200){
+    sim.data <- c(rnorm(n.1,1,3),rnorm(n.0,0,1))
+    sim.data.p <- 2*pnorm(-abs(sim.data))
+    
+    last.hist[j] <- p.fdr(pvalues=sim.data.p, estim.method = "last.hist")$pi0
+    Meinshausen[j] = p.fdr(pvalues=sim.data.p, estim.method = "Meinshausen")$pi0
+    Jiang[j] = p.fdr(pvalues=sim.data.p, estim.method = "Jiang")$pi0
+    Nettleton[j] = p.fdr(pvalues=sim.data.p, estim.method = "Nettleton")$pi0
+    Pounds[j] = p.fdr(pvalues=sim.data.p, estim.method = "Pounds")$pi0
+    Storey[j] = p.fdr(pvalues=sim.data.p, estim.method = "Storey")$pi0
+      
+  }
+  
+  return.mat13[i,1] <- mean(last.hist, na.rm = TRUE)
+  return.mat13[i,2] <- 1-mean(Meinshausen, na.rm = TRUE)
+  return.mat13[i,3] <- mean(Storey, na.rm = TRUE)
+  return.mat13[i,4] <- mean(Jiang, na.rm = TRUE)
+  return.mat13[i,5] <- mean(Nettleton, na.rm = TRUE)
+  return.mat13[i,6] <- mean(Pounds, na.rm = TRUE)
+} 
+```
+
+
+```{r " med sample 23",cache=TRUE}
+pi0 = seq(0,1, by=0.025)  
+return.mat23 = matrix(NA, ncol=10, nrow=length(pi0))
+last.hist = NA
+Meinshausen = NA
+Storey = NA
+Jiang = NA
+Nettleton = NA
+Pounds = NA 
+
+for(i in 1:length(pi0)){
+  pi1 <- 1-pi0[i]
+  n.0 <- ceiling(n*pi0[i]) 
+  n.1 <- n-n.0 
+   
+  for(j in 1:200){
+    sim.data <- c(rnorm(n.1,2,3),rnorm(n.0,0,1))
+    sim.data.p <- 2*pnorm(-abs(sim.data))
+    
+    last.hist[j] <- p.fdr(pvalues=sim.data.p, estim.method = "last.hist")$pi0
+    Meinshausen[j] = p.fdr(pvalues=sim.data.p, estim.method = "Meinshausen")$pi0
+    Jiang[j] = p.fdr(pvalues=sim.data.p, estim.method = "Jiang")$pi0
+    Nettleton[j] = p.fdr(pvalues=sim.data.p, estim.method = "Nettleton")$pi0
+    Pounds[j] = p.fdr(pvalues=sim.data.p, estim.method = "Pounds")$pi0
+    Storey[j] = p.fdr(pvalues=sim.data.p, estim.method = "Storey")$pi0
+      
+  }
+  
+  return.mat23[i,1] <- mean(last.hist, na.rm = TRUE)
+  return.mat23[i,2] <- 1-mean(Meinshausen, na.rm = TRUE)
+  return.mat23[i,3] <- mean(Storey, na.rm = TRUE)
+  return.mat23[i,4] <- mean(Jiang, na.rm = TRUE)
+  return.mat23[i,5] <- mean(Nettleton, na.rm = TRUE)
+  return.mat23[i,6] <- mean(Pounds, na.rm = TRUE)
+} 
+```
+
+```{r " med sample 43",cache=TRUE}
+pi0 = seq(0,1, by=0.025)  
+return.mat43 = matrix(NA, ncol=10, nrow=length(pi0))
+last.hist = NA
+Meinshausen = NA
+Storey = NA
+Jiang = NA
+Nettleton = NA
+Pounds = NA 
+
+for(i in 1:length(pi0)){
+  pi1 <- 1-pi0[i]
+  n.0 <- ceiling(n*pi0[i]) 
+  n.1 <- n-n.0 
+   
+  for(j in 1:200){
+    sim.data <- c(rnorm(n.1,4,3),rnorm(n.0,0,1))
+    sim.data.p <- 2*pnorm(-abs(sim.data))
+  
+    last.hist[j] <- p.fdr(pvalues=sim.data.p, estim.method = "last.hist")$pi0
+    Meinshausen[j] = p.fdr(pvalues=sim.data.p, estim.method = "Meinshausen")$pi0
+    Jiang[j] = p.fdr(pvalues=sim.data.p, estim.method = "Jiang")$pi0
+    Nettleton[j] = p.fdr(pvalues=sim.data.p, estim.method = "Nettleton")$pi0
+    Pounds[j] = p.fdr(pvalues=sim.data.p, estim.method = "Pounds")$pi0
+    Storey[j] = p.fdr(pvalues=sim.data.p, estim.method = "Storey")$pi0
+      
+  }
+  
+  return.mat43[i,1] <- mean(last.hist, na.rm = TRUE)
+  return.mat43[i,2] <- 1-mean(Meinshausen, na.rm = TRUE)
+  return.mat43[i,3] <- mean(Storey, na.rm = TRUE)
+  return.mat43[i,4] <- mean(Jiang, na.rm = TRUE)
+  return.mat43[i,5] <- mean(Nettleton, na.rm = TRUE)
+  return.mat43[i,6] <- mean(Pounds, na.rm = TRUE)
+} 
+```
+
+### Plots
+
+```{r}
+par(pty="s",mar=c(2,2,2,2), mfrow=c(4,3), mai=c(.3,.3,.3,.3))
+mypalette<-rainbow(6)
+
+plot(pi0, pi0, type="l",main="Alt N(1,3)", ylab="", xlab="", lwd=2)
+lines(pi0, return.mat13[,1], col=mypalette[1], lwd=2)
+lines(pi0, return.mat13[,2], col=mypalette[2], lwd=2)
+lines(pi0, return.mat13[,3], col=mypalette[3], lwd=2)
+lines(pi0, return.mat13[,4], col=mypalette[4], lwd=2)
+lines(pi0, return.mat13[,5], col=mypalette[5], lwd=2)
+lines(pi0, return.mat13[,6], col=mypalette[6], lwd=2)
+lines(pi0, return.mat13[,1], col=mypalette[1], lwd=2)
+
+plot(pi0, pi0, type="l",main="Alt N(2,3)", ylab="", xlab="", lwd=2)
+lines(pi0, return.mat23[,1], col=mypalette[1], lty=1,lwd=2)
+lines(pi0, return.mat23[,2], col=mypalette[2],lty=1, lwd=2)
+lines(pi0, return.mat23[,3], col=mypalette[3],lty=1, lwd=2)
+lines(pi0, return.mat23[,4], col=mypalette[4],lty=1, lwd=2)
+lines(pi0, return.mat23[,5], col=mypalette[5],lty=1, lwd=2)
+lines(pi0, return.mat23[,6], col=mypalette[6],lty=1, lwd=2)
+lines(pi0, return.mat23[,1], col=mypalette[1], lty=1,lwd=2)
+
+plot(pi0, pi0, type="l",main="Alt N(4,3)", ylab="", xlab="", lwd=2)
+lines(pi0, return.mat43[,1], col=mypalette[1],lty=1,lwd=2)
+lines(pi0, return.mat43[,2], col=mypalette[2],lty=1, lwd=2)
+lines(pi0, return.mat43[,3], col=mypalette[3],lty=1, lwd=2)
+lines(pi0, return.mat43[,4], col=mypalette[4],lty=1, lwd=2)
+lines(pi0, return.mat43[,5], col=mypalette[5],lty=1, lwd=2)
+lines(pi0, return.mat43[,6], col=mypalette[6],lty=1, lwd=2)
+lines(pi0, return.mat43[,1], col=mypalette[1],lty=1,lwd=2)
+
+plot(pi0, pi0, type="l",main="Alt N(1,1)", ylab="", xlab="", lwd=2)
+lines(pi0, return.mat1[,1], col=mypalette[1], lwd=2)
+lines(pi0, return.mat1[,2], col=mypalette[2], lwd=2)
+lines(pi0, return.mat1[,3], col=mypalette[3], lwd=2)
+lines(pi0, return.mat1[,4], col=mypalette[4], lwd=2)
+lines(pi0, return.mat1[,5], col=mypalette[5], lwd=2)
+lines(pi0, return.mat1[,6], col=mypalette[6], lwd=2)
+lines(pi0, return.mat1[,1], col=mypalette[1], lwd=2)
+
+plot(pi0, pi0, type="l",main="Alt N(2,1)", ylab="", xlab="", lwd=2)
+lines(pi0, return.mat2[,1], col=mypalette[1], lty=1,lwd=2)
+lines(pi0, return.mat2[,2], col=mypalette[2],lty=1, lwd=2)
+lines(pi0, return.mat2[,3], col=mypalette[3],lty=1, lwd=2)
+lines(pi0, return.mat2[,4], col=mypalette[4],lty=1, lwd=2)
+lines(pi0, return.mat2[,5], col=mypalette[5],lty=1, lwd=2)
+lines(pi0, return.mat2[,6], col=mypalette[6],lty=1, lwd=2)
+lines(pi0, return.mat2[,1], col=mypalette[1], lty=1,lwd=2)
+
+plot(pi0, pi0, type="l",main="Alt N(4,1)", ylab="", xlab="", lwd=2)
+lines(pi0, return.mat4[,1], col=mypalette[1], lty=1,lwd=2)
+lines(pi0, return.mat4[,2], col=mypalette[2],lty=1, lwd=2)
+lines(pi0, return.mat4[,3], col=mypalette[3],lty=1, lwd=2)
+lines(pi0, return.mat4[,4], col=mypalette[4],lty=1, lwd=2)
+lines(pi0, return.mat4[,5], col=mypalette[5],lty=1, lwd=2)
+lines(pi0, return.mat4[,6], col=mypalette[6],lty=1, lwd=2)
+lines(pi0, return.mat4[,1], col=mypalette[1], lty=1,lwd=2)
+
+plot(pi0, pi0, type="l",main="Alt N(1,0.5)", ylab="", xlab="", lwd=2)
+lines(pi0, return.mat1.5[,1], col=mypalette[1], lwd=2)
+lines(pi0, return.mat1.5[,2], col=mypalette[2], lwd=2)
+lines(pi0, return.mat1.5[,3], col=mypalette[3], lwd=2)
+lines(pi0, return.mat1.5[,4], col=mypalette[4], lwd=2)
+lines(pi0, return.mat1.5[,5], col=mypalette[5], lwd=2)
+lines(pi0, return.mat1.5[,6], col=mypalette[6], lwd=2)
+lines(pi0, return.mat1.5[,1], col=mypalette[1], lwd=2)
+
+plot(pi0, pi0, type="l",main="Alt N(2,0.5)", ylab="", xlab="", lwd=2)
+lines(pi0, return.mat2.5[,1], col=mypalette[1], lty=1,lwd=2)
+lines(pi0, return.mat2.5[,2], col=mypalette[2],lty=1, lwd=2)
+lines(pi0, return.mat2.5[,3], col=mypalette[3],lty=1, lwd=2)
+lines(pi0, return.mat2.5[,4], col=mypalette[4],lty=1, lwd=2)
+lines(pi0, return.mat2.5[,5], col=mypalette[5],lty=1, lwd=2)
+lines(pi0, return.mat2.5[,6], col=mypalette[6],lty=1, lwd=2)
+lines(pi0, return.mat2.5[,1], col=mypalette[1], lty=1,lwd=2)
+
+plot(pi0, pi0, type="l",main="Alt N(4,0.5)", ylab="", xlab="", lwd=2)
+lines(pi0, return.mat4.5[,1], col=mypalette[1], lty=1,lwd=2)
+lines(pi0, return.mat4.5[,2], col=mypalette[2],lty=1, lwd=2)
+lines(pi0, return.mat4.5[,3], col=mypalette[3],lty=1, lwd=2)
+lines(pi0, return.mat4.5[,4], col=mypalette[4],lty=1, lwd=2)
+lines(pi0, return.mat4.5[,5], col=mypalette[5],lty=1, lwd=2)
+lines(pi0, return.mat4.5[,6], col=mypalette[6],lty=1, lwd=2)
+lines(pi0, return.mat4.5[,1], col=mypalette[1], lty=1,lwd=2)
+
+plot(pi0, pi0, type="l",main="Alt N(1,0.1)", ylab="", xlab="", lwd=2)
+lines(pi0, return.mat0.1[,1], col=mypalette[1], lty=1,lwd=2)
+lines(pi0, return.mat0.1[,2], col=mypalette[2],lty=1, lwd=2)
+lines(pi0, return.mat0.1[,3], col=mypalette[3],lty=1, lwd=2)
+lines(pi0, return.mat0.1[,4], col=mypalette[4],lty=1, lwd=2)
+lines(pi0, return.mat0.1[,5], col=mypalette[5],lty=1, lwd=2)
+lines(pi0, return.mat0.1[,6], col=mypalette[6],lty=1, lwd=2)
+lines(pi0, return.mat0.1[,1], col=mypalette[1], lty=1,lwd=2)
+
+plot(pi0, pi0, type="l",main="Alt N(2,0.1)", ylab="", xlab="", lwd=2)
+lines(pi0, return.mat0.2[,1], col=mypalette[1], lty=1,lwd=2)
+lines(pi0, return.mat0.2[,2], col=mypalette[2],lty=1, lwd=2)
+lines(pi0, return.mat0.2[,3], col=mypalette[3],lty=1, lwd=2)
+lines(pi0, return.mat0.2[,4], col=mypalette[4],lty=1, lwd=2)
+lines(pi0, return.mat0.2[,5], col=mypalette[5],lty=1, lwd=2)
+lines(pi0, return.mat0.2[,6], col=mypalette[6],lty=1, lwd=2)
+lines(pi0, return.mat0.2[,1], col=mypalette[1], lty=1,lwd=2)
+
+plot(pi0, pi0, type="l",main="Alt N(4,0.1)", ylab="", xlab="", lwd=2)
+lines(pi0, return.mat0.4[,1], col=mypalette[1], lty=1,lwd=2)
+lines(pi0, return.mat0.4[,2], col=mypalette[2],lty=1, lwd=2)
+lines(pi0, return.mat0.4[,3], col=mypalette[3],lty=1, lwd=2)
+lines(pi0, return.mat0.4[,4], col=mypalette[4],lty=1, lwd=2)
+lines(pi0, return.mat0.4[,5], col=mypalette[5],lty=1, lwd=2)
+lines(pi0, return.mat0.4[,6], col=mypalette[6],lty=1, lwd=2)
+lines(pi0, return.mat0.4[,1], col=mypalette[1], lty=1,lwd=2)
+```
+
+```{r}
+par(pty="s",mar=c(2,2,2,2), mfrow=c(4,3), mai=c(.3,.3,.3,.3))
+plot(pi0, (pi0-pi0)^2, type="n", ylim=c(0, 0.2), main="Alt N(1,3)", ylab="", xlab="")
+lines(pi0, (return.mat13[,1]-pi0)^2, col=mypalette[1], lwd=2)
+lines(pi0, (return.mat13[,2]-pi0)^2, col=mypalette[2], lwd=2)
+lines(pi0, (return.mat13[,3]-pi0)^2, col=mypalette[3], lwd=2)
+lines(pi0, (return.mat13[,4]-pi0)^2, col=mypalette[4], lwd=2)
+lines(pi0, (return.mat13[,5]-pi0)^2, col=mypalette[5], lwd=2)
+lines(pi0, (return.mat13[,6]-pi0)^2, col=mypalette[6], lwd=2)
+lines(pi0, (return.mat13[,1]-pi0)^2, col=mypalette[1], lwd=2)
+
+
+plot(pi0, (pi0-pi0)^2, type="n", ylim=c(0, 0.2), main="Alt N(2,3)", ylab="", xlab="")
+lines(pi0, (return.mat23[,1]-pi0)^2, col=mypalette[1],lty=1, lwd=2)
+lines(pi0, (return.mat23[,2]-pi0)^2, col=mypalette[2],lty=1, lwd=2)
+lines(pi0, (return.mat23[,3]-pi0)^2, col=mypalette[3],lty=1, lwd=2)
+lines(pi0, (return.mat23[,4]-pi0)^2, col=mypalette[4],lty=1, lwd=2)
+lines(pi0, (return.mat23[,5]-pi0)^2, col=mypalette[5],lty=1, lwd=2)
+lines(pi0, (return.mat23[,6]-pi0)^2, col=mypalette[6],lty=1, lwd=2)
+lines(pi0, (return.mat23[,1]-pi0)^2, col=mypalette[1],lty=1, lwd=2)
+
+plot(pi0, (pi0-pi0)^2, type="n", ylim=c(0, 0.2), main="Alt N(4,3)", ylab="", xlab="")
+lines(pi0, (return.mat43[,1]-pi0)^2, col=mypalette[1],lty=1, lwd=2)
+lines(pi0, (return.mat43[,2]-pi0)^2, col=mypalette[2],lty=1, lwd=2)
+lines(pi0, (return.mat43[,3]-pi0)^2, col=mypalette[3],lty=1, lwd=2)
+lines(pi0, (return.mat43[,4]-pi0)^2, col=mypalette[4],lty=1, lwd=2)
+lines(pi0, (return.mat43[,5]-pi0)^2, col=mypalette[5],lty=1, lwd=2)
+lines(pi0, (return.mat43[,6]-pi0)^2, col=mypalette[6],lty=1, lwd=2)
+lines(pi0, (return.mat43[,1]-pi0)^2, col=mypalette[1],lty=1, lwd=2)
+
+plot(pi0, (pi0-pi0)^2, type="n", ylim=c(0, 0.2), main="Alt N(1,1)", ylab="", xlab="")
+lines(pi0, (return.mat1[,1]-pi0)^2, col=mypalette[1], lwd=2)
+lines(pi0, (return.mat1[,2]-pi0)^2, col=mypalette[2], lwd=2)
+lines(pi0, (return.mat1[,3]-pi0)^2, col=mypalette[3], lwd=2)
+lines(pi0, (return.mat1[,4]-pi0)^2, col=mypalette[4], lwd=2)
+lines(pi0, (return.mat1[,5]-pi0)^2, col=mypalette[5], lwd=2)
+lines(pi0, (return.mat1[,6]-pi0)^2, col=mypalette[6], lwd=2)
+lines(pi0, (return.mat1[,1]-pi0)^2, col=mypalette[1], lwd=2)
+
+plot(pi0, (pi0-pi0)^2, type="n", ylim=c(0, 0.2), main="Alt N(2,1)", ylab="", xlab="")
+lines(pi0, (return.mat2[,1]-pi0)^2, col=mypalette[1],lty=1, lwd=2)
+lines(pi0, (return.mat2[,2]-pi0)^2, col=mypalette[2],lty=1, lwd=2)
+lines(pi0, (return.mat2[,3]-pi0)^2, col=mypalette[3],lty=1, lwd=2)
+lines(pi0, (return.mat2[,4]-pi0)^2, col=mypalette[4],lty=1, lwd=2)
+lines(pi0, (return.mat2[,5]-pi0)^2, col=mypalette[5],lty=1, lwd=2)
+lines(pi0, (return.mat2[,6]-pi0)^2, col=mypalette[6],lty=1, lwd=2)
+lines(pi0, (return.mat2[,1]-pi0)^2, col=mypalette[1],lty=1, lwd=2)
+
+plot(pi0, (pi0-pi0)^2, type="n", ylim=c(0, 0.2), main="Alt N(4,1)", ylab="", xlab="")
+lines(pi0, (return.mat4[,1]-pi0)^2, col=mypalette[1],lty=1, lwd=2)
+lines(pi0, (return.mat4[,2]-pi0)^2, col=mypalette[2],lty=1, lwd=2)
+lines(pi0, (return.mat4[,3]-pi0)^2, col=mypalette[3],lty=1, lwd=2)
+lines(pi0, (return.mat4[,4]-pi0)^2, col=mypalette[4],lty=1, lwd=2)
+lines(pi0, (return.mat4[,5]-pi0)^2, col=mypalette[5],lty=1, lwd=2)
+lines(pi0, (return.mat4[,6]-pi0)^2, col=mypalette[6],lty=1, lwd=2)
+lines(pi0, (return.mat4[,1]-pi0)^2, col=mypalette[1],lty=1, lwd=2)
+
+plot(pi0, (pi0-pi0)^2, type="n", ylim=c(0, 0.2), main="Alt N(1,0.5)", ylab="", xlab="")
+lines(pi0, (return.mat1.5[,1]-pi0)^2, col=mypalette[1], lwd=2)
+lines(pi0, (return.mat1.5[,2]-pi0)^2, col=mypalette[2], lwd=2)
+lines(pi0, (return.mat1.5[,3]-pi0)^2, col=mypalette[3], lwd=2)
+lines(pi0, (return.mat1.5[,4]-pi0)^2, col=mypalette[4], lwd=2)
+lines(pi0, (return.mat1.5[,5]-pi0)^2, col=mypalette[5], lwd=2)
+lines(pi0, (return.mat1.5[,6]-pi0)^2, col=mypalette[6], lwd=2)
+lines(pi0, (return.mat1.5[,1]-pi0)^2, col=mypalette[1], lwd=2)
+
+plot(pi0, (pi0-pi0)^2, type="n", ylim=c(0, 0.2), main="Alt N(2,0.5)", ylab="", xlab="")
+lines(pi0, (return.mat2.5[,1]-pi0)^2, col=mypalette[1],lty=1, lwd=2)
+lines(pi0, (return.mat2.5[,2]-pi0)^2, col=mypalette[2],lty=1, lwd=2)
+lines(pi0, (return.mat2.5[,3]-pi0)^2, col=mypalette[3],lty=1, lwd=2)
+lines(pi0, (return.mat2.5[,4]-pi0)^2, col=mypalette[4],lty=1, lwd=2)
+lines(pi0, (return.mat2.5[,5]-pi0)^2, col=mypalette[5],lty=1, lwd=2)
+lines(pi0, (return.mat2.5[,6]-pi0)^2, col=mypalette[6],lty=1, lwd=2)
+lines(pi0, (return.mat2.5[,1]-pi0)^2, col=mypalette[1],lty=1, lwd=2)
+
+plot(pi0, (pi0-pi0)^2, type="n", ylim=c(0, 0.2), main="Alt N(4,0.5)", ylab="", xlab="")
+lines(pi0, (return.mat4.5[,1]-pi0)^2, col=mypalette[1],lty=1, lwd=2)
+lines(pi0, (return.mat4.5[,2]-pi0)^2, col=mypalette[2],lty=1, lwd=2)
+lines(pi0, (return.mat4.5[,3]-pi0)^2, col=mypalette[3],lty=1, lwd=2)
+lines(pi0, (return.mat4.5[,4]-pi0)^2, col=mypalette[4],lty=1, lwd=2)
+lines(pi0, (return.mat4.5[,5]-pi0)^2, col=mypalette[5],lty=1, lwd=2)
+lines(pi0, (return.mat4.5[,6]-pi0)^2, col=mypalette[6],lty=1, lwd=2)
+lines(pi0, (return.mat4.5[,1]-pi0)^2, col=mypalette[1],lty=1, lwd=2)
+
+plot(pi0, (pi0-pi0)^2, type="n", ylim=c(0, 0.2), main="Alt N(1,0.1)", ylab="", xlab="")
+lines(pi0, (return.mat0.1[,1]-pi0)^2, col=mypalette[1],lty=1, lwd=2)
+lines(pi0, (return.mat0.1[,2]-pi0)^2, col=mypalette[2],lty=1, lwd=2)
+lines(pi0, (return.mat0.1[,3]-pi0)^2, col=mypalette[3],lty=1, lwd=2)
+lines(pi0, (return.mat0.1[,4]-pi0)^2, col=mypalette[4],lty=1, lwd=2)
+lines(pi0, (return.mat0.1[,5]-pi0)^2, col=mypalette[5],lty=1, lwd=2)
+lines(pi0, (return.mat0.1[,6]-pi0)^2, col=mypalette[6],lty=1, lwd=2)
+lines(pi0, (return.mat0.1[,1]-pi0)^2, col=mypalette[1],lty=1, lwd=2)
+
+plot(pi0, (pi0-pi0)^2, type="n", ylim=c(0, 0.2), main="Alt N(2,0.1)", ylab="", xlab="")
+lines(pi0, (return.mat0.2[,1]-pi0)^2, col=mypalette[1],lty=1, lwd=2)
+lines(pi0, (return.mat0.2[,2]-pi0)^2, col=mypalette[2],lty=1, lwd=2)
+lines(pi0, (return.mat0.2[,3]-pi0)^2, col=mypalette[3],lty=1, lwd=2)
+lines(pi0, (return.mat0.2[,4]-pi0)^2, col=mypalette[4],lty=1, lwd=2)
+lines(pi0, (return.mat0.2[,5]-pi0)^2, col=mypalette[5],lty=1, lwd=2)
+lines(pi0, (return.mat0.2[,6]-pi0)^2, col=mypalette[6],lty=1, lwd=2)
+lines(pi0, (return.mat0.2[,1]-pi0)^2, col=mypalette[1],lty=1, lwd=2)
+
+plot(pi0, (pi0-pi0)^2, type="n", ylim=c(0, 0.2), main="Alt N(4,0.1)", ylab="", xlab="")
+lines(pi0, (return.mat0.4[,1]-pi0)^2, col=mypalette[1],lty=1, lwd=2)
+lines(pi0, (return.mat0.4[,2]-pi0)^2, col=mypalette[2],lty=1, lwd=2)
+lines(pi0, (return.mat0.4[,3]-pi0)^2, col=mypalette[3],lty=1, lwd=2)
+lines(pi0, (return.mat0.4[,4]-pi0)^2, col=mypalette[4],lty=1, lwd=2)
+lines(pi0, (return.mat0.4[,5]-pi0)^2, col=mypalette[5],lty=1, lwd=2)
+lines(pi0, (return.mat0.4[,6]-pi0)^2, col=mypalette[6],lty=1, lwd=2)
+lines(pi0, (return.mat0.4[,1]-pi0)^2, col=mypalette[1],lty=1, lwd=2)
+```
+
+## n=1000
+
+```{r "big sample 41",cache=TRUE}
+pi0 = seq(0,1, by=0.025)  
+n <- 1000
+return.mat4 = matrix(NA, ncol=10, nrow=length(pi0))
+last.hist = NA
+Meinshausen = NA
+Storey = NA
+Jiang = NA
+Nettleton = NA
+Pounds = NA 
+
+for(i in 1:length(pi0)){
+  pi1 <- 1-pi0[i]
+  n.0 <- ceiling(n*pi0[i]) 
+  n.1 <- n-n.0 
+   
+  for(j in 1:200){
+    sim.data <- c(rnorm(n.1,4,1),rnorm(n.0,0,1))
+    sim.data.p <- 2*pnorm(-abs(sim.data))
+  
+    last.hist[j] <- p.fdr(pvalues=sim.data.p, estim.method = "last.hist")$pi0
+    Meinshausen[j] = p.fdr(pvalues=sim.data.p, estim.method = "Meinshausen")$pi0
+    Jiang[j] = p.fdr(pvalues=sim.data.p, estim.method = "Jiang")$pi0
+    Nettleton[j] = p.fdr(pvalues=sim.data.p, estim.method = "Nettleton")$pi0
+    Pounds[j] = p.fdr(pvalues=sim.data.p, estim.method = "Pounds")$pi0
+    Storey[j] = p.fdr(pvalues=sim.data.p, estim.method = "Storey")$pi0
+      
+  }
+  
+  return.mat4[i,1] <- mean(last.hist, na.rm = TRUE)
+  return.mat4[i,2] <- 1-mean(Meinshausen, na.rm = TRUE)
+  return.mat4[i,3] <- mean(Storey, na.rm = TRUE)
+  return.mat4[i,4] <- mean(Jiang, na.rm = TRUE)
+  return.mat4[i,5] <- mean(Nettleton, na.rm = TRUE)
+  return.mat4[i,6] <- mean(Pounds, na.rm = TRUE)
+
+} 
+```
+
+```{r "big sample 21",cache=TRUE}
+pi0 = seq(0,1, by=0.025)  
+return.mat2 = matrix(NA, ncol=10, nrow=length(pi0))
+last.hist = NA
+Meinshausen = NA
+Storey = NA
+Jiang = NA
+Nettleton = NA
+Pounds = NA 
+
+for(i in 1:length(pi0)){
+  pi1 <- 1-pi0[i]
+  n.0 <- ceiling(n*pi0[i]) 
+  n.1 <- n-n.0 
+   
+  for(j in 1:200){
+    sim.data <- c(rnorm(n.1,2,1),rnorm(n.0,0,1))
+    sim.data.p <- 2*pnorm(-abs(sim.data))
+  
+    last.hist[j] <- p.fdr(pvalues=sim.data.p, estim.method = "last.hist")$pi0
+    Meinshausen[j] = p.fdr(pvalues=sim.data.p, estim.method = "Meinshausen")$pi0
+    Jiang[j] = p.fdr(pvalues=sim.data.p, estim.method = "Jiang")$pi0
+    Nettleton[j] = p.fdr(pvalues=sim.data.p, estim.method = "Nettleton")$pi0
+    Pounds[j] = p.fdr(pvalues=sim.data.p, estim.method = "Pounds")$pi0
+    Storey[j] = p.fdr(pvalues=sim.data.p, estim.method = "Storey")$pi0
+      
+  }
+
+  return.mat2[i,1] <- mean(last.hist, na.rm = TRUE)
+  return.mat2[i,2] <- 1-mean(Meinshausen, na.rm = TRUE)
+  return.mat2[i,3] <- mean(Storey, na.rm = TRUE)
+  return.mat2[i,4] <- mean(Jiang, na.rm = TRUE)
+  return.mat2[i,5] <- mean(Nettleton, na.rm = TRUE)
+  return.mat2[i,6] <- mean(Pounds, na.rm = TRUE)
+} 
+```
+
+
+```{r "big sample 11",cache=TRUE}
+pi0 = seq(0,1, by=0.025)  
+return.mat1 = matrix(NA, ncol=10, nrow=length(pi0))
+last.hist = NA
+Meinshausen = NA
+Storey = NA
+Jiang = NA
+Nettleton = NA
+Pounds = NA 
+
+for(i in 1:length(pi0)){
+  pi1 <- 1-pi0[i]
+  n.0 <- ceiling(n*pi0[i]) 
+  n.1 <- n-n.0 
+   
+  for(j in 1:200){
+    sim.data <- c(rnorm(n.1,1,1),rnorm(n.0,0,1))
+    sim.data.p <- 2*pnorm(-abs(sim.data))
+    
+    last.hist[j] <- p.fdr(pvalues=sim.data.p, estim.method = "last.hist")$pi0
+    Meinshausen[j] = p.fdr(pvalues=sim.data.p, estim.method = "Meinshausen")$pi0
+    Jiang[j] = p.fdr(pvalues=sim.data.p, estim.method = "Jiang")$pi0
+    Nettleton[j] = p.fdr(pvalues=sim.data.p, estim.method = "Nettleton")$pi0
+    Pounds[j] = p.fdr(pvalues=sim.data.p, estim.method = "Pounds")$pi0
+    Storey[j] = p.fdr(pvalues=sim.data.p, estim.method = "Storey")$pi0
+      
+  }
+  
+  return.mat1[i,1] <- mean(last.hist, na.rm = TRUE)
+  return.mat1[i,2] <- 1-mean(Meinshausen, na.rm = TRUE)
+  return.mat1[i,3] <- mean(Storey, na.rm = TRUE)
+  return.mat1[i,4] <- mean(Jiang, na.rm = TRUE)
+  return.mat1[i,5] <- mean(Nettleton, na.rm = TRUE)
+  return.mat1[i,6] <- mean(Pounds, na.rm = TRUE)
+} 
+```
+
+```{r "big sample 1.1",cache=TRUE}
+pi0 = seq(0,1, by=0.025)  
+return.mat0.1 = matrix(NA, ncol=10, nrow=length(pi0))
+last.hist = NA
+Meinshausen = NA
+Storey = NA
+Jiang = NA
+Nettleton = NA
+Pounds = NA 
+
+for(i in 1:length(pi0)){
+  pi1 <- 1-pi0[i]
+  n.0 <- ceiling(n*pi0[i]) 
+  n.1 <- n-n.0 
+   
+  for(j in 1:200){
+    sim.data <- c(rnorm(n.1,1,0.1),rnorm(n.0,0,1))
+    sim.data.p <- 2*pnorm(-abs(sim.data))
+  
+    last.hist[j] <- p.fdr(pvalues=sim.data.p, estim.method = "last.hist")$pi0
+    Meinshausen[j] = p.fdr(pvalues=sim.data.p, estim.method = "Meinshausen")$pi0
+    Jiang[j] = p.fdr(pvalues=sim.data.p, estim.method = "Jiang")$pi0
+    Nettleton[j] = p.fdr(pvalues=sim.data.p, estim.method = "Nettleton")$pi0
+    Pounds[j] = p.fdr(pvalues=sim.data.p, estim.method = "Pounds")$pi0
+    Storey[j] = p.fdr(pvalues=sim.data.p, estim.method = "Storey")$pi0
+      
+  }
+  
+  return.mat0.1[i,1] <- mean(last.hist, na.rm = TRUE)
+  return.mat0.1[i,2] <- 1-mean(Meinshausen, na.rm = TRUE)
+  return.mat0.1[i,3] <- mean(Storey, na.rm = TRUE)
+  return.mat0.1[i,4] <- mean(Jiang, na.rm = TRUE)
+  return.mat0.1[i,5] <- mean(Nettleton, na.rm = TRUE)
+  return.mat0.1[i,6] <- mean(Pounds, na.rm = TRUE)
+} 
+```
+
+```{r "big sample 2.1",cache=TRUE}
+pi0 = seq(0,1, by=0.025)  
+return.mat0.2 = matrix(NA, ncol=10, nrow=length(pi0))
+last.hist = NA
+Meinshausen = NA
+Storey = NA
+Jiang = NA
+Nettleton = NA
+Pounds = NA 
+
+for(i in 1:length(pi0)){
+  pi1 <- 1-pi0[i]
+  n.0 <- ceiling(n*pi0[i]) 
+  n.1 <- n-n.0 
+   
+  for(j in 1:200){
+    sim.data <- c(rnorm(n.1,2,0.1),rnorm(n.0,0,1))
+    sim.data.p <- 2*pnorm(-abs(sim.data))
+  
+    last.hist[j] <- p.fdr(pvalues=sim.data.p, estim.method = "last.hist")$pi0
+    Meinshausen[j] = p.fdr(pvalues=sim.data.p, estim.method = "Meinshausen")$pi0
+    Jiang[j] = p.fdr(pvalues=sim.data.p, estim.method = "Jiang")$pi0
+    Nettleton[j] = p.fdr(pvalues=sim.data.p, estim.method = "Nettleton")$pi0
+    Pounds[j] = p.fdr(pvalues=sim.data.p, estim.method = "Pounds")$pi0
+    Storey[j] = p.fdr(pvalues=sim.data.p, estim.method = "Storey")$pi0
+      
+  }
+  
+  return.mat0.2[i,1] <- mean(last.hist, na.rm = TRUE)
+  return.mat0.2[i,2] <- 1-mean(Meinshausen, na.rm = TRUE)
+  return.mat0.2[i,3] <- mean(Storey, na.rm = TRUE)
+  return.mat0.2[i,4] <- mean(Jiang, na.rm = TRUE)
+  return.mat0.2[i,5] <- mean(Nettleton, na.rm = TRUE)
+  return.mat0.2[i,6] <- mean(Pounds, na.rm = TRUE)
+} 
+```
+
+```{r "big sample 4.1",cache=TRUE}
+pi0 = seq(0,1, by=0.025)  
+return.mat0.4 = matrix(NA, ncol=10, nrow=length(pi0))
+last.hist = NA
+Meinshausen = NA
+Storey = NA
+Jiang = NA
+Nettleton = NA
+Pounds = NA 
+
+for(i in 1:length(pi0)){
+  pi1 <- 1-pi0[i]
+  n.0 <- ceiling(n*pi0[i]) 
+  n.1 <- n-n.0 
+   
+  for(j in 1:200){
+    sim.data <- c(rnorm(n.1,4,0.1),rnorm(n.0,0,1))
+    sim.data.p <- 2*pnorm(-abs(sim.data))
+    
+    last.hist[j] <- p.fdr(pvalues=sim.data.p, estim.method = "last.hist")$pi0
+    Meinshausen[j] = p.fdr(pvalues=sim.data.p, estim.method = "Meinshausen")$pi0
+    Jiang[j] = p.fdr(pvalues=sim.data.p, estim.method = "Jiang")$pi0
+    Nettleton[j] = p.fdr(pvalues=sim.data.p, estim.method = "Nettleton")$pi0
+    Pounds[j] = p.fdr(pvalues=sim.data.p, estim.method = "Pounds")$pi0
+    Storey[j] = p.fdr(pvalues=sim.data.p, estim.method = "Storey")$pi0
+      
+  }
+     
+  return.mat0.4[i,1] <- mean(last.hist, na.rm = TRUE)
+  return.mat0.4[i,2] <- 1-mean(Meinshausen, na.rm = TRUE)
+  return.mat0.4[i,3] <- mean(Storey, na.rm = TRUE)
+  return.mat0.4[i,4] <- mean(Jiang, na.rm = TRUE)
+  return.mat0.4[i,5] <- mean(Nettleton, na.rm = TRUE)
+  return.mat0.4[i,6] <- mean(Pounds, na.rm = TRUE)
+} 
+```
+
+```{r "big sample 1.5",cache=TRUE}
+pi0 = seq(0,1, by=0.025)  
+return.mat1.5 = matrix(NA, ncol=10, nrow=length(pi0))
+last.hist = NA
+Meinshausen = NA
+Storey = NA
+Jiang = NA
+Nettleton = NA
+Pounds = NA 
+
+for(i in 1:length(pi0)){
+  pi1 <- 1-pi0[i]
+  n.0 <- ceiling(n*pi0[i]) 
+  n.1 <- n-n.0 
+   
+  for(j in 1:200){
+    sim.data <- c(rnorm(n.1,1,0.5),rnorm(n.0,0,1))
+    sim.data.p <- 2*pnorm(-abs(sim.data))
+     
+    last.hist[j] <- p.fdr(pvalues=sim.data.p, estim.method = "last.hist")$pi0
+    Meinshausen[j] = p.fdr(pvalues=sim.data.p, estim.method = "Meinshausen")$pi0
+    Jiang[j] = p.fdr(pvalues=sim.data.p, estim.method = "Jiang")$pi0
+    Nettleton[j] = p.fdr(pvalues=sim.data.p, estim.method = "Nettleton")$pi0
+    Pounds[j] = p.fdr(pvalues=sim.data.p, estim.method = "Pounds")$pi0
+    Storey[j] = p.fdr(pvalues=sim.data.p, estim.method = "Storey")$pi0
+      
+  }
+  
+  return.mat1.5[i,1] <- mean(last.hist, na.rm = TRUE)
+  return.mat1.5[i,2] <- 1-mean(Meinshausen, na.rm = TRUE)
+  return.mat1.5[i,3] <- mean(Storey, na.rm = TRUE)
+  return.mat1.5[i,4] <- mean(Jiang, na.rm = TRUE)
+  return.mat1.5[i,5] <- mean(Nettleton, na.rm = TRUE)
+  return.mat1.5[i,6] <- mean(Pounds, na.rm = TRUE)
+} 
+```
+
+
+```{r "big sample 2.5",cache=TRUE}
+pi0 = seq(0,1, by=0.025)  
+return.mat2.5 = matrix(NA, ncol=10, nrow=length(pi0))
+last.hist = NA
+Meinshausen = NA
+Storey = NA
+Jiang = NA
+Nettleton = NA
+Pounds = NA 
+
+for(i in 1:length(pi0)){
+  pi1 <- 1-pi0[i]
+  n.0 <- ceiling(n*pi0[i]) 
+  n.1 <- n-n.0 
+   
+  for(j in 1:200){
+    sim.data <- c(rnorm(n.1,2,0.5),rnorm(n.0,0,1))
+    sim.data.p <- 2*pnorm(-abs(sim.data))
+    
+    last.hist[j] <- p.fdr(pvalues=sim.data.p, estim.method = "last.hist")$pi0
+    Meinshausen[j] = p.fdr(pvalues=sim.data.p, estim.method = "Meinshausen")$pi0
+    Jiang[j] = p.fdr(pvalues=sim.data.p, estim.method = "Jiang")$pi0
+    Nettleton[j] = p.fdr(pvalues=sim.data.p, estim.method = "Nettleton")$pi0
+    Pounds[j] = p.fdr(pvalues=sim.data.p, estim.method = "Pounds")$pi0
+    Storey[j] = p.fdr(pvalues=sim.data.p, estim.method = "Storey")$pi0
+      
+  }
+  
+  return.mat2.5[i,1] <- mean(last.hist, na.rm = TRUE)
+  return.mat2.5[i,2] <- 1-mean(Meinshausen, na.rm = TRUE)
+  return.mat2.5[i,3] <- mean(Storey, na.rm = TRUE)
+  return.mat2.5[i,4] <- mean(Jiang, na.rm = TRUE)
+  return.mat2.5[i,5] <- mean(Nettleton, na.rm = TRUE)
+  return.mat2.5[i,6] <- mean(Pounds, na.rm = TRUE)
+} 
+```
+
+```{r "big sample 4.5",cache=TRUE}
+pi0 = seq(0,1, by=0.025)  
+return.mat4.5 = matrix(NA, ncol=10, nrow=length(pi0))
+last.hist = NA
+Meinshausen = NA
+Storey = NA
+Jiang = NA
+Nettleton = NA
+Pounds = NA 
+
+for(i in 1:length(pi0)){
+  pi1 <- 1-pi0[i]
+  n.0 <- ceiling(n*pi0[i]) 
+  n.1 <- n-n.0 
+   
+  for(j in 1:200){
+    sim.data <- c(rnorm(n.1,4,0.5),rnorm(n.0,0,1))
+    sim.data.p <- 2*pnorm(-abs(sim.data))
+
+    last.hist[j] <- p.fdr(pvalues=sim.data.p, estim.method = "last.hist")$pi0
+    Meinshausen[j] = p.fdr(pvalues=sim.data.p, estim.method = "Meinshausen")$pi0
+    Jiang[j] = p.fdr(pvalues=sim.data.p, estim.method = "Jiang")$pi0
+    Nettleton[j] = p.fdr(pvalues=sim.data.p, estim.method = "Nettleton")$pi0
+    Pounds[j] = p.fdr(pvalues=sim.data.p, estim.method = "Pounds")$pi0
+    Storey[j] = p.fdr(pvalues=sim.data.p, estim.method = "Storey")$pi0
+      
+  }
+  
+  return.mat4.5[i,1] <- mean(last.hist, na.rm = TRUE)
+  return.mat4.5[i,2] <- 1-mean(Meinshausen, na.rm = TRUE)
+  return.mat4.5[i,3] <- mean(Storey, na.rm = TRUE)
+  return.mat4.5[i,4] <- mean(Jiang, na.rm = TRUE)
+  return.mat4.5[i,5] <- mean(Nettleton, na.rm = TRUE)
+  return.mat4.5[i,6] <- mean(Pounds, na.rm = TRUE)
+} 
+```
+
+```{r "big sample 13",cache=TRUE}
+pi0 = seq(0,1, by=0.025)  
+return.mat13 = matrix(NA, ncol=10, nrow=length(pi0))
+last.hist = NA
+Meinshausen = NA
+Storey = NA
+Jiang = NA
+Nettleton = NA
+Pounds = NA 
+
+for(i in 1:length(pi0)){
+  pi1 <- 1-pi0[i]
+  n.0 <- ceiling(n*pi0[i]) 
+  n.1 <- n-n.0 
+   
+  for(j in 1:200){
+    sim.data <- c(rnorm(n.1,1,3),rnorm(n.0,0,1))
+    sim.data.p <- 2*pnorm(-abs(sim.data))
+
+    last.hist[j] <- p.fdr(pvalues=sim.data.p, estim.method = "last.hist")$pi0
+    Meinshausen[j] = p.fdr(pvalues=sim.data.p, estim.method = "Meinshausen")$pi0
+    Jiang[j] = p.fdr(pvalues=sim.data.p, estim.method = "Jiang")$pi0
+    Nettleton[j] = p.fdr(pvalues=sim.data.p, estim.method = "Nettleton")$pi0
+    Pounds[j] = p.fdr(pvalues=sim.data.p, estim.method = "Pounds")$pi0
+    Storey[j] = p.fdr(pvalues=sim.data.p, estim.method = "Storey")$pi0
+      
+  }
+  
+  return.mat13[i,1] <- mean(last.hist, na.rm = TRUE)
+  return.mat13[i,2] <- 1-mean(Meinshausen, na.rm = TRUE)
+  return.mat13[i,3] <- mean(Storey, na.rm = TRUE)
+  return.mat13[i,4] <- mean(Jiang, na.rm = TRUE)
+  return.mat13[i,5] <- mean(Nettleton, na.rm = TRUE)
+  return.mat13[i,6] <- mean(Pounds, na.rm = TRUE)
+} 
+```
+
+
+```{r "big sample 23",cache=TRUE}
+pi0 = seq(0,1, by=0.025)  
+return.mat23 = matrix(NA, ncol=10, nrow=length(pi0))
+last.hist = NA
+Meinshausen = NA
+Storey = NA
+Jiang = NA
+Nettleton = NA
+Pounds = NA 
+
+for(i in 1:length(pi0)){
+  pi1 <- 1-pi0[i]
+  n.0 <- ceiling(n*pi0[i]) 
+  n.1 <- n-n.0 
+   
+  for(j in 1:200){
+    sim.data <- c(rnorm(n.1,2,3),rnorm(n.0,0,1))
+    sim.data.p <- 2*pnorm(-abs(sim.data))
+
+    last.hist[j] <- p.fdr(pvalues=sim.data.p, estim.method = "last.hist")$pi0
+    Meinshausen[j] = p.fdr(pvalues=sim.data.p, estim.method = "Meinshausen")$pi0
+    Jiang[j] = p.fdr(pvalues=sim.data.p, estim.method = "Jiang")$pi0
+    Nettleton[j] = p.fdr(pvalues=sim.data.p, estim.method = "Nettleton")$pi0
+    Pounds[j] = p.fdr(pvalues=sim.data.p, estim.method = "Pounds")$pi0
+    Storey[j] = p.fdr(pvalues=sim.data.p, estim.method = "Storey")$pi0
+      
+  }
+  
+  return.mat23[i,1] <- mean(last.hist, na.rm = TRUE)
+  return.mat23[i,2] <- 1-mean(Meinshausen, na.rm = TRUE)
+  return.mat23[i,3] <- mean(Storey, na.rm = TRUE)
+  return.mat23[i,4] <- mean(Jiang, na.rm = TRUE)
+  return.mat23[i,5] <- mean(Nettleton, na.rm = TRUE)
+  return.mat23[i,6] <- mean(Pounds, na.rm = TRUE)
+} 
+```
+
+```{r "big sample 43",cache=TRUE}
+pi0 = seq(0,1, by=0.025)  
+return.mat43 = matrix(NA, ncol=10, nrow=length(pi0))
+last.hist = NA
+Meinshausen = NA
+Storey = NA
+Jiang = NA
+Nettleton = NA
+Pounds = NA 
+
+for(i in 1:length(pi0)){
+  pi1 <- 1-pi0[i]
+  n.0 <- ceiling(n*pi0[i]) 
+  n.1 <- n-n.0 
+   
+  for(j in 1:200){
+    sim.data <- c(rnorm(n.1,4,3),rnorm(n.0,0,1))
+    sim.data.p <- 2*pnorm(-abs(sim.data))
+    
+    last.hist[j] <- p.fdr(pvalues=sim.data.p, estim.method = "last.hist")$pi0
+    Meinshausen[j] = p.fdr(pvalues=sim.data.p, estim.method = "Meinshausen")$pi0
+    Jiang[j] = p.fdr(pvalues=sim.data.p, estim.method = "Jiang")$pi0
+    Nettleton[j] = p.fdr(pvalues=sim.data.p, estim.method = "Nettleton")$pi0
+    Pounds[j] = p.fdr(pvalues=sim.data.p, estim.method = "Pounds")$pi0
+    Storey[j] = p.fdr(pvalues=sim.data.p, estim.method = "Storey")$pi0
+      
+  }
+
+  return.mat43[i,1] <- mean(last.hist, na.rm = TRUE)
+  return.mat43[i,2] <- 1-mean(Meinshausen, na.rm = TRUE)
+  return.mat43[i,3] <- mean(Storey, na.rm = TRUE)
+  return.mat43[i,4] <- mean(Jiang, na.rm = TRUE)
+  return.mat43[i,5] <- mean(Nettleton, na.rm = TRUE)
+  return.mat43[i,6] <- mean(Pounds, na.rm = TRUE)
+} 
+```
+
+### Plots
+
+```{r}
+par(pty="s",mar=c(2,2,2,2), mfrow=c(4,3), mai=c(.3,.3,.3,.3))
+mypalette<-rainbow(6)
+
+plot(pi0, pi0, type="l",main="Alt N(1,3)", ylab="", xlab="", lwd=2)
+lines(pi0, return.mat13[,1], col=mypalette[1], lwd=2)
+lines(pi0, return.mat13[,2], col=mypalette[2], lwd=2)
+lines(pi0, return.mat13[,3], col=mypalette[3], lwd=2)
+lines(pi0, return.mat13[,4], col=mypalette[4], lwd=2)
+lines(pi0, return.mat13[,5], col=mypalette[5], lwd=2)
+lines(pi0, return.mat13[,6], col=mypalette[6], lwd=2)
+lines(pi0, return.mat13[,1], col=mypalette[1], lwd=2)
+
+plot(pi0, pi0, type="l",main="Alt N(2,3)", ylab="", xlab="", lwd=2)
+lines(pi0, return.mat23[,1], col=mypalette[1], lty=1,lwd=2)
+lines(pi0, return.mat23[,2], col=mypalette[2],lty=1, lwd=2)
+lines(pi0, return.mat23[,3], col=mypalette[3],lty=1, lwd=2)
+lines(pi0, return.mat23[,4], col=mypalette[4],lty=1, lwd=2)
+lines(pi0, return.mat23[,5], col=mypalette[5],lty=1, lwd=2)
+lines(pi0, return.mat23[,6], col=mypalette[6],lty=1, lwd=2)
+lines(pi0, return.mat23[,1], col=mypalette[1], lty=1,lwd=2)
+
+plot(pi0, pi0, type="l",main="Alt N(4,3)", ylab="", xlab="", lwd=2)
+lines(pi0, return.mat43[,1], col=mypalette[1],lty=1,lwd=2)
+lines(pi0, return.mat43[,2], col=mypalette[2],lty=1, lwd=2)
+lines(pi0, return.mat43[,3], col=mypalette[3],lty=1, lwd=2)
+lines(pi0, return.mat43[,4], col=mypalette[4],lty=1, lwd=2)
+lines(pi0, return.mat43[,5], col=mypalette[5],lty=1, lwd=2)
+lines(pi0, return.mat43[,6], col=mypalette[6],lty=1, lwd=2)
+lines(pi0, return.mat43[,1], col=mypalette[1],lty=1,lwd=2)
+
+plot(pi0, pi0, type="l",main="Alt N(1,1)", ylab="", xlab="", lwd=2)
+lines(pi0, return.mat1[,1], col=mypalette[1], lwd=2)
+lines(pi0, return.mat1[,2], col=mypalette[2], lwd=2)
+lines(pi0, return.mat1[,3], col=mypalette[3], lwd=2)
+lines(pi0, return.mat1[,4], col=mypalette[4], lwd=2)
+lines(pi0, return.mat1[,5], col=mypalette[5], lwd=2)
+lines(pi0, return.mat1[,6], col=mypalette[6], lwd=2)
+lines(pi0, return.mat1[,1], col=mypalette[1], lwd=2)
+
+plot(pi0, pi0, type="l",main="Alt N(2,1)", ylab="", xlab="", lwd=2)
+lines(pi0, return.mat2[,1], col=mypalette[1], lty=1,lwd=2)
+lines(pi0, return.mat2[,2], col=mypalette[2],lty=1, lwd=2)
+lines(pi0, return.mat2[,3], col=mypalette[3],lty=1, lwd=2)
+lines(pi0, return.mat2[,4], col=mypalette[4],lty=1, lwd=2)
+lines(pi0, return.mat2[,5], col=mypalette[5],lty=1, lwd=2)
+lines(pi0, return.mat2[,6], col=mypalette[6],lty=1, lwd=2)
+lines(pi0, return.mat2[,1], col=mypalette[1], lty=1,lwd=2)
+
+plot(pi0, pi0, type="l",main="Alt N(4,1)", ylab="", xlab="", lwd=2)
+lines(pi0, return.mat4[,1], col=mypalette[1], lty=1,lwd=2)
+lines(pi0, return.mat4[,2], col=mypalette[2],lty=1, lwd=2)
+lines(pi0, return.mat4[,3], col=mypalette[3],lty=1, lwd=2)
+lines(pi0, return.mat4[,4], col=mypalette[4],lty=1, lwd=2)
+lines(pi0, return.mat4[,5], col=mypalette[5],lty=1, lwd=2)
+lines(pi0, return.mat4[,6], col=mypalette[6],lty=1, lwd=2)
+lines(pi0, return.mat4[,1], col=mypalette[1], lty=1,lwd=2)
+
+plot(pi0, pi0, type="l",main="Alt N(1,0.5)", ylab="", xlab="", lwd=2)
+lines(pi0, return.mat1.5[,1], col=mypalette[1], lwd=2)
+lines(pi0, return.mat1.5[,2], col=mypalette[2], lwd=2)
+lines(pi0, return.mat1.5[,3], col=mypalette[3], lwd=2)
+lines(pi0, return.mat1.5[,4], col=mypalette[4], lwd=2)
+lines(pi0, return.mat1.5[,5], col=mypalette[5], lwd=2)
+lines(pi0, return.mat1.5[,6], col=mypalette[6], lwd=2)
+lines(pi0, return.mat1.5[,1], col=mypalette[1], lwd=2)
+
+plot(pi0, pi0, type="l",main="Alt N(2,0.5)", ylab="", xlab="", lwd=2)
+lines(pi0, return.mat2.5[,1], col=mypalette[1], lty=1,lwd=2)
+lines(pi0, return.mat2.5[,2], col=mypalette[2],lty=1, lwd=2)
+lines(pi0, return.mat2.5[,3], col=mypalette[3],lty=1, lwd=2)
+lines(pi0, return.mat2.5[,4], col=mypalette[4],lty=1, lwd=2)
+lines(pi0, return.mat2.5[,5], col=mypalette[5],lty=1, lwd=2)
+lines(pi0, return.mat2.5[,6], col=mypalette[6],lty=1, lwd=2)
+lines(pi0, return.mat2.5[,1], col=mypalette[1], lty=1,lwd=2)
+
+plot(pi0, pi0, type="l",main="Alt N(4,0.5)", ylab="", xlab="", lwd=2)
+lines(pi0, return.mat4.5[,1], col=mypalette[1], lty=1,lwd=2)
+lines(pi0, return.mat4.5[,2], col=mypalette[2],lty=1, lwd=2)
+lines(pi0, return.mat4.5[,3], col=mypalette[3],lty=1, lwd=2)
+lines(pi0, return.mat4.5[,4], col=mypalette[4],lty=1, lwd=2)
+lines(pi0, return.mat4.5[,5], col=mypalette[5],lty=1, lwd=2)
+lines(pi0, return.mat4.5[,6], col=mypalette[6],lty=1, lwd=2)
+lines(pi0, return.mat4.5[,1], col=mypalette[1], lty=1,lwd=2)
+
+plot(pi0, pi0, type="l",main="Alt N(1,0.1)", ylab="", xlab="", lwd=2)
+lines(pi0, return.mat0.1[,1], col=mypalette[1], lty=1,lwd=2)
+lines(pi0, return.mat0.1[,2], col=mypalette[2],lty=1, lwd=2)
+lines(pi0, return.mat0.1[,3], col=mypalette[3],lty=1, lwd=2)
+lines(pi0, return.mat0.1[,4], col=mypalette[4],lty=1, lwd=2)
+lines(pi0, return.mat0.1[,5], col=mypalette[5],lty=1, lwd=2)
+lines(pi0, return.mat0.1[,6], col=mypalette[6],lty=1, lwd=2)
+lines(pi0, return.mat0.1[,1], col=mypalette[1], lty=1,lwd=2)
+
+plot(pi0, pi0, type="l",main="Alt N(2,0.1)", ylab="", xlab="", lwd=2)
+lines(pi0, return.mat0.2[,1], col=mypalette[1], lty=1,lwd=2)
+lines(pi0, return.mat0.2[,2], col=mypalette[2],lty=1, lwd=2)
+lines(pi0, return.mat0.2[,3], col=mypalette[3],lty=1, lwd=2)
+lines(pi0, return.mat0.2[,4], col=mypalette[4],lty=1, lwd=2)
+lines(pi0, return.mat0.2[,5], col=mypalette[5],lty=1, lwd=2)
+lines(pi0, return.mat0.2[,6], col=mypalette[6],lty=1, lwd=2)
+lines(pi0, return.mat0.2[,1], col=mypalette[1], lty=1,lwd=2)
+
+plot(pi0, pi0, type="l",main="Alt N(4,0.1)", ylab="", xlab="", lwd=2)
+lines(pi0, return.mat0.4[,1], col=mypalette[1], lty=1,lwd=2)
+lines(pi0, return.mat0.4[,2], col=mypalette[2],lty=1, lwd=2)
+lines(pi0, return.mat0.4[,3], col=mypalette[3],lty=1, lwd=2)
+lines(pi0, return.mat0.4[,4], col=mypalette[4],lty=1, lwd=2)
+lines(pi0, return.mat0.4[,5], col=mypalette[5],lty=1, lwd=2)
+lines(pi0, return.mat0.4[,6], col=mypalette[6],lty=1, lwd=2)
+lines(pi0, return.mat0.4[,1], col=mypalette[1], lty=1,lwd=2)
+```
+
+```{r}
+par(pty="s",mar=c(2,2,2,2), mfrow=c(4,3), mai=c(.3,.3,.3,.3))
+plot(pi0, (pi0-pi0)^2, type="n", ylim=c(0, 0.2), main="Alt N(1,3)", ylab="", xlab="")
+lines(pi0, (return.mat13[,1]-pi0)^2, col=mypalette[1], lwd=2)
+lines(pi0, (return.mat13[,2]-pi0)^2, col=mypalette[2], lwd=2)
+lines(pi0, (return.mat13[,3]-pi0)^2, col=mypalette[3], lwd=2)
+lines(pi0, (return.mat13[,4]-pi0)^2, col=mypalette[4], lwd=2)
+lines(pi0, (return.mat13[,5]-pi0)^2, col=mypalette[5], lwd=2)
+lines(pi0, (return.mat13[,6]-pi0)^2, col=mypalette[6], lwd=2)
+lines(pi0, (return.mat13[,1]-pi0)^2, col=mypalette[1], lwd=2)
+
+
+plot(pi0, (pi0-pi0)^2, type="n", ylim=c(0, 0.2), main="Alt N(2,3)", ylab="", xlab="")
+lines(pi0, (return.mat23[,1]-pi0)^2, col=mypalette[1],lty=1, lwd=2)
+lines(pi0, (return.mat23[,2]-pi0)^2, col=mypalette[2],lty=1, lwd=2)
+lines(pi0, (return.mat23[,3]-pi0)^2, col=mypalette[3],lty=1, lwd=2)
+lines(pi0, (return.mat23[,4]-pi0)^2, col=mypalette[4],lty=1, lwd=2)
+lines(pi0, (return.mat23[,5]-pi0)^2, col=mypalette[5],lty=1, lwd=2)
+lines(pi0, (return.mat23[,6]-pi0)^2, col=mypalette[6],lty=1, lwd=2)
+lines(pi0, (return.mat23[,1]-pi0)^2, col=mypalette[1],lty=1, lwd=2)
+
+plot(pi0, (pi0-pi0)^2, type="n", ylim=c(0, 0.2), main="Alt N(4,3)", ylab="", xlab="")
+lines(pi0, (return.mat43[,1]-pi0)^2, col=mypalette[1],lty=1, lwd=2)
+lines(pi0, (return.mat43[,2]-pi0)^2, col=mypalette[2],lty=1, lwd=2)
+lines(pi0, (return.mat43[,3]-pi0)^2, col=mypalette[3],lty=1, lwd=2)
+lines(pi0, (return.mat43[,4]-pi0)^2, col=mypalette[4],lty=1, lwd=2)
+lines(pi0, (return.mat43[,5]-pi0)^2, col=mypalette[5],lty=1, lwd=2)
+lines(pi0, (return.mat43[,6]-pi0)^2, col=mypalette[6],lty=1, lwd=2)
+lines(pi0, (return.mat43[,1]-pi0)^2, col=mypalette[1],lty=1, lwd=2)
+
+plot(pi0, (pi0-pi0)^2, type="n", ylim=c(0, 0.2), main="Alt N(1,1)", ylab="", xlab="")
+lines(pi0, (return.mat1[,1]-pi0)^2, col=mypalette[1], lwd=2)
+lines(pi0, (return.mat1[,2]-pi0)^2, col=mypalette[2], lwd=2)
+lines(pi0, (return.mat1[,3]-pi0)^2, col=mypalette[3], lwd=2)
+lines(pi0, (return.mat1[,4]-pi0)^2, col=mypalette[4], lwd=2)
+lines(pi0, (return.mat1[,5]-pi0)^2, col=mypalette[5], lwd=2)
+lines(pi0, (return.mat1[,6]-pi0)^2, col=mypalette[6], lwd=2)
+lines(pi0, (return.mat1[,1]-pi0)^2, col=mypalette[1], lwd=2)
+
+plot(pi0, (pi0-pi0)^2, type="n", ylim=c(0, 0.2), main="Alt N(2,1)", ylab="", xlab="")
+lines(pi0, (return.mat2[,1]-pi0)^2, col=mypalette[1],lty=1, lwd=2)
+lines(pi0, (return.mat2[,2]-pi0)^2, col=mypalette[2],lty=1, lwd=2)
+lines(pi0, (return.mat2[,3]-pi0)^2, col=mypalette[3],lty=1, lwd=2)
+lines(pi0, (return.mat2[,4]-pi0)^2, col=mypalette[4],lty=1, lwd=2)
+lines(pi0, (return.mat2[,5]-pi0)^2, col=mypalette[5],lty=1, lwd=2)
+lines(pi0, (return.mat2[,6]-pi0)^2, col=mypalette[6],lty=1, lwd=2)
+lines(pi0, (return.mat2[,1]-pi0)^2, col=mypalette[1],lty=1, lwd=2)
+
+plot(pi0, (pi0-pi0)^2, type="n", ylim=c(0, 0.2), main="Alt N(4,1)", ylab="", xlab="")
+lines(pi0, (return.mat4[,1]-pi0)^2, col=mypalette[1],lty=1, lwd=2)
+lines(pi0, (return.mat4[,2]-pi0)^2, col=mypalette[2],lty=1, lwd=2)
+lines(pi0, (return.mat4[,3]-pi0)^2, col=mypalette[3],lty=1, lwd=2)
+lines(pi0, (return.mat4[,4]-pi0)^2, col=mypalette[4],lty=1, lwd=2)
+lines(pi0, (return.mat4[,5]-pi0)^2, col=mypalette[5],lty=1, lwd=2)
+lines(pi0, (return.mat4[,6]-pi0)^2, col=mypalette[6],lty=1, lwd=2)
+lines(pi0, (return.mat4[,1]-pi0)^2, col=mypalette[1],lty=1, lwd=2)
+
+plot(pi0, (pi0-pi0)^2, type="n", ylim=c(0, 0.2), main="Alt N(1,0.5)", ylab="", xlab="")
+lines(pi0, (return.mat1.5[,1]-pi0)^2, col=mypalette[1], lwd=2)
+lines(pi0, (return.mat1.5[,2]-pi0)^2, col=mypalette[2], lwd=2)
+lines(pi0, (return.mat1.5[,3]-pi0)^2, col=mypalette[3], lwd=2)
+lines(pi0, (return.mat1.5[,4]-pi0)^2, col=mypalette[4], lwd=2)
+lines(pi0, (return.mat1.5[,5]-pi0)^2, col=mypalette[5], lwd=2)
+lines(pi0, (return.mat1.5[,6]-pi0)^2, col=mypalette[6], lwd=2)
+lines(pi0, (return.mat1.5[,1]-pi0)^2, col=mypalette[1], lwd=2)
+
+plot(pi0, (pi0-pi0)^2, type="n", ylim=c(0, 0.2), main="Alt N(2,0.5)", ylab="", xlab="")
+lines(pi0, (return.mat2.5[,1]-pi0)^2, col=mypalette[1],lty=1, lwd=2)
+lines(pi0, (return.mat2.5[,2]-pi0)^2, col=mypalette[2],lty=1, lwd=2)
+lines(pi0, (return.mat2.5[,3]-pi0)^2, col=mypalette[3],lty=1, lwd=2)
+lines(pi0, (return.mat2.5[,4]-pi0)^2, col=mypalette[4],lty=1, lwd=2)
+lines(pi0, (return.mat2.5[,5]-pi0)^2, col=mypalette[5],lty=1, lwd=2)
+lines(pi0, (return.mat2.5[,6]-pi0)^2, col=mypalette[6],lty=1, lwd=2)
+lines(pi0, (return.mat2.5[,1]-pi0)^2, col=mypalette[1],lty=1, lwd=2)
+
+plot(pi0, (pi0-pi0)^2, type="n", ylim=c(0, 0.2), main="Alt N(4,0.5)", ylab="", xlab="")
+lines(pi0, (return.mat4.5[,1]-pi0)^2, col=mypalette[1],lty=1, lwd=2)
+lines(pi0, (return.mat4.5[,2]-pi0)^2, col=mypalette[2],lty=1, lwd=2)
+lines(pi0, (return.mat4.5[,3]-pi0)^2, col=mypalette[3],lty=1, lwd=2)
+lines(pi0, (return.mat4.5[,4]-pi0)^2, col=mypalette[4],lty=1, lwd=2)
+lines(pi0, (return.mat4.5[,5]-pi0)^2, col=mypalette[5],lty=1, lwd=2)
+lines(pi0, (return.mat4.5[,6]-pi0)^2, col=mypalette[6],lty=1, lwd=2)
+lines(pi0, (return.mat4.5[,1]-pi0)^2, col=mypalette[1],lty=1, lwd=2)
+
+plot(pi0, (pi0-pi0)^2, type="n", ylim=c(0, 0.2), main="Alt N(1,0.1)", ylab="", xlab="")
+lines(pi0, (return.mat0.1[,1]-pi0)^2, col=mypalette[1],lty=1, lwd=2)
+lines(pi0, (return.mat0.1[,2]-pi0)^2, col=mypalette[2],lty=1, lwd=2)
+lines(pi0, (return.mat0.1[,3]-pi0)^2, col=mypalette[3],lty=1, lwd=2)
+lines(pi0, (return.mat0.1[,4]-pi0)^2, col=mypalette[4],lty=1, lwd=2)
+lines(pi0, (return.mat0.1[,5]-pi0)^2, col=mypalette[5],lty=1, lwd=2)
+lines(pi0, (return.mat0.1[,6]-pi0)^2, col=mypalette[6],lty=1, lwd=2)
+lines(pi0, (return.mat0.1[,1]-pi0)^2, col=mypalette[1],lty=1, lwd=2)
+
+plot(pi0, (pi0-pi0)^2, type="n", ylim=c(0, 0.2), main="Alt N(2,0.1)", ylab="", xlab="")
+lines(pi0, (return.mat0.2[,1]-pi0)^2, col=mypalette[1],lty=1, lwd=2)
+lines(pi0, (return.mat0.2[,2]-pi0)^2, col=mypalette[2],lty=1, lwd=2)
+lines(pi0, (return.mat0.2[,3]-pi0)^2, col=mypalette[3],lty=1, lwd=2)
+lines(pi0, (return.mat0.2[,4]-pi0)^2, col=mypalette[4],lty=1, lwd=2)
+lines(pi0, (return.mat0.2[,5]-pi0)^2, col=mypalette[5],lty=1, lwd=2)
+lines(pi0, (return.mat0.2[,6]-pi0)^2, col=mypalette[6],lty=1, lwd=2)
+lines(pi0, (return.mat0.2[,1]-pi0)^2, col=mypalette[1],lty=1, lwd=2)
+
+plot(pi0, (pi0-pi0)^2, type="n", ylim=c(0, 0.2), main="Alt N(4,0.1)", ylab="", xlab="")
+lines(pi0, (return.mat0.4[,1]-pi0)^2, col=mypalette[1],lty=1, lwd=2)
+lines(pi0, (return.mat0.4[,2]-pi0)^2, col=mypalette[2],lty=1, lwd=2)
+lines(pi0, (return.mat0.4[,3]-pi0)^2, col=mypalette[3],lty=1, lwd=2)
+lines(pi0, (return.mat0.4[,4]-pi0)^2, col=mypalette[4],lty=1, lwd=2)
+lines(pi0, (return.mat0.4[,5]-pi0)^2, col=mypalette[5],lty=1, lwd=2)
+lines(pi0, (return.mat0.4[,6]-pi0)^2, col=mypalette[6],lty=1, lwd=2)
+lines(pi0, (return.mat0.4[,1]-pi0)^2, col=mypalette[1],lty=1, lwd=2)
+```
+
+# Legend
+
+```{r}
+plot(pi0, pi0, type="n",main=" ", ylab=" ", xlab=" ", lwd=2)
+legend("topright",
+           legend=c("True Value", "Last Hist", "Meinshausen", "Storey","Jiang","Nettleton","Pounds"),
+           lwd=2,
+           col=c("black",mypalette[c(1:6)]),
+           bty = "n")
+```
