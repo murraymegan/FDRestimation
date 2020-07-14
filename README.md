@@ -1,4 +1,4 @@
-FDRestimatio
+FDRestimation
 ========
 
 The `FDRestimation` package contains functions to calculate method adjusted FDRs and p-values. 
