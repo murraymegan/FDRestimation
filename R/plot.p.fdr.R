@@ -59,8 +59,9 @@ plot.p.fdr = function(p.fdr.object,
                       pch.star = 17){
 
   n=length(p.fdr.object$fdrs)
-  threshold = p.fdr.object$threshold
-
+  if(is.na(threshold)){
+    threshold = p.fdr.object$threshold
+  }
   #Zvalues method
   if(is.character(zvalues)){
     if(zvalues=="greater"){
@@ -125,11 +126,12 @@ plot.p.fdr = function(p.fdr.object,
         axis(side = 1)
         axis(side = 2,
              at = c(threshold),
-             las=2,
+             las=1,
              col.axis = "dodgerblue2",
              cex.axis=0.75)
         axis(side = 2,
-             cex.axis=0.75)
+             cex.axis=0.75,
+             las=1)
         points(rank(p.fdr.object$`Results Matrix`[,3],ties.method = "first"),
                p.fdr.object$`Results Matrix`[,1],
                col="firebrick2",
@@ -139,7 +141,8 @@ plot.p.fdr = function(p.fdr.object,
                lwd=2)
       }else{
         axis(side = 1)
-        axis(side = 2)
+        axis(side = 2,
+             las=1)
         points(rank(p.fdr.object$`Results Matrix`[,3],ties.method = "first"),
                p.fdr.object$`Results Matrix`[,1],
                col="firebrick2",
@@ -154,7 +157,8 @@ plot.p.fdr = function(p.fdr.object,
            xlab="Ranking of Raw p-values",
            ylab=" ",
            main=title,
-           pch=20)
+           pch=20,
+           las=1)
     }
     if(raw.pvalues){
       points(rank(p.fdr.object$`Results Matrix`[,3],ties.method = "first"),
@@ -238,15 +242,17 @@ plot.p.fdr = function(p.fdr.object,
              pch=pch.star,
              cex.main=1.2,
              axes=FALSE,
-             cex.axis=0.5)
+             cex.axis=0.5,
+             las=1)
         axis(side = 1)
         axis(side = 2,
              at = c(threshold),
-             las=2,
+             las=1,
              col.axis="dodgerblue2",
              cex.axis=0.75)
         axis(side = 2,
-             cex.axis=0.75)
+             cex.axis=0.75,
+             las=1)
         points(zvalues,
                p.fdr.object$`Results Matrix`[,1],
                col="firebrick2",
@@ -262,7 +268,8 @@ plot.p.fdr = function(p.fdr.object,
              xlab="Z-values",
              ylab=" ",
              main=title,
-             pch=20)
+             pch=20,
+             las=1)
       }
 
       if(raw.pvalues){
@@ -282,7 +289,7 @@ plot.p.fdr = function(p.fdr.object,
              pch=c(pch.star,20,20, NA),
              lty=c(NA,NA,NA,1),
              lwd=c(NA,NA,NA,2),
-             col=c("dodgerblue2","firebrick2", "black","black"),
+             col=c("dodgerblue2","firebrick2", "black","dodgerblue2"),
              cex=0.7,
              bty = "n")
     }
@@ -303,7 +310,7 @@ plot.p.fdr = function(p.fdr.object,
              pch=c(pch.star,20, NA),
              lty=c(NA,NA,1),
              lwd=c(NA,NA,2),
-             col=c("dodgerblue2","firebrick2", "black"),
+             col=c("dodgerblue2","firebrick2", "dodgerblue2"),
              cex=0.7,
              bty = "n")
     }

@@ -16,7 +16,7 @@
 #' @param estim.method A string used to determine which method is used to estimate the pi0 value. Defaults to "last.hist".
 #' @param zvalues A numeric vector of z-values to be used in pi0 estimation or a string with options "two.sided", "greater" or "less". Defaults to "two.sided".
 #' @param threshold A numeric value in the interval \code{[0,1]} used in a multiple comparison hypothesis tests to determine significance from the null. Defaults to 0.05.
-#' @param default.odds A numeric value determining the ratio of pi1/pi0 used in the computation of one FDR. Defaults to 1.
+#' @param default.odds A numeric value determining the ratio of pi1/pi0 used in the computation of lower bound FDR. Defaults to 1.
 #' @param hist.breaks A numeric or string variable representing how many breaks in the pi0 estimation histogram methods. Defaults to "scott".
 #'
 #' @details We run into errors or warnings when
