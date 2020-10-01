@@ -59,9 +59,11 @@ plot.p.fdr = function(p.fdr.object,
                       pch.star = 17){
 
   n=length(p.fdr.object$fdrs)
+
   if(is.na(threshold)){
     threshold = p.fdr.object$threshold
   }
+
   #Zvalues method
   if(is.character(zvalues)){
     if(zvalues=="greater"){
@@ -70,6 +72,10 @@ plot.p.fdr = function(p.fdr.object,
       zvalues = qnorm(p.fdr.object$`Results Matrix`[,3]/2, lower.tail = FALSE)
     }else if(zvalues=="less"){
       zvalues = qnorm(p.fdr.object$`Results Matrix`[,3], lower.tail = TRUE)
+    }
+  }else{
+    if(length(zvalues)!=length(p.fdr.object$`Results Matrix`[,3])){
+      stop("'zvalues' is different length than 'p.fdr object'")
     }
   }
 
@@ -110,7 +116,7 @@ plot.p.fdr = function(p.fdr.object,
                     " p.fdr Object Plot")
     }
     if(adj.pvalues){
-      plot(rank(p.fdr.object$`Results Matrix`[,3],ties.method = "first"),
+      plot(rank(p.fdr.object$`Results Matrix`[,3],ties.method = "random"),
            p.fdr.object$`Results Matrix`[,2],
            col="dodgerblue2",
            ylim=y.lim,
@@ -132,7 +138,7 @@ plot.p.fdr = function(p.fdr.object,
         axis(side = 2,
              cex.axis=0.75,
              las=1)
-        points(rank(p.fdr.object$`Results Matrix`[,3],ties.method = "first"),
+        points(rank(p.fdr.object$`Results Matrix`[,3],ties.method = "random"),
                p.fdr.object$`Results Matrix`[,1],
                col="firebrick2",
                pch=20)
@@ -143,13 +149,13 @@ plot.p.fdr = function(p.fdr.object,
         axis(side = 1)
         axis(side = 2,
              las=1)
-        points(rank(p.fdr.object$`Results Matrix`[,3],ties.method = "first"),
+        points(rank(p.fdr.object$`Results Matrix`[,3],ties.method = "random"),
                p.fdr.object$`Results Matrix`[,1],
                col="firebrick2",
                pch=20)
       }
     }else{
-      plot(rank(p.fdr.object$`Results Matrix`[,3],ties.method = "first"),
+      plot(rank(p.fdr.object$`Results Matrix`[,3],ties.method = "random"),
            p.fdr.object$`Results Matrix`[,1],
            col="firebrick2",
            ylim=y.lim,
@@ -161,7 +167,7 @@ plot.p.fdr = function(p.fdr.object,
            las=1)
     }
     if(raw.pvalues){
-      points(rank(p.fdr.object$`Results Matrix`[,3],ties.method = "first"),
+      points(rank(p.fdr.object$`Results Matrix`[,3],ties.method = "random"),
              p.fdr.object$`Results Matrix`[,3],
              col="black",
              pch=20)

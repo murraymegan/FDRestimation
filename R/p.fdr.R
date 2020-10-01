@@ -81,11 +81,30 @@ p.fdr = function(pvalues,
                  na.rm=TRUE){
 
   cl <- match.call()
+
+  # Error Checking
+  if(TRUE %in% (pvalues>1|pvalues<0)){
+    stop("'pvalues' has value outside acceptable [0,1] range")
+  }
+  if(threshold>=1|threshold<=0){
+    stop("'threshold' has value outside acceptable (0,1) range")
+  }
+  if(set.pi0>1|set.pi0<0){
+    stop("'set.pi0' has value outside acceptable [0,1] range")
+  }
+  if(default.odds<0){
+    stop("'default.odds' has a negative value which is outside its acceptable range")
+  }
+  if(!(BY.corr %in% c("positive", "negative"))){
+    stop("'BY.corr' input not acceptable. Must be either 'positive' or 'negative'")
+  }
+
   n=length(pvalues)
 
-  #Remove NA inputted pvalues
+  #Remove NA inputted pvalues, zvalues
   if(na.rm){
     pvalues = pvalues[!is.na(pvalues)]
+    zvalues = zvalues[!is.na(zvalues)]
     n = length(pvalues)
   }
 
@@ -98,45 +117,45 @@ p.fdr = function(pvalues,
     }else if(zvalues=="less"){
       zvalues = qnorm(pvalues, lower.tail = TRUE)
     }
-  }
-
-
-  if(estim.method == "set.pi0"){
-    pi0 = set.pi0
   }else{
-    pi0 = get.pi0(pvalues=pvalues,
-                    estim.method=estim.method,
-                    zvalues=zvalues ,
-                    threshold=threshold,
-                    default.odds=default.odds,
-                    hist.breaks=hist.breaks)
+    if(length(zvalues)!=length(pvalues)){
+      stop("'zvalues' is different length than 'pvalues'")
+    }
   }
+
+  pi0 = get.pi0(pvalues=pvalues,
+                set.pi0=set.pi0,
+                estim.method=estim.method,
+                zvalues=zvalues ,
+                threshold=threshold,
+                default.odds=default.odds,
+                hist.breaks=hist.breaks)
 
   #Always calc the individual BH FDRs
-  fdr.bh = pmin(1,pi0*pvalues*n/rank(pvalues,ties.method = "first"))
+  fdr.bh = pmin(1,pi0*pvalues*n/rank(pvalues,ties.method = "random"))
 
   #Different Adjustment Methods
   if(adjust.method == "BH"){
     o = order(pvalues, decreasing = TRUE)
     ro = order(o)
-    adj.pvalues = cummin(pmin(1,pvalues*n/rank(pvalues,ties.method = "first"))[o])[ro]
+    adj.pvalues = cummin(pmin(1,pvalues*n/rank(pvalues,ties.method = "random"))[o])[ro]
 
-    adj.fdrs = pmin(1,pi0*pvalues*n/rank(pvalues,ties.method = "first"))
+    adj.fdrs = pmin(1,pi0*pvalues*n/rank(pvalues,ties.method = "random"))
   }else if(adjust.method == "BY"&BY.corr=="positive"){
     dep = cumsum(1/(1:n))
     o = order(pvalues, decreasing = TRUE)
     ro = order(o)
-    adj.pvalues = cummin(pmin(1,dep*pvalues*n/rank(pvalues,ties.method = "first"))[o])[ro]
+    adj.pvalues = cummin(pmin(1,dep*pvalues*n/rank(pvalues,ties.method = "random"))[o])[ro]
 
-    adj.fdrs = pmin(1,pi0*dep*pvalues*n/rank(pvalues,ties.method = "first"))
+    adj.fdrs = pmin(1,pi0*dep*pvalues*n/rank(pvalues,ties.method = "random"))
   }else if(adjust.method == "BY"&BY.corr=="negative"){
     gamma= -1*log(n)+sum(1/(1:n))
     dep = log(1:n)+gamma+1/(2*(1:n))
     o = order(pvalues, decreasing = TRUE)
     ro = order(o)
-    adj.pvalues = cummin(pmin(1,dep*pvalues*n/rank(pvalues,ties.method = "first"))[o])[ro]
+    adj.pvalues = cummin(pmin(1,dep*pvalues*n/rank(pvalues,ties.method = "random"))[o])[ro]
 
-    adj.fdrs = pmin(1,pi0*dep*pvalues*n/rank(pvalues,ties.method = "first"))
+    adj.fdrs = pmin(1,pi0*dep*pvalues*n/rank(pvalues,ties.method = "random"))
   }else if(adjust.method == "Bon"){
     adj.pvalues = pmin(1, n*pvalues)
 
@@ -144,15 +163,15 @@ p.fdr = function(pvalues,
   }else if(adjust.method == "Holm"){
     o = order(pvalues, decreasing = TRUE)
     ro = order(o)
-    adj.pvalues = cummax(pmin(1,(n + 1 - rank(pvalues,ties.method = "first"))*pvalues)[o])[ro]
+    adj.pvalues = cummax(pmin(1,(n + 1 - rank(pvalues,ties.method = "random"))*pvalues)[o])[ro]
 
-    adj.fdrs = pmin(1, (n + 1 - rank(pvalues,ties.method = "first")*pvalues))
+    adj.fdrs = pmin(1, pi0*(n + 1 - rank(pvalues,ties.method = "random")*pvalues))
   }else if(adjust.method == "Hoch"){
     o = order(pvalues, decreasing = TRUE)
     ro = order(o)
-    adj.pvalues = cummin(pmin(1,(n - rank(pvalues,ties.method = "first") + 1)*pvalues)[o])[ro]
+    adj.pvalues = cummin(pmin(1,(n - rank(pvalues,ties.method = "random") + 1)*pvalues)[o])[ro]
 
-    adj.fdrs = pmin(1, (n - rank(pvalues,ties.method = "first") + 1)*pvalues)
+    adj.fdrs = pmin(1, pi0*(n - rank(pvalues,ties.method = "random") + 1)*pvalues)
   }else if(adjust.method == "Hommel"){
     o = order(pvalues, decreasing = TRUE)
     ro = order(o)
@@ -169,7 +188,10 @@ p.fdr = function(pvalues,
     }
     adj.pvalues = pmax(pa, p)[ro]
 
-    adj.fdrs = pmax(pa, p)[ro]
+    adj.fdrs = pi0*pmax(pa, p)[ro]
+  }else if(adjust.method == "Sidak"){
+    adj.pvalues = 1 - (1 - pvalues)^(n)
+    adj.fdrs = pi0*(1 - (1 - pvalues)^(n))
   }
 
   #Sort results matrix in decreasing order by adj.fdrs
@@ -179,6 +201,7 @@ p.fdr = function(pvalues,
     new.order = c(1:n)
   }
 
+  #Output
   if(length(pvalues)==1){
     one.fdr=(1+exp(zvalues^2/2)*default.odds)^-1
 

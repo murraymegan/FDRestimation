@@ -6,23 +6,24 @@
 \usage{
 get.pi0(
   pvalues,
-  estim.method = "last.hist",
   zvalues = "two.sided",
+  estim.method = "last.hist",
   threshold = 0.05,
   default.odds = 1,
-  hist.breaks = "scott"
+  hist.breaks = "scott",
+  na.rm = TRUE
 )
 }
 \arguments{
 \item{pvalues}{A numeric vector of raw p-values.}
 
-\item{estim.method}{A string used to determine which method is used to estimate the pi0 value. Defaults to "last.hist".}
-
 \item{zvalues}{A numeric vector of z-values to be used in pi0 estimation or a string with options "two.sided", "greater" or "less". Defaults to "two.sided".}
+
+\item{estim.method}{A string used to determine which method is used to estimate the pi0 value. Defaults to "last.hist".}
 
 \item{threshold}{A numeric value in the interval \code{[0,1]} used in a multiple comparison hypothesis tests to determine significance from the null. Defaults to 0.05.}
 
-\item{default.odds}{A numeric value determining the ratio of pi1/pi0 used in the computation of one FDR. Defaults to 1.}
+\item{default.odds}{A numeric value determining the ratio of pi1/pi0 used in the computation of lower bound FDR. Defaults to 1.}
 
 \item{hist.breaks}{A numeric or string variable representing how many breaks in the pi0 estimation histogram methods. Defaults to "scott".}
 }

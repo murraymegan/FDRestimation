@@ -45,13 +45,33 @@
 #'
 
 get.pi0 = function(pvalues,
-                   estim.method = "last.hist",
+                   set.pi0,
                    zvalues = "two.sided",
+                   estim.method = "last.hist",
                    threshold=0.05,
                    default.odds=1,
-                   hist.breaks="scott"){
+                   hist.breaks="scott",
+                   na.rm=TRUE){
+
+  # Error Checking
+  if(TRUE %in% (pvalues>1|pvalues<0)){
+    stop("'pvalues' has value outside acceptable [0,1] range")
+  }
+  if(threshold>=1|threshold<=0){
+    stop("'threshold' has value outside acceptable (0,1) range")
+  }
+  if(default.odds<0){
+    stop("'default.odds' has a negative value which is outside its acceptable range")
+  }
 
   n=length(pvalues)
+
+  #Remove NA inputted pvalues, zvalues
+  if(na.rm){
+    pvalues = pvalues[!is.na(pvalues)]
+    zvalues = zvalues[!is.na(zvalues)]
+    n = length(pvalues)
+  }
 
   #Zvalues method
   if(is.character(zvalues)){
@@ -62,10 +82,16 @@ get.pi0 = function(pvalues,
     }else if(zvalues=="less"){
       zvalues = qnorm(pvalues, lower.tail = TRUE)
     }
+  }else{
+    if(length(zvalues)!=length(pvalues)){
+      stop("'zvalues' is different length than 'pvalues'")
+    }
   }
 
   #Null Proportion Estimation
-  if(estim.method=="last.hist"){
+  if(estim.method == "set.pi0"){
+    pi0 = set.pi0
+  }else if(estim.method=="last.hist"){
     try.hist = hist(pvalues, breaks=hist.breaks, plot=FALSE)
     try.mids = try.hist$mids
     try.count = try.hist$counts
