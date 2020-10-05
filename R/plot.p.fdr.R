@@ -5,7 +5,7 @@
 ##	Version:	1.0
 ##
 ##	Author:		Megan H. Murray and Jeffrey D. Blume
-##	Date:		  June 29, 2020
+##	Date:		  October 5th, 2020
 ################################################################
 #
 #' FDR plotting
@@ -19,17 +19,20 @@
 #' @param adj.sig.line A Boolean TRUE or FALSE value to indicate whether or not to plot the adjusted significance threshold. Defaults to TRUE.
 #' @param threshold A numeric value to determine the threshold at which we plot significance. Defaults to value used in the p.fdr.object.
 #' @param x.axis A string variable to indicate what to plot on the x-axis. Can either be "Rank" or "Zvalues". Defaults to "Rank".
-#' @param x.lim A numeric interval for x-axis limits.
-#' @param y.lim A numeric interval for y-axis limits. Defaults to c(0,1).
+#' @param xlim A numeric interval for x-axis limits.
+#' @param ylim A numeric interval for y-axis limits. Defaults to c(0,1).
 #' @param zvalues A numeric vector of z-values to be used in pi0 estimation or a string with options "two.sided", "greater" or "less". Defaults to "two.sided".
 #' @param legend.where A string "bottomright", "bottomleft", "topleft", "topright". Defaults to "topleft" is x.axis="Rank" and "topright" if x.axis="Zvalues".
-#' @param title A string variable for the title of the plot.
-#' @param pch.star A plotting ‘character’, or symbol to use for the adjusted p-value points. This can either be a single character or an integer code for one of a set of graphics symbols. Defaults to 17.
+#' @param main A string variable for the title of the plot.
+#' @param pch.adj.p A plotting ‘character’, or symbol to use for the adjusted p-value points. This can either be a single character or an integer code for one of a set of graphics symbols. Defaults to 17.
+#' @param pch.raw.p A plotting ‘character’, or symbol to use for the raw p-value points. This can either be a single character or an integer code for one of a set of graphics symbols. Defaults to 20.
+#' @param pch.adj.fdr A plotting ‘character’, or symbol to use for the adjusted FDR points. This can either be a single character or an integer code for one of a set of graphics symbols. Defaults to 20.
+#' @param col A vector of colors for the points and lines in the plot. If the input has 1 value all points and lines will be that same color. If the input has length of 3 then col.adj.fdr will be the first value, col.adj.p will be the second, and col.raw.p is the third. Defaults to c("dodgerblue","firebrick2", "black").
 #'
 #' @details We run into errors or warnings when
 #'
 #' @seealso \code{\link{summary.p.fdr}, \link{p.fdr}, \link{get.pi0}}
-#' @keywords
+#' @keywords plot, FDR, adjusted p-values
 #' @export
 #' @examples
 #'
@@ -51,14 +54,20 @@ plot.p.fdr = function(p.fdr.object,
                       adj.sig.line=TRUE,
                       threshold = NA,
                       x.axis="Rank",
-                      x.lim=NA,
-                      y.lim=c(0,1),
+                      xlim=NA,
+                      ylim=c(0,1),
                       zvalues="two.sided",
                       legend.where=NA,
-                      title=NA,
-                      pch.star = 17){
+                      main=NA,
+                      pch.adj.p=17,
+                      pch.raw.p=20,
+                      pch.adj.fdr=20,
+                      col=c("dodgerblue","firebrick2", "black")){
 
   n=length(p.fdr.object$fdrs)
+  library(stats, quietly = TRUE)
+  library(utils, quietly = TRUE)
+  library(graphics, quietly = TRUE)
 
   if(is.na(threshold)){
     threshold = p.fdr.object$threshold
@@ -79,13 +88,23 @@ plot.p.fdr = function(p.fdr.object,
     }
   }
 
+  if(length(col)==3){
+    col.adj.fdr = col[1]
+    col.adj.p = col[2]
+    col.raw.p = col[3]
+  }else if(length(col)==1){
+    col.adj.fdr=col.adj.p=col.raw.p = col
+  }else{
+    stop("Length of 'col' input is not 1 or 3.")
+  }
+
   if(x.axis=="Rank"){
     if(is.na(legend.where)){
       legend.where="topleft"
     }
 
-    if(length(x.lim)!=2){
-      x.lim = c(1,n)
+    if(length(xlim)!=2){
+      xlim = c(1,n)
     }
     if(p.fdr.object$`Adjustment Method`=="BH"){
       x.line=0:(n)
@@ -111,20 +130,20 @@ plot.p.fdr = function(p.fdr.object,
       y.line=NA
     }
 
-    if(is.na(title)){
-      title= paste0(p.fdr.object$`Adjustment Method`,
+    if(is.na(main)){
+      main= paste0(p.fdr.object$`Adjustment Method`,
                     " p.fdr Object Plot")
     }
     if(adj.pvalues){
       plot(rank(p.fdr.object$`Results Matrix`[,3],ties.method = "random"),
            p.fdr.object$`Results Matrix`[,2],
-           col="dodgerblue2",
-           ylim=y.lim,
-           xlim=x.lim,
+           col=col.adj.fdr,
+           ylim=ylim,
+           xlim=xlim,
            xlab="Ranking of Raw p-values",
            ylab=" ",
-           main=title,
-           pch=pch.star,
+           main=main,
+           pch=pch.adj.p,
            cex.main=1.2,
            axes = FALSE,
            cex.axis=0.5)
@@ -133,17 +152,17 @@ plot.p.fdr = function(p.fdr.object,
         axis(side = 2,
              at = c(threshold),
              las=1,
-             col.axis = "dodgerblue2",
+             col.axis = col.adj.fdr,
              cex.axis=0.75)
         axis(side = 2,
              cex.axis=0.75,
              las=1)
         points(rank(p.fdr.object$`Results Matrix`[,3],ties.method = "random"),
                p.fdr.object$`Results Matrix`[,1],
-               col="firebrick2",
-               pch=20)
+               col=col.adj.p,
+               pch=pch.adj.fdr)
         abline(h=threshold,
-               col="dodgerblue2",
+               col=col.adj.fdr,
                lwd=2)
       }else{
         axis(side = 1)
@@ -151,29 +170,29 @@ plot.p.fdr = function(p.fdr.object,
              las=1)
         points(rank(p.fdr.object$`Results Matrix`[,3],ties.method = "random"),
                p.fdr.object$`Results Matrix`[,1],
-               col="firebrick2",
-               pch=20)
+               col=col.adj.p,
+               pch=pch.adj.fdr)
       }
     }else{
       plot(rank(p.fdr.object$`Results Matrix`[,3],ties.method = "random"),
            p.fdr.object$`Results Matrix`[,1],
-           col="firebrick2",
-           ylim=y.lim,
-           xlim=x.lim,
+           col=col.adj.p,
+           ylim=ylim,
+           xlim=xlim,
            xlab="Ranking of Raw p-values",
            ylab=" ",
-           main=title,
-           pch=20,
+           main=main,
+           pch=pch.adj.fdr,
            las=1)
     }
     if(raw.pvalues){
       points(rank(p.fdr.object$`Results Matrix`[,3],ties.method = "random"),
              p.fdr.object$`Results Matrix`[,3],
-             col="black",
-             pch=20)
+             col=col.raw.p,
+             pch=pch.raw.p)
       if(sig.line){
         lines(x.line, y.line,
-              col="black",
+              col=col.raw.p,
               lwd=2)
       }
     }
@@ -186,10 +205,10 @@ plot.p.fdr = function(p.fdr.object,
                       "Raw p-values",
                       paste0(p.fdr.object$`Adjustment Method`," Threshold (Raw p-values)"),
                       paste0(p.fdr.object$`Adjustment Method`," Threshold (Adj p-values)")),
-             pch=c(pch.star,20,20, NA, NA),
+             pch=c(pch.adj.p,pch.adj.fdr,pch.raw.p, NA, NA),
              lty=c(NA,NA,NA,1,1),
              lwd=c(NA,NA,NA,2,2),
-             col=c("dodgerblue2","firebrick2", "black", "black","dodgerblue2"),
+             col=c(col.adj.fdr,col.adj.p, col.raw.p, col.raw.p,col.adj.fdr),
              cex=0.7,
              bty = "n")
     }
@@ -198,10 +217,10 @@ plot.p.fdr = function(p.fdr.object,
              legend=c(paste0("FDRs (", p.fdr.object$`Adjustment Method`,")"),
                       "Raw p-values",
                       paste0(p.fdr.object$`Adjustment Method`," Threshold (Raw p-values)")),
-             pch=c(20,20, NA),
+             pch=c(pch.adj.fdr,pch.raw.p, NA),
              lty=c(NA,NA,1),
              lwd=c(NA,NA,2),
-             col=c("firebrick2", "black", "black"),
+             col=c(col.adj.p, col.raw.p, col.raw.p),
              cex=0.7,
              bty = "n")
     }
@@ -210,18 +229,18 @@ plot.p.fdr = function(p.fdr.object,
              legend=c(paste0("Adj p-values (",p.fdr.object$`Adjustment Method`,")"),
                       paste0("FDRs (", p.fdr.object$`Adjustment Method`,")"),
                       paste0(p.fdr.object$`Adjustment Method`," Threshold (Adj p-values)")),
-             pch=c(pch.star,20, NA),
+             pch=c(pch.adj.p,pch.adj.fdr, NA),
              lty=c(NA,NA,1),
              lwd=c(NA,NA,2),
-             col=c("dodgerblue2","firebrick2", "dodgerblue2"),
+             col=c(col.adj.fdr,col.adj.p, col.adj.fdr),
              cex=0.7,
              bty = "n")
     }
     else{
       legend(legend.where,
              legend=c(paste0("FDRs (",p.fdr.object$`Adjustment Method`,")")),
-             pch=c(20),
-             col=c("firebrick2"),
+             pch=c(pch.adj.fdr),
+             col=c(col.adj.p),
              cex=0.7,
              bty = "n")
 
@@ -232,20 +251,20 @@ plot.p.fdr = function(p.fdr.object,
         legend.where="topright"
       }
 
-      if(is.na(title)){
-        title= paste0(p.fdr.object$`Adjustment Method`,
+      if(is.na(main)){
+        main= paste0(p.fdr.object$`Adjustment Method`,
                       " p.fdr Z-values Plot")
       }
 
       if(adj.pvalues){
         plot(zvalues,
              p.fdr.object$`Results Matrix`[,2],
-             col="dodgerblue2",
-             ylim=y.lim,
+             col=col.adj.fdr,
+             ylim=ylim,
              xlab="Z-values",
              ylab=" ",
-             main=title,
-             pch=pch.star,
+             main=main,
+             pch=pch.adj.p,
              cex.main=1.2,
              axes=FALSE,
              cex.axis=0.5,
@@ -254,35 +273,35 @@ plot.p.fdr = function(p.fdr.object,
         axis(side = 2,
              at = c(threshold),
              las=1,
-             col.axis="dodgerblue2",
+             col.axis=col.adj.fdr,
              cex.axis=0.75)
         axis(side = 2,
              cex.axis=0.75,
              las=1)
         points(zvalues,
                p.fdr.object$`Results Matrix`[,1],
-               col="firebrick2",
-               pch=20)
+               col=col.adj.p,
+               pch=pch.adj.fdr)
         abline(h=threshold,
-               col="dodgerblue2",
+               col=col.adj.fdr,
                lwd=2)
       }else{
         plot(zvalues,
              p.fdr.object$`Results Matrix`[,1],
-             col="firebrick2",
-             ylim=y.lim,
+             col=col.adj.p,
+             ylim=ylim,
              xlab="Z-values",
              ylab=" ",
-             main=title,
-             pch=20,
+             main=main,
+             pch=pch.adj.fdr,
              las=1)
       }
 
       if(raw.pvalues){
         points(zvalues,
                p.fdr.object$`Results Matrix`[,3],
-               col="black",
-               pch=20)
+               col=col.raw.p,
+               pch=pch.raw.p)
       }
 
     #Legends
@@ -292,10 +311,10 @@ plot.p.fdr = function(p.fdr.object,
                       paste0("FDRs (",p.fdr.object$`Adjustment Method`,")"),
                       "Raw p-values",
                       paste0(p.fdr.object$`Adjustment Method`," Threshold (Adj p-values)")),
-             pch=c(pch.star,20,20, NA),
+             pch=c(pch.adj.p,pch.adj.fdr,pch.raw.p, NA),
              lty=c(NA,NA,NA,1),
              lwd=c(NA,NA,NA,2),
-             col=c("dodgerblue2","firebrick2", "black","dodgerblue2"),
+             col=c(col.adj.fdr,col.adj.p, col.raw.p,col.adj.fdr),
              cex=0.7,
              bty = "n")
     }
@@ -303,8 +322,8 @@ plot.p.fdr = function(p.fdr.object,
       legend(legend.where,
              legend=c(paste0("FDRs (", p.fdr.object$`Adjustment Method`,")"),
                       "Raw p-values"),
-             pch=c(20,20),
-             col=c("firebrick2", "black"),
+             pch=c(pch.adj.fdr,pch.raw.p),
+             col=c(col.adj.p, col.raw.p),
              cex=0.7,
              bty = "n")
     }
@@ -313,18 +332,18 @@ plot.p.fdr = function(p.fdr.object,
              legend=c(paste0("Adj p-values (",p.fdr.object$`Adjustment Method`,")"),
                       paste0("FDRs (", p.fdr.object$`Adjustment Method`,")"),
                       paste0(p.fdr.object$`Adjustment Method`," Threshold (Raw p-values)")),
-             pch=c(pch.star,20, NA),
+             pch=c(pch.adj.p,pch.adj.fdr, NA),
              lty=c(NA,NA,1),
              lwd=c(NA,NA,2),
-             col=c("dodgerblue2","firebrick2", "dodgerblue2"),
+             col=c(col.adj.fdr,col.adj.p, col.adj.fdr),
              cex=0.7,
              bty = "n")
     }
     else{
       legend(legend.where,
              legend=c(paste0("FDRs (",p.fdr.object$`Adjustment Method`,")")),
-             pch=c(20),
-             col=c("firebrick2"),
+             pch=c(pch.adj.fdr),
+             col=c(col.adj.p),
              cex=0.7,
              bty = "n")
     }

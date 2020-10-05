@@ -5,7 +5,7 @@
 ##	Version:	1.0
 ##
 ##	Author:		Megan H. Murray and Jeffrey D. Blume
-##	Date:		  June 29, 2020
+##	Date:		  October 5th, 2020
 ################################################################
 #
 #' Summary of p.fdr.object
@@ -20,13 +20,13 @@
 #' @return A list containing the following components:
 #' @return \item{Range}{The range on the false discovery rates.}
 #' @return \item{Significant Findings}{The number of significant findings. Found using the adjusted p-values and the given threshold. This is also the number of times we decide to reject the null hypothesis that the data is generated from a standard normal distribution.}
-#' @return \item{Inconclusive Findings]{The number of inconclusive findings. Found using the adjusted p-values and the given threshold. This is also the number of times we fail to reject the null hypothesis that the data is generated from a standard normal distribution.}
+#' @return \item{Inconclusive Findings}{The number of inconclusive findings. Found using the adjusted p-values and the given threshold. This is also the number of times we fail to reject the null hypothesis that the data is generated from a standard normal distribution.}
 #' @return \item{Assumed/Estimated pi0}{the assumed or estimated pi0 value depending on how the p.fdr function was run.}
 #' @return \item{Number of Tests}{The total number of multiple comparison tests completed.}
 #' @return \item{Adjustment Method}{The adjustment method used in the p.fdr function. }
 #'
 #' @seealso \code{\link{plot.p.fdr}, \link{p.fdr}, \link{get.pi0}}
-#' @keywords
+#' @keywords summary, FDR, adjusted p-values
 #' @export
 #' @examples
 #'
@@ -50,8 +50,8 @@
 
 summary.p.fdr = function(p.fdr.object,
                          digits = 5){
-  if (is.null(p.fdr.object$fdrs)){
-    stop("invalid 'p.fdr' object:  no 'fdrs' component")
+  if(is.null(p.fdr.object$fdrs)){
+    stop("Invalid 'p.fdr' object: No 'fdrs' component. ")
   }
 
   ans = list("FDR Range" = round(range(p.fdr.object$fdrs),digits=digits),

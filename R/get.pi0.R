@@ -5,7 +5,7 @@
 ##	Version:	1.0
 ##
 ##	Author:		Megan H. Murray and Jeffrey D. Blume
-##	Date:		  June 29, 2020
+##	Date:		  October 5th, 2020
 ################################################################
 #
 #' pi0 Estimation
@@ -13,18 +13,20 @@
 #' @description This function estimates the null proportion of data or pi0 value.
 #'
 #' @param pvalues A numeric vector of raw p-values.
+#' @param set.pi0 A numeric value to specify a known or assumed pi0 value in the interval \code{[0,1]}. Defaults to 1. Which means the assumption is that all inputted raw p-values come from the null distribution.
 #' @param estim.method A string used to determine which method is used to estimate the pi0 value. Defaults to "last.hist".
 #' @param zvalues A numeric vector of z-values to be used in pi0 estimation or a string with options "two.sided", "greater" or "less". Defaults to "two.sided".
 #' @param threshold A numeric value in the interval \code{[0,1]} used in a multiple comparison hypothesis tests to determine significance from the null. Defaults to 0.05.
 #' @param default.odds A numeric value determining the ratio of pi1/pi0 used in the computation of lower bound FDR. Defaults to 1.
 #' @param hist.breaks A numeric or string variable representing how many breaks in the pi0 estimation histogram methods. Defaults to "scott".
+#' @param na.rm A Boolean TRUE or FALSE value indicating whether NA's should be removed from the inputted raw p-value vector before further computation. Defaults to TRUE.
 #'
 #' @details We run into errors or warnings when
 #'
 #' @return \item{pi0} A numeric value represnting the proportion of the given data that come from the null distribution. A value in the interval \code{[0,1]}.
 #'
 #' @seealso \code{\link{plot.p.fdr}, \link{p.fdr}, \link{summary.p.fdr}}
-#' @keywords
+#' @keywords FDR, adjusted p-values, null proportion
 #' @export
 #' @examples
 #'
@@ -52,6 +54,10 @@ get.pi0 = function(pvalues,
                    default.odds=1,
                    hist.breaks="scott",
                    na.rm=TRUE){
+
+  library(stats, quietly = TRUE)
+  library(utils, quietly = TRUE)
+  library(graphics, quietly = TRUE)
 
   # Error Checking
   if(TRUE %in% (pvalues>1|pvalues<0)){

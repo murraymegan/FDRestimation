@@ -5,7 +5,7 @@
 ##	Version:	1.0
 ##
 ##	Author:		Megan H. Murray and Jeffrey D. Blume
-##	Date:		  June 29, 2020
+##	Date:		  October 5th, 2020
 ################################################################
 #
 #' Print the summary of p.fdr.object
@@ -18,7 +18,7 @@
 #' @details We run into errors or warnings when
 #'
 #' @seealso \code{\link{plot.p.fdr}, \link{p.fdr}, \link{get.pi0}}
-#' @keywords
+#' @keywords  summary, FDR, adjusted p-values, null proportion
 #' @export
 #' @examples
 #'

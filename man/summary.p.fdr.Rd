@@ -18,7 +18,7 @@ A list containing the following components:
 
 \item{Significant Findings}{The number of significant findings. Found using the adjusted p-values and the given threshold. This is also the number of times we decide to reject the null hypothesis that the data is generated from a standard normal distribution.}
 
-
+\item{Inconclusive Findings}{The number of inconclusive findings. Found using the adjusted p-values and the given threshold. This is also the number of times we fail to reject the null hypothesis that the data is generated from a standard normal distribution.}
 
 \item{Assumed/Estimated pi0}{the assumed or estimated pi0 value depending on how the p.fdr function was run.}
 
@@ -55,3 +55,7 @@ R Journal 2020?
 \seealso{
 \code{\link{plot.p.fdr}, \link{p.fdr}, \link{get.pi0}}
 }
+\keyword{FDR,}
+\keyword{adjusted}
+\keyword{p-values}
+\keyword{summary,}

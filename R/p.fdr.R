@@ -5,7 +5,7 @@
 ##	Version:	1.0
 ##
 ##	Author:		Megan H. Murray and Jeffrey D. Blume
-##	Date:		  June 29, 2020
+##	Date:		  October 5th, 2020
 ################################################################
 #
 #' FDR Computation
@@ -36,7 +36,7 @@
 #' @return \item{Adjustment Method}{The string with the method name used in computation(needed for the plot.fdr function).}
 #'
 #' @seealso \code{\link{plot.p.fdr}, \link{summary.p.fdr}, \link{get.pi0}}
-#' @keywords
+#' @keywords  FDR, adjusted p-values, null proportion
 #' @export
 #' @examples
 #'
@@ -81,6 +81,9 @@ p.fdr = function(pvalues,
                  na.rm=TRUE){
 
   cl <- match.call()
+  library(stats, quietly = TRUE)
+  library(utils, quietly = TRUE)
+  library(graphics, quietly = TRUE)
 
   # Error Checking
   if(TRUE %in% (pvalues>1|pvalues<0)){

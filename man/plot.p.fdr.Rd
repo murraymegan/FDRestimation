@@ -12,12 +12,15 @@
   adj.sig.line = TRUE,
   threshold = NA,
   x.axis = "Rank",
-  x.lim = NA,
-  y.lim = c(0, 1),
+  xlim = NA,
+  ylim = c(0, 1),
   zvalues = "two.sided",
   legend.where = NA,
-  title = NA,
-  pch.star = 17
+  main = NA,
+  pch.adj.p = 17,
+  pch.raw.p = 20,
+  pch.adj.fdr = 20,
+  col = c("dodgerblue", "firebrick2", "black")
 )
 }
 \arguments{
@@ -35,17 +38,23 @@
 
 \item{x.axis}{A string variable to indicate what to plot on the x-axis. Can either be "Rank" or "Zvalues". Defaults to "Rank".}
 
-\item{x.lim}{A numeric interval for x-axis limits.}
+\item{xlim}{A numeric interval for x-axis limits.}
 
-\item{y.lim}{A numeric interval for y-axis limits. Defaults to c(0,1).}
+\item{ylim}{A numeric interval for y-axis limits. Defaults to c(0,1).}
 
 \item{zvalues}{A numeric vector of z-values to be used in pi0 estimation or a string with options "two.sided", "greater" or "less". Defaults to "two.sided".}
 
 \item{legend.where}{A string "bottomright", "bottomleft", "topleft", "topright". Defaults to "topleft" is x.axis="Rank" and "topright" if x.axis="Zvalues".}
 
-\item{title}{A string variable for the title of the plot.}
+\item{main}{A string variable for the title of the plot.}
 
-\item{pch.star}{A plotting ‘character’, or symbol to use for the adjusted p-value points. This can either be a single character or an integer code for one of a set of graphics symbols. Defaults to 17.}
+\item{pch.adj.p}{A plotting ‘character’, or symbol to use for the adjusted p-value points. This can either be a single character or an integer code for one of a set of graphics symbols. Defaults to 17.}
+
+\item{pch.raw.p}{A plotting ‘character’, or symbol to use for the raw p-value points. This can either be a single character or an integer code for one of a set of graphics symbols. Defaults to 20.}
+
+\item{pch.adj.fdr}{A plotting ‘character’, or symbol to use for the adjusted FDR points. This can either be a single character or an integer code for one of a set of graphics symbols. Defaults to 20.}
+
+\item{col}{A vector of colors for the points and lines in the plot. If the input has 1 value all points and lines will be that same color. If the input has length of 3 then col.adj.fdr will be the first value, col.adj.p will be the second, and col.raw.p is the third. Defaults to c("dodgerblue","firebrick2", "black").}
 }
 \description{
 This function creates a plot using a p.fdr.object.
@@ -70,3 +79,7 @@ plot(fdr.output, x.axis="Zvalues")
 \seealso{
 \code{\link{summary.p.fdr}, \link{p.fdr}, \link{get.pi0}}
 }
+\keyword{FDR,}
+\keyword{adjusted}
+\keyword{p-values}
+\keyword{plot,}

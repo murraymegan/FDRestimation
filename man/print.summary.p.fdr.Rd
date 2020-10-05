@@ -40,3 +40,9 @@ R Journal 2020?
 \seealso{
 \code{\link{plot.p.fdr}, \link{p.fdr}, \link{get.pi0}}
 }
+\keyword{FDR,}
+\keyword{adjusted}
+\keyword{null}
+\keyword{p-values,}
+\keyword{proportion}
+\keyword{summary,}

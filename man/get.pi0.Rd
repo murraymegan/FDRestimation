@@ -6,6 +6,7 @@
 \usage{
 get.pi0(
   pvalues,
+  set.pi0,
   zvalues = "two.sided",
   estim.method = "last.hist",
   threshold = 0.05,
@@ -17,6 +18,8 @@ get.pi0(
 \arguments{
 \item{pvalues}{A numeric vector of raw p-values.}
 
+\item{set.pi0}{A numeric value to specify a known or assumed pi0 value in the interval \code{[0,1]}. Defaults to 1. Which means the assumption is that all inputted raw p-values come from the null distribution.}
+
 \item{zvalues}{A numeric vector of z-values to be used in pi0 estimation or a string with options "two.sided", "greater" or "less". Defaults to "two.sided".}
 
 \item{estim.method}{A string used to determine which method is used to estimate the pi0 value. Defaults to "last.hist".}
@@ -26,6 +29,8 @@ get.pi0(
 \item{default.odds}{A numeric value determining the ratio of pi1/pi0 used in the computation of lower bound FDR. Defaults to 1.}
 
 \item{hist.breaks}{A numeric or string variable representing how many breaks in the pi0 estimation histogram methods. Defaults to "scott".}
+
+\item{na.rm}{A Boolean TRUE or FALSE value indicating whether NA's should be removed from the inputted raw p-value vector before further computation. Defaults to TRUE.}
 }
 \value{
 \item{pi0} A numeric value represnting the proportion of the given data that come from the null distribution. A value in the interval \code{[0,1]}.
@@ -57,3 +62,8 @@ R Journal 2020?
 \seealso{
 \code{\link{plot.p.fdr}, \link{p.fdr}, \link{summary.p.fdr}}
 }
+\keyword{FDR,}
+\keyword{adjusted}
+\keyword{null}
+\keyword{p-values,}
+\keyword{proportion}
