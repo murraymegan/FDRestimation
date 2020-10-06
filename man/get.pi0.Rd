@@ -33,7 +33,7 @@ get.pi0(
 \item{na.rm}{A Boolean TRUE or FALSE value indicating whether NA's should be removed from the inputted raw p-value vector before further computation. Defaults to TRUE.}
 }
 \value{
-\item{pi0} A numeric value represnting the proportion of the given data that come from the null distribution. A value in the interval \code{[0,1]}.
+\item{pi0} A numeric value representing the proportion of the given data that come from the null distribution. A value in the interval \code{[0,1]}.
 }
 \description{
 This function estimates the null proportion of data or pi0 value.

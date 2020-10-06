@@ -23,7 +23,7 @@
 #'
 #' @details We run into errors or warnings when
 #'
-#' @return \item{pi0} A numeric value represnting the proportion of the given data that come from the null distribution. A value in the interval \code{[0,1]}.
+#' @return \item{pi0} A numeric value representing the proportion of the given data that come from the null distribution. A value in the interval \code{[0,1]}.
 #'
 #' @seealso \code{\link{plot.p.fdr}, \link{p.fdr}, \link{summary.p.fdr}}
 #' @keywords FDR, adjusted p-values, null proportion
@@ -145,11 +145,6 @@ get.pi0 = function(pvalues,
     pi0=min(tail(lowerbound,1)/n,1)
 
   }else if(estim.method=="Storey"){
-    #Default
-    #lambda = seq(0.05, 0.95, by=0.05)
-    #Change?
-    #lambda = c(0.001,lambda, 0.999)
-
     lambda = seq(0, 0.95, by=0.05)
     lambda <- sort(lambda)
     ll <- length(lambda)
@@ -162,14 +157,15 @@ get.pi0 = function(pvalues,
     }else{
       ind <- length(lambda):1
 
-      # We add in (nbins=ll)
-      pi0 <- cumsum(tabulate(findInterval(pvalues , vec = lambda), nbins=ll)[ind])/(length(pvalues ) *
-                                                                                      (1 - lambda[ind]))
+      # Change nbins=ll
+      pi0 <- cumsum(tabulate(findInterval(pvalues,
+                                          vec = lambda),
+                             nbins=ll)[ind])/(length(pvalues)*(1 - lambda[ind]))
       pi0 <- pi0[ind]
       pi0.lambda <- pi0
-
       spi0 <- smooth.spline(lambda, pi0, df = 3)
-      #Original
+
+      #Original Code
       #pi0Smooth <- predict(spi0, x = lambda)$y
 
       pi0Smooth <- predict(spi0, x = c(lambda,1))$y

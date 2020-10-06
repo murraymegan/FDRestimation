@@ -26,7 +26,7 @@ p.fdr(
 
 \item{threshold}{A numeric value in the interval \code{[0,1]} used in a multiple comparison hypothesis tests to determine significance from the null. Defaults to 0.05.}
 
-\item{adjust.method}{A string used to identify the p-value and false discovery rate adjustment method. Defaults to \code{BH}. Options are \code{BH}, \code{BY}, code{Bon},\code{Holm}, \code{Hoch}, and \code{Hommel}.}
+\item{adjust.method}{A string used to identify the p-value and false discovery rate adjustment method. Defaults to \code{BH}. Options are \code{BH}, \code{BY}, code{Bon},\code{Holm}, \code{Hoch}, and \code{Sidak}.}
 
 \item{BY.corr}{A string of either "positive" or "negative" to determine which correlation is used in the BY method. Defaults to \code{positive}.}
 

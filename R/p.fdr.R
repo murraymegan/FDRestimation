@@ -15,7 +15,7 @@
 #' @param pvalues A numeric vector of raw p-values.
 #' @param zvalues A numeric vector of z-values to be used in pi0 estimation or a string with options "two.sided", "greater" or "less". Defaults to "two.sided".
 #' @param threshold A numeric value in the interval \code{[0,1]} used in a multiple comparison hypothesis tests to determine significance from the null. Defaults to 0.05.
-#' @param adjust.method A string used to identify the p-value and false discovery rate adjustment method. Defaults to \code{BH}. Options are \code{BH}, \code{BY}, code{Bon},\code{Holm}, \code{Hoch}, and \code{Hommel}.
+#' @param adjust.method A string used to identify the p-value and false discovery rate adjustment method. Defaults to \code{BH}. Options are \code{BH}, \code{BY}, code{Bon},\code{Holm}, \code{Hoch}, and \code{Sidak}.
 #' @param BY.corr A string of either "positive" or "negative" to determine which correlation is used in the BY method. Defaults to \code{positive}.
 #' @param just.fdr A Boolean TRUE or FALSE value which output only the FDR vector instead of the list output. Defaults to FALSE.
 #' @param default.odds A numeric value determining the ratio of pi1/pi0 used in the computation of one FDR. Defaults to 1.
@@ -175,23 +175,6 @@ p.fdr = function(pvalues,
     adj.pvalues = cummin(pmin(1,(n - rank(pvalues,ties.method = "random") + 1)*pvalues)[o])[ro]
 
     adj.fdrs = pmin(1, pi0*(n - rank(pvalues,ties.method = "random") + 1)*pvalues)
-  }else if(adjust.method == "Hommel"){
-    o = order(pvalues, decreasing = TRUE)
-    ro = order(o)
-    p = pvalues[o]
-    q = pa = rep.int(min(n * p/(1:n)), n)
-
-    for (j in (n - 1):2) {
-      ij = seq_len(n - j + 1)
-      i2 = (n - j + 2):n
-      q1 = min(j * p[i2]/(2:j))
-      q[ij] = pmin(j * p[ij], q1)
-      q[i2] = q[n - j + 1]
-      pa = pmax(pa, q)
-    }
-    adj.pvalues = pmax(pa, p)[ro]
-
-    adj.fdrs = pi0*pmax(pa, p)[ro]
   }else if(adjust.method == "Sidak"){
     adj.pvalues = 1 - (1 - pvalues)^(n)
     adj.fdrs = pi0*(1 - (1 - pvalues)^(n))
