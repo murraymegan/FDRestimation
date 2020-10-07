@@ -10,8 +10,7 @@ Vanderbilt University
 PhD Student, Department of Biostatistics  
 <i class="fas fa-envelope"></i>  megan.c.hollister@vanderbilt.edu  
   
-Jeffrey D. Blume
-Vanderbilt University  
+Jeffrey D. Blume  
 Professor of Biostatistics, Biomedical Informatics and Biochemistry  
 Vice Chair for Education, Biostatistics  
 Director of Graduate Education, Data Science Institute  Vanderbilt University  
