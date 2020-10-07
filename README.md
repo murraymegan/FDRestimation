@@ -51,6 +51,18 @@ sim.data.p <- 2*pnorm(-abs(sim.data))
 fdr.output = p.fdr(pvalues=sim.data.p, adjust.method="BH")
 ```
 
+This `plot.p.fdr()` function is used to plot the results of `p.fdr`. By default, the adjusted FDRs, adjusted p-values and raw p-values are plotted along with two threshold lines to help contextualize the points. Any combination of p-values and thresholds can be removed from the plot. The user can set the axis limits, the location of the legend, the title of the plot and the plotting symbols and colors.
+
+``` r
+plot(fdr.output)
+```
+
+The `get.pi0()` function is used to estimate the null proportion from the raw p-values. The user can choose one of 6 different methods included in our function: Last Histogram Height, Storey, Meinshausen, Jiang, Nettleton, and Pounds. The user may also change the methods of determining the number of histogram breaks, which is an essential component for many of the methods implemented here. The histogram breaks method defaults to "scott" because this was the most accurate and reliable method in our simulatons. 
+
+``` r 
+get.pi0(pvalues=sim.data.p, adjust.method="BH", estim.method="last.hist")
+```
+
 References
 ----------
 
