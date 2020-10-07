@@ -3,6 +3,22 @@ FDRestimation
 
 The `FDRestimation` package contains functions to calculate method adjusted FDRs and p-values. 
 
+Authors
+-------
+Megan Hollister Murray     
+Vanderbilt University  
+PhD Student, Department of Biostatistics  
+Nashville, TN  
+<i class="fas fa-envelope"></i>  megan.c.hollister@vanderbilt.edu  
+  
+Jeffrey D. Blume
+Vanderbilt University  
+Professor of Biostatistics, Biomedical Informatics and Biochemistry  
+Vice Chair for Education, Biostatistics  
+Director of Graduate Education, Data Science Institute  Vanderbilt University  
+Nashville, TN  
+<i class="fas fa-envelope"></i>  j.blume@vanderbilt.edu  
+
 News
 ----
 Version 1.0.0
@@ -38,5 +54,5 @@ fdr.output = p.fdr(pvalues=sim.data.p, adjust.method="BH")
 References
 ----------
 
-Paper appearing in ?
+A corresponding paper explaining and illustarting this package is in the process of being submitted to The R Journal.
 
