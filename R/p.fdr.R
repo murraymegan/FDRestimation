@@ -22,6 +22,7 @@
 #' @param estim.method A string used to determine which method is used to estimate the null proportion or pi0 value. Defaults to \code{set.pi0}.
 #' @param set.pi0 A numeric value to specify a known or assumed pi0 value in the interval \code{[0,1]}. Defaults to 1. Which means the assumption is that all inputted raw p-values come from the null distribution.
 #' @param hist.breaks A numeric or string variable representing how many breaks are used in the pi0 estimation histogram methods. Defaults to "scott".
+#' @param ties.method A string a character string specifying how ties are treated. Options are "first", "last", "average", "min", "max", or "random". Defaults to "random".
 #' @param sort.results A Boolean TRUE or FALSE value which sorts the output in either increasing or non-increasing order dependent on the FDR vector. Defaults to FALSE.
 #' @param na.rm A Boolean TRUE or FALSE value indicating whether NA's should be removed from the inputted raw p-value vector before further computation. Defaults to TRUE.
 #'
@@ -77,6 +78,7 @@ p.fdr = function(pvalues,
                  estim.method = "set.pi0",
                  set.pi0 = 1,
                  hist.breaks="scott",
+                 ties.method = "random",
                  sort.results=FALSE,
                  na.rm=TRUE){
 
@@ -135,30 +137,30 @@ p.fdr = function(pvalues,
                 hist.breaks=hist.breaks)
 
   #Always calc the individual BH FDRs
-  fdr.bh = pmin(1,pi0*pvalues*n/rank(pvalues,ties.method = "random"))
+  fdr.bh = pmin(1,pi0*pvalues*n/rank(pvalues,ties.method = ties.method))
 
   #Different Adjustment Methods
   if(adjust.method == "BH"){
     o = order(pvalues, decreasing = TRUE)
     ro = order(o)
-    adj.pvalues = cummin(pmin(1,pvalues*n/rank(pvalues,ties.method = "random"))[o])[ro]
+    adj.pvalues = cummin(pmin(1,pvalues*n/rank(pvalues,ties.method = ties.method))[o])[ro]
 
-    adj.fdrs = pmin(1,pi0*pvalues*n/rank(pvalues,ties.method = "random"))
+    adj.fdrs = pmin(1,pi0*pvalues*n/rank(pvalues,ties.method = ties.method))
   }else if(adjust.method == "BY"&BY.corr=="positive"){
     dep = cumsum(1/(1:n))
     o = order(pvalues, decreasing = TRUE)
     ro = order(o)
-    adj.pvalues = cummin(pmin(1,dep*pvalues*n/rank(pvalues,ties.method = "random"))[o])[ro]
+    adj.pvalues = cummin(pmin(1,dep*pvalues*n/rank(pvalues,ties.method = ties.method))[o])[ro]
 
-    adj.fdrs = pmin(1,pi0*dep*pvalues*n/rank(pvalues,ties.method = "random"))
+    adj.fdrs = pmin(1,pi0*dep*pvalues*n/rank(pvalues,ties.method = ties.method))
   }else if(adjust.method == "BY"&BY.corr=="negative"){
     gamma= -1*log(n)+sum(1/(1:n))
     dep = log(1:n)+gamma+1/(2*(1:n))
     o = order(pvalues, decreasing = TRUE)
     ro = order(o)
-    adj.pvalues = cummin(pmin(1,dep*pvalues*n/rank(pvalues,ties.method = "random"))[o])[ro]
+    adj.pvalues = cummin(pmin(1,dep*pvalues*n/rank(pvalues,ties.method = ties.method))[o])[ro]
 
-    adj.fdrs = pmin(1,pi0*dep*pvalues*n/rank(pvalues,ties.method = "random"))
+    adj.fdrs = pmin(1,pi0*dep*pvalues*n/rank(pvalues,ties.method = ties.method))
   }else if(adjust.method == "Bon"){
     adj.pvalues = pmin(1, n*pvalues)
 
@@ -166,15 +168,15 @@ p.fdr = function(pvalues,
   }else if(adjust.method == "Holm"){
     o = order(pvalues, decreasing = TRUE)
     ro = order(o)
-    adj.pvalues = cummax(pmin(1,(n + 1 - rank(pvalues,ties.method = "random"))*pvalues)[o])[ro]
+    adj.pvalues = cummax(pmin(1,(n + 1 - rank(pvalues,ties.method = ties.method))*pvalues)[o])[ro]
 
-    adj.fdrs = pmin(1, pi0*(n + 1 - rank(pvalues,ties.method = "random")*pvalues))
+    adj.fdrs = pmin(1, pi0*(n + 1 - rank(pvalues,ties.method = ties.method)*pvalues))
   }else if(adjust.method == "Hoch"){
     o = order(pvalues, decreasing = TRUE)
     ro = order(o)
-    adj.pvalues = cummin(pmin(1,(n - rank(pvalues,ties.method = "random") + 1)*pvalues)[o])[ro]
+    adj.pvalues = cummin(pmin(1,(n - rank(pvalues,ties.method = ties.method) + 1)*pvalues)[o])[ro]
 
-    adj.fdrs = pmin(1, pi0*(n - rank(pvalues,ties.method = "random") + 1)*pvalues)
+    adj.fdrs = pmin(1, pi0*(n - rank(pvalues,ties.method = ties.method) + 1)*pvalues)
   }else if(adjust.method == "Sidak"){
     adj.pvalues = 1 - (1 - pvalues)^(n)
     adj.fdrs = pi0*(1 - (1 - pvalues)^(n))

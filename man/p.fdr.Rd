@@ -15,6 +15,7 @@ p.fdr(
   estim.method = "set.pi0",
   set.pi0 = 1,
   hist.breaks = "scott",
+  ties.method = "random",
   sort.results = FALSE,
   na.rm = TRUE
 )
@@ -39,6 +40,8 @@ p.fdr(
 \item{set.pi0}{A numeric value to specify a known or assumed pi0 value in the interval \code{[0,1]}. Defaults to 1. Which means the assumption is that all inputted raw p-values come from the null distribution.}
 
 \item{hist.breaks}{A numeric or string variable representing how many breaks are used in the pi0 estimation histogram methods. Defaults to "scott".}
+
+\item{ties.method}{A string a character string specifying how ties are treated. Options are "first", "last", "average", "min", "max", or "random". Defaults to "random".}
 
 \item{sort.results}{A Boolean TRUE or FALSE value which sorts the output in either increasing or non-increasing order dependent on the FDR vector. Defaults to FALSE.}
 
