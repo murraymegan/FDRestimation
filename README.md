@@ -63,6 +63,15 @@ The `get.pi0()` function is used to estimate the null proportion from the raw p-
 get.pi0(pvalues=sim.data.p, adjust.method="BH", estim.method="last.hist")
 ```
 
+Help
+----
+
+Use the `help()` function to see full documentation on any of our functions. 
+
+``` r 
+help(p.fdr)
+```
+
 References
 ----------
 
