@@ -60,7 +60,7 @@ plot(fdr.output)
 The `get.pi0()` function is used to estimate the null proportion from the raw p-values. The user can choose one of 6 different methods included in our function: Last Histogram Height, Storey, Meinshausen, Jiang, Nettleton, and Pounds. The user may also change the methods of determining the number of histogram breaks, which is an essential component for many of the methods implemented here. The histogram breaks method defaults to "scott" because this was the most accurate and reliable method in our simulatons. 
 
 ``` r 
-get.pi0(pvalues=sim.data.p, adjust.method="BH", estim.method="last.hist")
+get.pi0(pvalues=sim.data.p, estim.method="last.hist")
 ```
 
 Help
