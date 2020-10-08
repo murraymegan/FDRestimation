@@ -13,7 +13,7 @@ PhD Student, Department of Biostatistics
 Jeffrey D. Blume  
 Professor of Biostatistics, Biomedical Informatics and Biochemistry  
 Vice Chair for Education, Biostatistics  
-Director of Graduate Education, Data Science Institute  Vanderbilt University  
+Director of Graduate Education, Data Science Institute  
 <i class="fas fa-envelope"></i>  j.blume@vanderbilt.edu  
 
 News
