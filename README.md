@@ -76,6 +76,6 @@ References
 ----------
 
 A corresponding paper explaining and illustarting this package is in the process of being submitted to The R Journal.  
-Link(https://arxiv.org/abs/2010.04680)
+https://arxiv.org/abs/2010.04680
 
 
