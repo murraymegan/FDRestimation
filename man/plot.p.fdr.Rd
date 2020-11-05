@@ -5,7 +5,7 @@
 \title{FDR plotting}
 \usage{
 \method{plot}{p.fdr}(
-  p.fdr.object,
+  x,
   raw.pvalues = TRUE,
   adj.pvalues = TRUE,
   sig.line = TRUE,
@@ -20,11 +20,12 @@
   pch.adj.p = 17,
   pch.raw.p = 20,
   pch.adj.fdr = 20,
-  col = c("dodgerblue", "firebrick2", "black")
+  col = c("dodgerblue", "firebrick2", "black"),
+  ...
 )
 }
 \arguments{
-\item{p.fdr.object}{A p.fdr object that contains the list of output.}
+\item{x}{A p.fdr object that contains the list of output.}
 
 \item{raw.pvalues}{A Boolean TRUE or FALSE value to indicate whether or not to plot the raw p-value points. Defaults to TRUE.}
 
@@ -48,33 +49,52 @@
 
 \item{main}{A string variable for the title of the plot.}
 
-\item{pch.adj.p}{A plotting ‘character’, or symbol to use for the adjusted p-value points. This can either be a single character or an integer code for one of a set of graphics symbols. Defaults to 17.}
+\item{pch.adj.p}{A plotting "character’, or symbol to use for the adjusted p-value points. This can either be a single character or an integer code for one of a set of graphics symbols. Defaults to 17.}
 
-\item{pch.raw.p}{A plotting ‘character’, or symbol to use for the raw p-value points. This can either be a single character or an integer code for one of a set of graphics symbols. Defaults to 20.}
+\item{pch.raw.p}{A plotting "character’, or symbol to use for the raw p-value points. This can either be a single character or an integer code for one of a set of graphics symbols. Defaults to 20.}
 
-\item{pch.adj.fdr}{A plotting ‘character’, or symbol to use for the adjusted FDR points. This can either be a single character or an integer code for one of a set of graphics symbols. Defaults to 20.}
+\item{pch.adj.fdr}{A plotting "character’, or symbol to use for the adjusted FDR points. This can either be a single character or an integer code for one of a set of graphics symbols. Defaults to 20.}
 
 \item{col}{A vector of colors for the points and lines in the plot. If the input has 1 value all points and lines will be that same color. If the input has length of 3 then col.adj.fdr will be the first value, col.adj.p will be the second, and col.raw.p is the third. Defaults to c("dodgerblue","firebrick2", "black").}
+
+\item{...}{Graphical parameters. Any argument that can be passed to image.plot and to base plot, such as axes=FALSE, main='title', ylab='latitude'}
 }
 \description{
-This function creates a plot using a p.fdr.object.
+This function creates a plot using a x (p.fdr.object).
 }
 \details{
-We run into errors or warnings when
+We run into errors or warnings when zvalues or col are inputted incorrectly.
 }
 \examples{
 
 # Example 1
 
 sim.data.p = c(runif(80),runif(20, min=0, max=0.01))
-fdr.output = p.fdr(pvalues=sim.data.p, sort.results = TRUE)
+fdr.output = p.fdr(pvalues=sim.data.p)
 
 plot(fdr.output)
 plot(fdr.output, x.axis="Zvalues")
 
+
 }
 \references{
+\insertRef{Rpack:bibtex}{Rdpack}
 
+\insertRef{R}{FDRestimation}
+
+\insertRef{bh:1995}{FDRestimation}
+
+\insertRef{by:2001}{FDRestimation}
+
+\insertRef{holm:1979}{FDRestimation}
+
+\insertRef{hoch:1988}{FDRestimation}
+
+\insertRef{sidak:1967}{FDRestimation}
+
+\insertRef{bon:1936}{FDRestimation}
+
+\insertRef{murray2020false}{FDRestimation}
 }
 \seealso{
 \code{\link{summary.p.fdr}, \link{p.fdr}, \link{get.pi0}}

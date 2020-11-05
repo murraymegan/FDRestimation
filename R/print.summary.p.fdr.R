@@ -5,21 +5,21 @@
 ##	Version:	1.0
 ##
 ##	Author:		Megan H. Murray and Jeffrey D. Blume
-##	Date:		  October 5th, 2020
+##	Date:		  November 5th, 2020
 ################################################################
 #
 #' Print the summary of p.fdr.object
 #'
 #' @description This function prints the summary a p.fdr.object.
 #'
-#' @param summary.p.fdr.object A list of output from the summary.p.fdr function.
+#' @param x A list of output from the summary.p.fdr function.
 #' @param digits A numeric value for the number of desired digits in the summary output. Defaults to 3.
+#' @param ... Further arguments passed to or from other methods.
 #'
 #' @details We run into errors or warnings when
 #'
 #' @seealso \code{\link{plot.p.fdr}, \link{p.fdr}, \link{get.pi0}}
 #' @keywords  summary, FDR, adjusted p-values, null proportion
-#' @export
 #' @examples
 #'
 #' # Example 1
@@ -36,13 +36,22 @@
 #'
 #' summary(fdr.output)
 #'
-#' @references
-#' R Journal 2020?
 #'
+#' @references
+#' \insertRef{Rpack:bibtex}{Rdpack}
+#'
+#' \insertRef{R}{FDRestimation}
+#'
+#' \insertRef{murray2020false}{FDRestimation}
+#'
+#' @rdname print.summary.p.fdr
+#' @export
 
-print.summary.p.fdr = function(summary.p.fdr.object,
-                               digits = 3){
+print.summary.p.fdr = function(x,
+                               digits = 3,
+                               ...){
 
+  summary.p.fdr.object = x
   if (is.null(summary.p.fdr.object)){
     stop("invalid 'summary.p.fdr' object")
   }

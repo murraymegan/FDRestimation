@@ -5,7 +5,7 @@
 ##	Version:	1.0
 ##
 ##	Author:		Megan H. Murray and Jeffrey D. Blume
-##	Date:		  October 5th, 2020
+##	Date:		  November 5th, 2020
 ################################################################
 #
 #' pi0 Estimation
@@ -21,33 +21,61 @@
 #' @param hist.breaks A numeric or string variable representing how many breaks in the pi0 estimation histogram methods. Defaults to "scott".
 #' @param na.rm A Boolean TRUE or FALSE value indicating whether NA's should be removed from the inputted raw p-value vector before further computation. Defaults to TRUE.
 #'
-#' @details We run into errors or warnings when
+#' @details We run into errors or warnings when pvalues, zvalues, threshold or default.odds are not inputted correctly.
 #'
-#' @return \item{pi0} A numeric value representing the proportion of the given data that come from the null distribution. A value in the interval \code{[0,1]}.
+#' @return An estimated null proportion:
+#' @return \item{pi0}{A numeric value representing the proportion of the given data that come from the null distribution. A value in the interval \code{[0,1]}.}
 #'
 #' @seealso \code{\link{plot.p.fdr}, \link{p.fdr}, \link{summary.p.fdr}}
 #' @keywords FDR, adjusted p-values, null proportion
+#' @importFrom stats qnorm
+#' @importFrom utils tail
+#' @importFrom graphics hist
+#' @importFrom stats smooth.spline
+#' @importFrom stats predict
+#' @importFrom graphics axis
+#' @importFrom graphics points
+#' @importFrom graphics abline
+#' @importFrom graphics lines
+#' @importFrom graphics legend
+#' @importFrom graphics abline
+#' @importFrom Rdpack reprompt
 #' @export
 #' @examples
 #'
 #' # Example 1
 #' pi0 = 0.8
 #' pi1 = 1-pi0
-#' n = 10
+#' n = 10000
 #' n.0 = ceiling(n*pi0)
 #' n.1 = n-n.0
 #'
-#' sim.data = c(rnorm(n.1,5,1),rnorm(n.0,0,1))
+#' sim.data = c(rnorm(n.1,3,1),rnorm(n.0,0,1))
 #' sim.data.p = 2*pnorm(-abs(sim.data))
 #'
 #' get.pi0(sim.data.p, estim.method = "last.hist")
+#' get.pi0(sim.data.p, estim.method = "storey")
+#' get.pi0(sim.data.p, estim.method = "set.pi0")
 #'
 #' @references
-#' R Journal 2020?
+#' \insertRef{Rpack:bibtex}{Rdpack}
 #'
+#' \insertRef{R}{FDRestimation}
+#'
+#' \insertRef{storey:2003}{FDRestimation}
+#'
+#' \insertRef{mein:2006}{FDRestimation}
+#'
+#' \insertRef{jiang:2008}{FDRestimation}
+#'
+#' \insertRef{nett:2006}{FDRestimation}
+#'
+#' \insertRef{pounds:2003}{FDRestimation}
+#'
+#' \insertRef{murray2020false}{FDRestimation}
 
 get.pi0 = function(pvalues,
-                   set.pi0,
+                   set.pi0 = 1,
                    zvalues = "two.sided",
                    estim.method = "last.hist",
                    threshold=0.05,
@@ -55,9 +83,7 @@ get.pi0 = function(pvalues,
                    hist.breaks="scott",
                    na.rm=TRUE){
 
-  library(stats, quietly = TRUE)
-  library(utils, quietly = TRUE)
-  library(graphics, quietly = TRUE)
+  requireNamespace(c("graphics", "stats", "utils"), quietly=TRUE)
 
   # Error Checking
   if(TRUE %in% (pvalues>1|pvalues<0)){

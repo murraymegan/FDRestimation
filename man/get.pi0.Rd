@@ -6,7 +6,7 @@
 \usage{
 get.pi0(
   pvalues,
-  set.pi0,
+  set.pi0 = 1,
   zvalues = "two.sided",
   estim.method = "last.hist",
   threshold = 0.05,
@@ -33,31 +33,49 @@ get.pi0(
 \item{na.rm}{A Boolean TRUE or FALSE value indicating whether NA's should be removed from the inputted raw p-value vector before further computation. Defaults to TRUE.}
 }
 \value{
-\item{pi0} A numeric value representing the proportion of the given data that come from the null distribution. A value in the interval \code{[0,1]}.
+An estimated null proportion:
+
+\item{pi0}{A numeric value representing the proportion of the given data that come from the null distribution. A value in the interval \code{[0,1]}.}
 }
 \description{
 This function estimates the null proportion of data or pi0 value.
 }
 \details{
-We run into errors or warnings when
+We run into errors or warnings when pvalues, zvalues, threshold or default.odds are not inputted correctly.
 }
 \examples{
 
 # Example 1
 pi0 = 0.8
 pi1 = 1-pi0
-n = 10
+n = 10000
 n.0 = ceiling(n*pi0)
 n.1 = n-n.0
 
-sim.data = c(rnorm(n.1,5,1),rnorm(n.0,0,1))
+sim.data = c(rnorm(n.1,3,1),rnorm(n.0,0,1))
 sim.data.p = 2*pnorm(-abs(sim.data))
 
 get.pi0(sim.data.p, estim.method = "last.hist")
+get.pi0(sim.data.p, estim.method = "storey")
+get.pi0(sim.data.p, estim.method = "set.pi0")
 
 }
 \references{
-R Journal 2020?
+\insertRef{Rpack:bibtex}{Rdpack}
+
+\insertRef{R}{FDRestimation}
+
+\insertRef{storey:2003}{FDRestimation}
+
+\insertRef{mein:2006}{FDRestimation}
+
+\insertRef{jiang:2008}{FDRestimation}
+
+\insertRef{nett:2006}{FDRestimation}
+
+\insertRef{pounds:2003}{FDRestimation}
+
+\insertRef{murray2020false}{FDRestimation}
 }
 \seealso{
 \code{\link{plot.p.fdr}, \link{p.fdr}, \link{summary.p.fdr}}

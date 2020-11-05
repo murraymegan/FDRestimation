@@ -4,12 +4,14 @@
 \alias{summary.p.fdr}
 \title{Summary of p.fdr.object}
 \usage{
-\method{summary}{p.fdr}(p.fdr.object, digits = 5)
+\method{summary}{p.fdr}(object, digits = 5, ...)
 }
 \arguments{
-\item{p.fdr.object}{A list of output from the p.fdr function.}
+\item{object}{A list of output from the p.fdr function.}
 
 \item{digits}{A numeric value for the number of desired digits in the summary output. Defaults to 3.}
+
+\item{...}{Additional arguments affecting the summary produced.}
 }
 \value{
 A list containing the following components:
@@ -27,7 +29,7 @@ A list containing the following components:
 \item{Adjustment Method}{The adjustment method used in the p.fdr function. }
 }
 \description{
-This function summarizes a p.fdr.object.
+This function summarizes a p.fdr object.
 }
 \details{
 We run into errors or warnings when
@@ -48,9 +50,14 @@ fdr.output = p.fdr(pvalues=sim.data.p, adjust.method="BH")
 
 summary(fdr.output)
 
+
 }
 \references{
-R Journal 2020?
+\insertRef{Rpack:bibtex}{Rdpack}
+
+\insertRef{R}{FDRestimation}
+
+\insertRef{murray2020false}{FDRestimation}
 }
 \seealso{
 \code{\link{plot.p.fdr}, \link{p.fdr}, \link{get.pi0}}

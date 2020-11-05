@@ -1,11 +1,20 @@
 Package: FDRestimation
-Type: Package
-Title: What the Package Does (Title Case)
 Version: 1.0.0
-Author: Megan H Murray and Jeffrey D Blume
-Maintainer: Megan H Murray <megan.c.hollister@vanderbilt.edu>
-Description: Estimate, plot, and summarize false discovery rates. 
-License: What license is it under?
-Encoding: UTF-8
-LazyData: true
+Date: 2020-11-04
+Title: Estimate, Plot, and Summarize False Discovery Rates
+Authors@R: c(
+    person("Megan", "Murray", email = "megan.c.hollister@vanderbilt.edu", role = c("aut", "cre")),
+    person("Jeffrey", "Blume", email = "j.blume@vanderbilt.edu", role = c("aut"))
+    )
+Author: Megan Murray [aut, cre],
+	Jeffrey Blume [aut]
+Maintainer: Megan Murray <megan.c.hollister@vanderbilt.edu>
+Depends: R (>= 3.4.0)
+Imports: stats, utils, graphics, Rdpack
+Description: This package, FDRestimation, is a user-friendly R package that directly computes and displays false discovery rates from p-values or z-scores under a variety of assumptions. p.fdr() computes FDRs, adjusted p-values and decision reject vectors from inputted p-values or z-values. get.pi0() estimates the proportion of data that are truly null. plot.p.fdr() plots the FDRs, adjusted p-values, and the raw p-values points against their rejection threshold lines. 
+License: MIT + file LICENSE
+URL: <arxiv:2010.04680>
+LazyData: false
 RoxygenNote: 7.1.1
+Encoding: UTF-8
+RdMacros: Rdpack

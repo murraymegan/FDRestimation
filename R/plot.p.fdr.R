@@ -5,14 +5,14 @@
 ##	Version:	1.0
 ##
 ##	Author:		Megan H. Murray and Jeffrey D. Blume
-##	Date:		  October 5th, 2020
+##	Date:		  November 5th, 2020
 ################################################################
 #
 #' FDR plotting
 #'
-#' @description This function creates a plot using a p.fdr.object.
+#' @description This function creates a plot using a x (p.fdr.object).
 #'
-#' @param p.fdr.object A p.fdr object that contains the list of output.
+#' @param x A p.fdr object that contains the list of output.
 #' @param raw.pvalues A Boolean TRUE or FALSE value to indicate whether or not to plot the raw p-value points. Defaults to TRUE.
 #' @param adj.pvalues A Boolean TRUE or FALSE value to indicate whether or not to plot the adjusted p-value points. Defaults to TRUE.
 #' @param sig.line A Boolean TRUE or FALSE value to indicate whether or not to plot the raw p-value significance line. Defaults to TRUE.
@@ -24,30 +24,63 @@
 #' @param zvalues A numeric vector of z-values to be used in pi0 estimation or a string with options "two.sided", "greater" or "less". Defaults to "two.sided".
 #' @param legend.where A string "bottomright", "bottomleft", "topleft", "topright". Defaults to "topleft" is x.axis="Rank" and "topright" if x.axis="Zvalues".
 #' @param main A string variable for the title of the plot.
-#' @param pch.adj.p A plotting ‘character’, or symbol to use for the adjusted p-value points. This can either be a single character or an integer code for one of a set of graphics symbols. Defaults to 17.
-#' @param pch.raw.p A plotting ‘character’, or symbol to use for the raw p-value points. This can either be a single character or an integer code for one of a set of graphics symbols. Defaults to 20.
-#' @param pch.adj.fdr A plotting ‘character’, or symbol to use for the adjusted FDR points. This can either be a single character or an integer code for one of a set of graphics symbols. Defaults to 20.
+#' @param pch.adj.p A plotting "character’, or symbol to use for the adjusted p-value points. This can either be a single character or an integer code for one of a set of graphics symbols. Defaults to 17.
+#' @param pch.raw.p A plotting "character’, or symbol to use for the raw p-value points. This can either be a single character or an integer code for one of a set of graphics symbols. Defaults to 20.
+#' @param pch.adj.fdr A plotting "character’, or symbol to use for the adjusted FDR points. This can either be a single character or an integer code for one of a set of graphics symbols. Defaults to 20.
 #' @param col A vector of colors for the points and lines in the plot. If the input has 1 value all points and lines will be that same color. If the input has length of 3 then col.adj.fdr will be the first value, col.adj.p will be the second, and col.raw.p is the third. Defaults to c("dodgerblue","firebrick2", "black").
+#' @param ... Graphical parameters. Any argument that can be passed to image.plot and to base plot, such as axes=FALSE, main='title', ylab='latitude'
 #'
-#' @details We run into errors or warnings when
+#' @details We run into errors or warnings when zvalues or col are inputted incorrectly.
 #'
 #' @seealso \code{\link{summary.p.fdr}, \link{p.fdr}, \link{get.pi0}}
 #' @keywords plot, FDR, adjusted p-values
-#' @export
+#' @importFrom stats qnorm
+#' @importFrom utils tail
+#' @importFrom graphics hist
+#' @importFrom stats smooth.spline
+#' @importFrom stats predict
+#' @importFrom graphics axis
+#' @importFrom graphics points
+#' @importFrom graphics abline
+#' @importFrom graphics lines
+#' @importFrom graphics legend
+#' @importFrom graphics abline
+#' @importFrom Rdpack reprompt
 #' @examples
 #'
 #' # Example 1
 #'
 #' sim.data.p = c(runif(80),runif(20, min=0, max=0.01))
-#' fdr.output = p.fdr(pvalues=sim.data.p, sort.results = TRUE)
+#' fdr.output = p.fdr(pvalues=sim.data.p)
 #'
 #' plot(fdr.output)
 #' plot(fdr.output, x.axis="Zvalues")
 #'
-#' @references
 #'
+#' @references
+#' \insertRef{Rpack:bibtex}{Rdpack}
+#'
+#' \insertRef{R}{FDRestimation}
+#'
+#' \insertRef{bh:1995}{FDRestimation}
+#'
+#' \insertRef{by:2001}{FDRestimation}
+#'
+#' \insertRef{holm:1979}{FDRestimation}
+#'
+#' \insertRef{hoch:1988}{FDRestimation}
+#'
+#' \insertRef{sidak:1967}{FDRestimation}
+#'
+#' \insertRef{bon:1936}{FDRestimation}
+#'
+#' \insertRef{murray2020false}{FDRestimation}
+#'
+#' @rdname plot.p.fdr
+#' @export
 
-plot.p.fdr = function(p.fdr.object,
+
+plot.p.fdr = function(x,
                       raw.pvalues=TRUE,
                       adj.pvalues=TRUE,
                       sig.line=TRUE,
@@ -62,12 +95,13 @@ plot.p.fdr = function(p.fdr.object,
                       pch.adj.p=17,
                       pch.raw.p=20,
                       pch.adj.fdr=20,
-                      col=c("dodgerblue","firebrick2", "black")){
+                      col=c("dodgerblue","firebrick2", "black"),
+                      ...){
 
+  requireNamespace(c("graphics", "stats", "utils"), quietly=TRUE)
+
+  p.fdr.object=x
   n=length(p.fdr.object$fdrs)
-  library(stats, quietly = TRUE)
-  library(utils, quietly = TRUE)
-  library(graphics, quietly = TRUE)
 
   if(is.na(threshold)){
     threshold = p.fdr.object$threshold

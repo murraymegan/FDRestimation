@@ -5,15 +5,16 @@
 ##	Version:	1.0
 ##
 ##	Author:		Megan H. Murray and Jeffrey D. Blume
-##	Date:		  October 5th, 2020
+##	Date:		  November 5th, 2020
 ################################################################
 #
 #' Summary of p.fdr.object
 #'
-#' @description This function summarizes a p.fdr.object.
+#' @description This function summarizes a p.fdr object.
 #'
-#' @param p.fdr.object A list of output from the p.fdr function.
+#' @param object A list of output from the p.fdr function.
 #' @param digits A numeric value for the number of desired digits in the summary output. Defaults to 3.
+#' @param ... Additional arguments affecting the summary produced.
 #'
 #' @details We run into errors or warnings when
 #'
@@ -27,7 +28,6 @@
 #'
 #' @seealso \code{\link{plot.p.fdr}, \link{p.fdr}, \link{get.pi0}}
 #' @keywords summary, FDR, adjusted p-values
-#' @export
 #' @examples
 #'
 #' # Example 1
@@ -44,12 +44,21 @@
 #'
 #' summary(fdr.output)
 #'
-#' @references
-#' R Journal 2020?
 #'
+#' @references
+#' \insertRef{Rpack:bibtex}{Rdpack}
+#'
+#' \insertRef{R}{FDRestimation}
+#'
+#' \insertRef{murray2020false}{FDRestimation}
+#'
+#' @rdname summary.p.fdr
+#' @export
 
-summary.p.fdr = function(p.fdr.object,
-                         digits = 5){
+summary.p.fdr = function(object,
+                         digits = 5,
+                         ...){
+  p.fdr.object=object
   if(is.null(p.fdr.object$fdrs)){
     stop("Invalid 'p.fdr' object: No 'fdrs' component. ")
   }

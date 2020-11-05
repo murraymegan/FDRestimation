@@ -4,12 +4,14 @@
 \alias{print.summary.p.fdr}
 \title{Print the summary of p.fdr.object}
 \usage{
-\method{print}{summary.p.fdr}(summary.p.fdr.object, digits = 3)
+\method{print}{summary.p.fdr}(x, digits = 3, ...)
 }
 \arguments{
-\item{summary.p.fdr.object}{A list of output from the summary.p.fdr function.}
+\item{x}{A list of output from the summary.p.fdr function.}
 
 \item{digits}{A numeric value for the number of desired digits in the summary output. Defaults to 3.}
+
+\item{...}{Further arguments passed to or from other methods.}
 }
 \description{
 This function prints the summary a p.fdr.object.
@@ -33,9 +35,14 @@ fdr.output = p.fdr(pvalues=sim.data.p, adjust.method="BH")
 
 summary(fdr.output)
 
+
 }
 \references{
-R Journal 2020?
+\insertRef{Rpack:bibtex}{Rdpack}
+
+\insertRef{R}{FDRestimation}
+
+\insertRef{murray2020false}{FDRestimation}
 }
 \seealso{
 \code{\link{plot.p.fdr}, \link{p.fdr}, \link{get.pi0}}

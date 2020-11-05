@@ -5,7 +5,7 @@
 ##	Version:	1.0
 ##
 ##	Author:		Megan H. Murray and Jeffrey D. Blume
-##	Date:		  October 5th, 2020
+##	Date:		  November 5th, 2020
 ################################################################
 #
 #' FDR Computation
@@ -26,7 +26,7 @@
 #' @param sort.results A Boolean TRUE or FALSE value which sorts the output in either increasing or non-increasing order dependent on the FDR vector. Defaults to FALSE.
 #' @param na.rm A Boolean TRUE or FALSE value indicating whether NA's should be removed from the inputted raw p-value vector before further computation. Defaults to TRUE.
 #'
-#' @details We run into errors or warnings when
+#' @details We run into errors or warnings when pvalues, zvalues, threshold, set.pi0, BY.corr, or default.odds are not inputted correctly.
 #'
 #' @return A list containing the following components:
 #' @return \item{fdrs}{A numeric vector of method adjusted FDRs.}
@@ -38,17 +38,29 @@
 #'
 #' @seealso \code{\link{plot.p.fdr}, \link{summary.p.fdr}, \link{get.pi0}}
 #' @keywords  FDR, adjusted p-values, null proportion
+#' @importFrom stats qnorm
+#' @importFrom utils tail
+#' @importFrom graphics hist
+#' @importFrom stats smooth.spline
+#' @importFrom stats predict
+#' @importFrom graphics axis
+#' @importFrom graphics points
+#' @importFrom graphics abline
+#' @importFrom graphics lines
+#' @importFrom graphics legend
+#' @importFrom graphics abline
+#' @importFrom Rdpack reprompt
 #' @export
 #' @examples
 #'
 #' # Example 1
 #' pi0 = 0.8
 #' pi1 = 1-pi0
-#' n = 10
+#' n = 10000
 #' n.0 = ceiling(n*pi0)
 #' n.1 = n-n.0
 #'
-#' sim.data = c(rnorm(n.1,5,1),rnorm(n.0,0,1))
+#' sim.data = c(rnorm(n.1,3,1),rnorm(n.0,0,1))
 #' sim.data.p = 2*pnorm(-abs(sim.data))
 #'
 #' fdr.output = p.fdr(pvalues=sim.data.p, adjust.method="BH")
@@ -58,15 +70,46 @@
 #'
 #' # Example 2
 #'
-#' sim.data.p = output = c(runif(80),runif(20, min=0, max=0.01))
-#' fdr.output = p.fdr(pvalues=sim.data.p, adjust.method="Holm" , sort.results = TRUE)
+#' sim.data.p = output = c(runif(800),runif(200, min=0, max=0.01))
+#' fdr.output = p.fdr(pvalues=sim.data.p, adjust.method="Holm", sort.results = TRUE)
 #'
 #' fdr.output$`Results Matrix`
 #'
-#'
 #' @references
-#' R Journal 2020?
+#' \insertRef{Rpack:bibtex}{Rdpack}
 #'
+#' \insertRef{R}{FDRestimation}
+#'
+#' \insertRef{efron:2013}{FDRestimation}
+#'
+#' \insertRef{bh:1995}{FDRestimation}
+#'
+#' \insertRef{shaffer:1995}{FDRestimation}
+#'
+#' \insertRef{wach:2004}{FDRestimation}
+#'
+#' \insertRef{storey:2003}{FDRestimation}
+#'
+#' \insertRef{by:2001}{FDRestimation}
+#'
+#' \insertRef{mein:2006}{FDRestimation}
+#'
+#' \insertRef{jiang:2008}{FDRestimation}
+#'
+#' \insertRef{nett:2006}{FDRestimation}
+#'
+#' \insertRef{pounds:2003}{FDRestimation}
+#'
+#' \insertRef{holm:1979}{FDRestimation}
+#'
+#' \insertRef{bon:1936}{FDRestimation}
+#'
+#' \insertRef{hoch:1988}{FDRestimation}
+#'
+#' \insertRef{sidak:1967}{FDRestimation}
+#'
+#' \insertRef{murray2020false}{FDRestimation}
+
 
 p.fdr = function(pvalues,
                  zvalues = "two.sided",
@@ -82,10 +125,9 @@ p.fdr = function(pvalues,
                  sort.results=FALSE,
                  na.rm=TRUE){
 
+  requireNamespace(c("graphics", "stats", "utils"), quietly=TRUE)
+
   cl <- match.call()
-  library(stats, quietly = TRUE)
-  library(utils, quietly = TRUE)
-  library(graphics, quietly = TRUE)
 
   # Error Checking
   if(TRUE %in% (pvalues>1|pvalues<0)){
