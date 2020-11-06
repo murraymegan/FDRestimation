@@ -23,6 +23,7 @@
 #' @param ylim A numeric interval for y-axis limits. Defaults to c(0,1).
 #' @param zvalues A numeric vector of z-values to be used in pi0 estimation or a string with options "two.sided", "greater" or "less". Defaults to "two.sided".
 #' @param legend.where A string "bottomright", "bottomleft", "topleft", "topright". Defaults to "topleft" is x.axis="Rank" and "topright" if x.axis="Zvalues".
+#' @param legend.on A Boolean TRUE or FALSE value to indicate whether or not to print the legend.
 #' @param main A string variable for the title of the plot.
 #' @param pch.adj.p A plotting "character’, or symbol to use for the adjusted p-value points. This can either be a single character or an integer code for one of a set of graphics symbols. Defaults to 17.
 #' @param pch.raw.p A plotting "character’, or symbol to use for the raw p-value points. This can either be a single character or an integer code for one of a set of graphics symbols. Defaults to 20.
@@ -91,6 +92,7 @@ plot.p.fdr = function(x,
                       ylim=c(0,1),
                       zvalues="two.sided",
                       legend.where=NA,
+                      legend.on=TRUE,
                       main=NA,
                       pch.adj.p=17,
                       pch.raw.p=20,
@@ -232,7 +234,7 @@ plot.p.fdr = function(x,
     }
 
     #Legends
-    if(raw.pvalues&adj.pvalues&sig.line&adj.sig.line){
+    if(raw.pvalues&adj.pvalues&sig.line&adj.sig.line&legend.on){
       legend(legend.where,
              legend=c(paste0("Adj p-values (",p.fdr.object$`Adjustment Method`,")"),
                       paste0("FDRs (",p.fdr.object$`Adjustment Method`,")"),
@@ -246,7 +248,7 @@ plot.p.fdr = function(x,
              cex=0.7,
              bty = "n")
     }
-    else if(raw.pvalues&!adj.pvalues&sig.line&!adj.sig.line){
+    else if(raw.pvalues&!adj.pvalues&sig.line&!adj.sig.line&legend.on){
       legend(legend.where,
              legend=c(paste0("FDRs (", p.fdr.object$`Adjustment Method`,")"),
                       "Raw p-values",
@@ -258,7 +260,7 @@ plot.p.fdr = function(x,
              cex=0.7,
              bty = "n")
     }
-    else if(!raw.pvalues&adj.pvalues&!sig.line&adj.sig.line){
+    else if(!raw.pvalues&adj.pvalues&!sig.line&adj.sig.line&legend.on){
       legend(legend.where,
              legend=c(paste0("Adj p-values (",p.fdr.object$`Adjustment Method`,")"),
                       paste0("FDRs (", p.fdr.object$`Adjustment Method`,")"),
@@ -270,7 +272,7 @@ plot.p.fdr = function(x,
              cex=0.7,
              bty = "n")
     }
-    else{
+    else if(sig.line&legend.on){
       legend(legend.where,
              legend=c(paste0("FDRs (",p.fdr.object$`Adjustment Method`,")")),
              pch=c(pch.adj.fdr),

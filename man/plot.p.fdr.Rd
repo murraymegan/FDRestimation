@@ -16,6 +16,7 @@
   ylim = c(0, 1),
   zvalues = "two.sided",
   legend.where = NA,
+  legend.on = TRUE,
   main = NA,
   pch.adj.p = 17,
   pch.raw.p = 20,
@@ -46,6 +47,8 @@
 \item{zvalues}{A numeric vector of z-values to be used in pi0 estimation or a string with options "two.sided", "greater" or "less". Defaults to "two.sided".}
 
 \item{legend.where}{A string "bottomright", "bottomleft", "topleft", "topright". Defaults to "topleft" is x.axis="Rank" and "topright" if x.axis="Zvalues".}
+
+\item{legend.on}{A Boolean TRUE or FALSE value to indicate whether or not to print the legend.}
 
 \item{main}{A string variable for the title of the plot.}
 

@@ -251,10 +251,12 @@ p.fdr = function(pvalues,
                                  "Adjusted p-values" = adj.pvalues[new.order],
                                  "Raw p-values" = pvalues[new.order]))
     }else{
-      out.mat = as.data.frame(cbind("Adjusted FDRs" = adj.fdrs[new.order],
-                                 "Adjusted p-values" = adj.pvalues[new.order],
+      out.mat = as.data.frame(cbind("FDRs" = adj.fdrs[new.order],
+                                    "Adjusted p-values" = adj.pvalues[new.order],
                                  "Raw p-values" = pvalues[new.order],
                                  "BH FDRs" = fdr.bh[new.order]))
+
+      colnames(out.mat)[1:2]= c(paste0(adjust.method," FDRs"),paste0(adjust.method," Adjusted p-values"))
     }
 
     #Return a list of fdrs, results matrix, pi0, threshold, adjustment method

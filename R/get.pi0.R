@@ -95,6 +95,11 @@ get.pi0 = function(pvalues,
   if(default.odds<0){
     stop("'default.odds' has a negative value which is outside its acceptable range")
   }
+  if(!(estim.method %in% c("last.hist","set.pi0","storey", "nettleton", "jiang", "pounds","meinshausen" ))){
+    stop("'estim.method' must be one of the following: 'last.hist','set.pi0','storey', 'nettleton', 'jiang', 'pounds','meinshausen'")
+  }
+
+  pi0 = NULL
 
   n=length(pvalues)
 
@@ -133,7 +138,7 @@ get.pi0 = function(pvalues,
     }else{
       pi0 = min(tail(try.count,1)*length(try.mids)/sum(try.count),1)
     }
-  }else if(estim.method=="Meinshausen"){
+  }else if(estim.method=="meinshausen"){
     ord <- order(pvalues)
     pvalues <- pvalues[ord]
     cutoff = threshold/n
@@ -170,7 +175,7 @@ get.pi0 = function(pvalues,
     }
     pi0=min(tail(lowerbound,1)/n,1)
 
-  }else if(estim.method=="Storey"){
+  }else if(estim.method=="storey"){
     lambda = seq(0, 0.95, by=0.05)
     lambda <- sort(lambda)
     ll <- length(lambda)
@@ -198,9 +203,9 @@ get.pi0 = function(pvalues,
 
       pi0 <- max(min(pi0Smooth[ll+1], 1),0)
     }
-  }else if(estim.method=="Pounds"){
+  }else if(estim.method=="pounds"){
     pi0 = min(1, 2 * mean(pvalues))
-  }else if(estim.method=="Jiang"){
+  }else if(estim.method=="jiang"){
     pi0.jiang = function(p, nbin) {
       m = length(p)
       t = seq(0, 1, length = nbin + 1)
@@ -222,7 +227,7 @@ get.pi0 = function(pvalues,
     histo=hist(pvalues,breaks=hist.breaks, plot=FALSE)
     nbins=length(histo$mids)
     pi0 = pi0.jiang(pvalues, nbins)
-  }else if(estim.method=="Nettleton"){
+  }else if(estim.method=="nettleton"){
     pi0.histo = function(p, nbin) {
       bin = c(-0.1, (1:nbin)/nbin)
       bin.counts = tabulate(cut(p, bin), nbins=nbin)
