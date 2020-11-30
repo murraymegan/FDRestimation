@@ -24,6 +24,15 @@ Version 1.0.0
 Installation
 ------------
 
+This package is availble on CRAN: https://CRAN.R-project.org/package=FDRestimation
+
+``` r
+install.packages("FDRestimation")
+```
+
+
+Or directly from GitHub:
+
 ``` r
 # install.packages("devtools")
 devtools::install_github("murraymegan/FDRestimation")
