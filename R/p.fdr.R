@@ -37,7 +37,8 @@
 #' @return \item{Adjustment Method}{The string with the method name used in computation(needed for the plot.fdr function).}
 #'
 #' @seealso \code{\link{plot.p.fdr}, \link{summary.p.fdr}, \link{get.pi0}}
-#' @keywords  FDR, adjusted p-values, null proportion
+#' @keywords  FDR p-values
+#' @concept FDR adjusted p-values null proportion
 #' @importFrom stats qnorm
 #' @importFrom utils tail
 #' @importFrom graphics hist

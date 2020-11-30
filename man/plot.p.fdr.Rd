@@ -102,7 +102,7 @@ plot(fdr.output, x.axis="Zvalues")
 \seealso{
 \code{\link{summary.p.fdr}, \link{p.fdr}, \link{get.pi0}}
 }
-\keyword{FDR,}
-\keyword{adjusted}
+\concept{plot FDR adjusted p-values}
+\keyword{FDR}
 \keyword{p-values}
-\keyword{plot,}
+\keyword{plot}

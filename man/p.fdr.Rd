@@ -131,8 +131,6 @@ fdr.output$`Results Matrix`
 \seealso{
 \code{\link{plot.p.fdr}, \link{summary.p.fdr}, \link{get.pi0}}
 }
-\keyword{FDR,}
-\keyword{adjusted}
-\keyword{null}
-\keyword{p-values,}
-\keyword{proportion}
+\concept{FDR adjusted p-values null proportion}
+\keyword{FDR}
+\keyword{p-values}

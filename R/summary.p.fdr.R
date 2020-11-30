@@ -27,7 +27,8 @@
 #' @return \item{Adjustment Method}{The adjustment method used in the p.fdr function. }
 #'
 #' @seealso \code{\link{plot.p.fdr}, \link{p.fdr}, \link{get.pi0}}
-#' @keywords summary, FDR, adjusted p-values
+#' @keywords summary FDR
+#' @concept summary FDR adjusted p-values
 #' @examples
 #'
 #' # Example 1

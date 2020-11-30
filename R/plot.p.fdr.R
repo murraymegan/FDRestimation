@@ -34,7 +34,8 @@
 #' @details We run into errors or warnings when zvalues or col are inputted incorrectly.
 #'
 #' @seealso \code{\link{summary.p.fdr}, \link{p.fdr}, \link{get.pi0}}
-#' @keywords plot, FDR, adjusted p-values
+#' @keywords plot FDR p-values
+#' @concept  plot FDR adjusted p-values
 #' @importFrom stats qnorm
 #' @importFrom utils tail
 #' @importFrom graphics hist

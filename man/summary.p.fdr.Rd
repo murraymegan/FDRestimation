@@ -62,7 +62,6 @@ summary(fdr.output)
 \seealso{
 \code{\link{plot.p.fdr}, \link{p.fdr}, \link{get.pi0}}
 }
-\keyword{FDR,}
-\keyword{adjusted}
-\keyword{p-values}
-\keyword{summary,}
+\concept{summary FDR adjusted p-values}
+\keyword{FDR}
+\keyword{summary}

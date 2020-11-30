@@ -80,8 +80,6 @@ get.pi0(sim.data.p, estim.method = "set.pi0")
 \seealso{
 \code{\link{plot.p.fdr}, \link{p.fdr}, \link{summary.p.fdr}}
 }
-\keyword{FDR,}
-\keyword{adjusted}
-\keyword{null}
-\keyword{p-values,}
-\keyword{proportion}
+\concept{FDR adjusted p-values null proportion}
+\keyword{FDR}
+\keyword{p-values}

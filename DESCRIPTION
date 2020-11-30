@@ -11,9 +11,9 @@ Author: Megan Murray [aut, cre],
 Maintainer: Megan Murray <megan.c.hollister@vanderbilt.edu>
 Depends: R (>= 3.4.0)
 Imports: stats, utils, graphics, Rdpack
-Description: This package, FDRestimation, is a user-friendly R package that directly computes and displays false discovery rates from p-values or z-scores under a variety of assumptions. p.fdr() computes FDRs, adjusted p-values and decision reject vectors from inputted p-values or z-values. get.pi0() estimates the proportion of data that are truly null. plot.p.fdr() plots the FDRs, adjusted p-values, and the raw p-values points against their rejection threshold lines. 
+Description: The user can directly compute and display false discovery rates from inputted p-values or z-scores under a variety of assumptions. p.fdr() computes FDRs, adjusted p-values and decision reject vectors from inputted p-values or z-values. get.pi0() estimates the proportion of data that are truly null. plot.p.fdr() plots the FDRs, adjusted p-values, and the raw p-values points against their rejection threshold lines. Megan H. Murray and Jeffrey D. Blume (2020) <arXiv:2010.04680>. 
 License: MIT + file LICENSE
-URL: <arxiv:2010.04680>
+URL: https://arxiv.org/abs/2010.04680
 LazyData: false
 RoxygenNote: 7.1.1
 Encoding: UTF-8

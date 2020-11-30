@@ -19,7 +19,8 @@
 #' @details We run into errors or warnings when
 #'
 #' @seealso \code{\link{plot.p.fdr}, \link{p.fdr}, \link{get.pi0}}
-#' @keywords  summary, FDR, adjusted p-values, null proportion
+#' @keywords  summary FDR p-values
+#' @concept summary FDR adjusted p-values null proportion
 #' @examples
 #'
 #' # Example 1

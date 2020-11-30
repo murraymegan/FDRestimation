@@ -27,7 +27,8 @@
 #' @return \item{pi0}{A numeric value representing the proportion of the given data that come from the null distribution. A value in the interval \code{[0,1]}.}
 #'
 #' @seealso \code{\link{plot.p.fdr}, \link{p.fdr}, \link{summary.p.fdr}}
-#' @keywords FDR, adjusted p-values, null proportion
+#' @keywords FDR p-values
+#' @concept FDR adjusted p-values null proportion
 #' @importFrom stats qnorm
 #' @importFrom utils tail
 #' @importFrom graphics hist
