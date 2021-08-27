@@ -1,6 +1,6 @@
 Package: FDRestimation
-Version: 1.0.0
-Date: 2020-11-04
+Version: 1.0.1
+Date: 2021-08-24
 Title: Estimate, Plot, and Summarize False Discovery Rates
 Authors@R: c(
     person("Megan", "Murray", email = "megan.c.hollister@vanderbilt.edu", role = c("aut", "cre")),
