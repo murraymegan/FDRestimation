@@ -154,6 +154,9 @@ p.fdr = function(pvalues = NA,
   if(any(duplicated(pvalues))){
     warning(paste0("There are ties in the input 'pvalues' and their ranks are determined using the '", ties.method, "' ties method."))
   }
+  if(length(pvalues)==1){
+    warning(paste0("Only 1 raw p-value was given so the lower bound on the posterior probability will be returned."))
+  }
   n=length(pvalues)
 
   #Remove NA inputted pvalues, zvalues
