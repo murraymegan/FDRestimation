@@ -2,10 +2,10 @@
 ##	Purpose: 	Compute FDRs and Adjusted p-values
 ##
 ##	Function:	p.fdr
-##	Version:	1.0
+##	Version:	2.0
 ##
 ##	Author:		Megan H. Murray and Jeffrey D. Blume
-##	Date:		  November 5th, 2020
+##	Date:		  March 2022
 ################################################################
 #
 #' FDR Computation
