@@ -87,8 +87,6 @@
 #'
 #' \insertRef{shaffer:1995}{FDRestimation}
 #'
-#' \insertRef{wach:2004}{FDRestimation}
-#'
 #' \insertRef{storey:2003}{FDRestimation}
 #'
 #' \insertRef{by:2001}{FDRestimation}
