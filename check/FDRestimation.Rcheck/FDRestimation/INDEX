@@ -1,0 +1,5 @@
+get.pi0                 pi0 Estimation
+p.fdr                   FDR Computation
+plot.p.fdr              FDR plotting
+print.summary.p.fdr     Print the summary of p.fdr.object
+summary.p.fdr           Summary of p.fdr.object

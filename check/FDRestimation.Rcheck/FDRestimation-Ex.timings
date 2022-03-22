@@ -1,0 +1,6 @@
+name	user	system	elapsed
+get.pi0	0.011	0.002	0.015	
+p.fdr	0.052	0.067	0.131	
+plot.p.fdr	0.021	0.001	0.023	
+print.summary.p.fdr	0.002	0.000	0.002	
+summary.p.fdr	0.001	0.000	0.001	
