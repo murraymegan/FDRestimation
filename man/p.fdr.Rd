@@ -5,7 +5,7 @@
 \title{FDR Computation}
 \usage{
 p.fdr(
-  pvalues,
+  pvalues = NA,
   zvalues = "two.sided",
   threshold = 0.05,
   adjust.method = "BH",
